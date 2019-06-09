@@ -83,8 +83,6 @@ typedef struct			s_vm_proc
 	int32_t				reg[REG_NUMBER];
 	int32_t				chemp_num;
 	int16_t				cycle_exec;
-	uint8_t				cmd;
-	uint8_t				color;
 	struct s_vm_proc	*next;
 	struct s_vm_proc	*prev;
 }						t_vm_proc;
@@ -94,8 +92,8 @@ typedef struct			s_champion
 	uint32_t			lives_num;
 	uint32_t			true_lives_num;
 	uint32_t			lust_live;
-	int32_t				champs;
 	int					number;
+	int					size; 
 	int32_t				fd;
 	char				name[PROG_NAME_LENGTH + 1];
 	char				file_name[PROG_NAME_LENGTH + 1];
@@ -115,21 +113,30 @@ typedef struct			s_operation
 
 typedef struct			s_core
 {
-	t_vm_proc			*vp;
 	t_operation			oper[16];
-	t_champion			chems[4];
+	t_champion			chmps[4];
+	int					ch_number;
+	unsigned char		map[MEM_SIZE];
 	uint32_t			cycle;
 	int32_t				cycle_to_die;
 	uint32_t			proces_count;
 	int32_t				rep_alive;
 	int8_t				game_over; 
-	int					**op_dscr;
 }						t_core;
 
 
 
-char      *remove_spaces(char *s, int len);
-char	  *hex_to_bin(unsigned char c);
-int				hex_to_dec(unsigned char *buf, int i);
+char	*remove_spaces(char *s, int len);
+char	*hex_to_bin(unsigned char c);
+int		hex_to_dec(unsigned char *buf, int i);
+int    	check_magic_header(int fd);
+int     read_ch_name(t_champion *ch);
+int     read_ch_comment(t_champion *ch);
+int     check_ch_null(int fd);
+int		check_ch_size(t_champion *ch);
+int     read_params(int ac, char **av, t_core *core);
+int		create_map(t_core *core);
+int		read_op_code(t_champion ch, t_core *core, int p);
+void 	cycle(t_core *core);
 
 #endif

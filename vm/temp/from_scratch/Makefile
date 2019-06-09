@@ -2,7 +2,7 @@ NAME = funct_test
 
 FLAGS = -Wall -Werror -Wextra
 
-FUNCTIONS =  main.c helpers1.c
+FUNCTIONS =  main.c helpers1.c champ_main.c process_arg.c create_map.c cycle.c recognize_op.c
 
 LIBFT = ../libft/libft.a
 
