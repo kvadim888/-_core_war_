@@ -1,20 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isprint.c                                       :+:      :+:    :+:   */
+/*   utilities.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akotilie <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: vkryvono <vkryvono@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/10/31 17:31:16 by akotilie          #+#    #+#             */
-/*   Updated: 2017/10/31 17:31:17 by akotilie         ###   ########.fr       */
+/*   Created: 2019/06/11 04:21:00 by vkryvono          #+#    #+#             */
+/*   Updated: 2019/06/11 04:21:00 by vkryvono         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "vm.h"
 
-int		ft_isprint(int c)
+int			is_number(char *str) //todo move to libft
 {
-	if (c > 31 && c < 127)
-		return (1);
-	return (0);
+	while (ft_iswhspace(*str))
+		str++;
+	while (ft_isdigit(*str))
+		str++;
+	while (ft_iswhspace(*str))
+		str++;
+	return (*str == '\0');
 }

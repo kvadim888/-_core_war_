@@ -34,8 +34,6 @@ void check_ch_process(t_core *core, t_champion ch){
     }
 }
 
-
-
 void cycle(t_core *core){
     int i;
 

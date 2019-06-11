@@ -1,23 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strclr.c                                        :+:      :+:    :+:   */
+/*   alert.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akotilie <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: vkryvono <vkryvono@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/11/01 15:15:07 by akotilie          #+#    #+#             */
-/*   Updated: 2017/11/01 15:15:09 by akotilie         ###   ########.fr       */
+/*   Created: 2019/06/11 04:19:00 by vkryvono          #+#    #+#             */
+/*   Updated: 2019/06/11 04:19:00 by vkryvono         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include <vm.h>
 
-void	ft_strclr(char *s)
+void	error(int trigger, char *msg)
 {
-	int i;
-
-	i = -1;
-	if (s)
-		while (s[++i])
-			s[i] = '\0';
+	if (trigger)
+	{
+		ft_dprintf(2, "ERROR: %s\n", msg);
+		exit(1);
+	}
 }

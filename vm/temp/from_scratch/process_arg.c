@@ -47,7 +47,7 @@ int     process_file(char **av, int i, t_core *core)
          //   printf("n = %i\n", ch.number);     
         } else 
         {
-           printf("Error: after -n must be digit");
+           printf();
         }
 
     } 
