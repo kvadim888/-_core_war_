@@ -43,7 +43,7 @@ int		get_file(char *path)
 	error(ft_strcmp(extension, BINARY_EXTENSION), "Invalid file extension");
 	error((fd = open(path, O_RDONLY)) == -1, ERR_OPEN_BINARY);
 	error(read(fd, &header, sizeof(header)) < 0, ERR_READ_BINARY);
-	error(header != COREWAR_EXEC_MAGIC, "Invalid file content");
+	error(header != COREWAR_EXEC_MAGIC, ERR_INVALID_HEADER);
 	return (fd);
 }
 

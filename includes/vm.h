@@ -52,7 +52,7 @@ typedef struct	s_carriage
 
 # define ERR_PLAYERS_AMOUNT		"Invalid players' amount"
 # define ERR_INIT_PLAYER		"Unable to initialise player"
-# define ERR_INIT_CURSOR		"Unable to initialise cursor"
+# define ERR_INIT_CARRIAGE		"Unable to initialise carriage"
 # define ERR_INIT_VM			"Unable to initialise virtual machine"
 # define ERR_OPEN_BINARY		"Binary file cannot be opened"
 # define ERR_READ_BINARY		"Binary file cannot be read"
