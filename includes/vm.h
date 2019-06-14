@@ -23,28 +23,56 @@
 ** Basic structures
 */
 
-typedef struct	s_game
-{
-	t_list		*players; // t_champion
-	uint8_t		field[];
-}				t_game;
+typedef struct s_game		t_game;
+typedef struct s_champion	t_champion;
+typedef struct s_operation	t_operation;
+typedef struct s_carriage	t_carriage;
 
-typedef struct	s_champion
+struct	s_game
+{
+	t_champion	*survivor;
+	t_list		*players; // t_champion
+	t_list		*carriages; // t_champion
+	uint8_t		field[MEM_SIZE];
+	int			check_counter;
+	int			cycle_counter;
+	int			check_period;
+	int			check_amount;
+	int			nbr_live;
+};
+
+struct	s_champion
 {
 	int32_t		fd;
-	t_list		*proc; // t_vm_proc
 	t_header	*header;
 	int			number;
 	int			size;
-}				t_champion;
+	uint8_t		*code;
+};
 
-typedef struct	s_carriage
+struct	s_carriage
 {
+	uint16_t	id;
+	uint16_t	pos;
+	uint16_t	op;
+	uint16_t	live;
+	uint32_t	rest;
 	uint8_t		carry;
-	uint32_t	pc;
 	uint32_t	reg[REG_NUMBER];
 	// todo complete structure
-}				t_carriage;
+};
+
+
+struct	s_operation
+{
+	char 		*name;
+	uint8_t		code;
+	uint16_t	argc;
+	uint16_t	arg_types[3];
+	uint32_t	period;
+	void		(*function)();
+	uint16_t	length;
+};
 
 /*
 ** Error messages
@@ -83,17 +111,19 @@ enum	e_operation
 	AFF
 };
 
-typedef struct	s_operation
-{
-	void		(*function)(void);
-	int			(*check)(char *c1, char *c2); // check
-	short		cycle_value;
-	char*		label;
-	int8_t		dir_number; // label size
-}				t_operation;
+//typedef struct	s_operation
+//{
+//	void		(*function)(void);
+//	int			(*check)(char *c1, char *c2); // check
+//	short		cycle_value;
+//	char*		label;
+//	int8_t		dir_number; // label size
+//}				t_operation;
 
 
 void			error(int trigger, char *msg);
 int				is_number(char *str);
+
+void			log_champ(t_list *lst);
 
 #endif //VM_H

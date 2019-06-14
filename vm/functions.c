@@ -12,208 +12,85 @@
 
 #include <vm.h>
 
-typedef struct	s_operation
-{
-	char 		*name;
-	uint8_t		code;
-	uint16_t	cycle;
-	void		(*function)();
-}				t_operation;
 
 //todo write functions
 
 void	func_live()
 {
-
+	ft_printf("func_live\n");
 }
 
 void	func_ld()
 {
-
+	ft_printf("func_ld\n");
 }
 
 void	func_st()
 {
-
+	ft_printf("func_st\n");
 }
 
 void	func_add()
 {
-
+	ft_printf("func_add\n");
 }
 
 void	func_sub()
 {
-
+	ft_printf("func_sub\n");
 }
 
 void	func_and()
 {
-
+	ft_printf("func_and\n");
 }
 
 void	func_or()
 {
-
+	ft_printf("func_or\n");
 }
 
 void	func_xor()
 {
-
+	ft_printf("func_xor\n");
 }
 
 void	func_zjmp()
 {
-
+	ft_printf("func_zjmp\n");
 }
 
 void	func_ldi()
 {
-
+	ft_printf("func_ldi\n");
 }
 
 void	func_sti()
 {
-
+	ft_printf("func_sti\n");
 }
 
 void	func_fork()
 {
-
+	ft_printf("func_fork\n");
 }
 
 void	func_lld()
 {
-
+	ft_printf("func_lld\n");
 }
 
 void	func_lldi()
 {
-
+	ft_printf("func_lldi\n");
 }
 
 void	func_lfork()
 {
-
+	ft_printf("func_lfork\n");
 }
 
 void	func_aff()
 {
-
+	ft_printf("func_aff\n");
 }
-
-t_operation	g_op[16] =
-{
-	{
-		.name = "live",
-		.code = 0x01,
-		.argc = 1,
-		.arg_types = {T_DIR, 0, 0},
-		.function = func_live
-	},
-	{
-		.name = "ld",
-		.code = 0x02,
-		.argc = 2,
-		.arg_types = {T_DIR | T_IND, T_REG, 0},
-		.function = func_ld
-	},
-	{
-		.name = "st",
-		.code = 0x03,
-		.argc = 2,
-		.arg_types = {T_REG, T_REG | T_IND, 0},
-		.function = func_st
-	},
-	{
-		.name = "add",
-		.code = 0x04,
-		.argc = 3,
-		.arg_types = {T_REG, T_REG, T_REG},
-		.function = func_add
-	},
-	{
-		.name = "sub",
-		.code = 0x05,
-		.argc = 3,
-		.arg_types = {T_REG, T_REG, T_REG},
-		.function = func_sub
-	},
-	{
-		.name = "and",
-		.code = 0x06,
-		.argc = 3,
-		.arg_types = {T_REG | T_DIR | T_IND, T_REG | T_DIR | T_IND, T_REG},
-		.function = func_and
-	},
-	{
-		.name = "or",
-		.code = 0x07,
-		.argc = 3,
-		.arg_types = {T_REG | T_DIR | T_IND, T_REG | T_DIR | T_IND, T_REG},
-		.function = func_or
-	},
-	{
-		.name = "xor",
-		.code = 0x08,
-		.argc = 3,
-		.arg_types = {T_REG | T_DIR | T_IND, T_REG | T_DIR | T_IND, T_REG},
-		.function = func_xor
-	},
-	{
-		.name = "zjmp",
-		.code = 0x09,
-		.argc = 1,
-		.arg_types = {T_DIR, 0, 0},
-		.function = func_zjmp
-	},
-	{
-		.name = "ldi",
-		.code = 0x0A,
-		.argc = 3,
-		.arg_types = {T_REG | T_DIR | T_IND, T_REG | T_DIR, T_REG},
-		.function = func_ldi
-	},
-	{
-		.name = "sti",
-		.code = 0x0B,
-		.argc = 3,
-		.arg_types = {T_REG, T_REG | T_DIR | T_IND, T_REG | T_DIR},
-		.function = func_sti
-	},
-	{
-		.name = "fork",
-		.code = 0x0C,
-		.argc = 1,
-		.arg_types = {T_DIR, 0, 0},
-		.function = func_fork
-	},
-	{
-		.name = "lld",
-		.code = 0x0D,
-		.argc = 2,
-		.arg_types = {T_DIR | T_IND, T_REG, 0},
-		.function = func_lld
-	},
-	{
-		.name = "lldi",
-		.code = 0x0E,
-		.argc = 3,
-		.arg_types = {T_REG | T_DIR | T_IND, T_REG | T_DIR, T_REG},
-		.function = func_lldi
-	},
-	{
-		.name = "lfork",
-		.code = 0x0F,
-		.argc = 1,
-		.arg_types = {T_DIR, 0, 0},
-		.function = func_lfork
-	},
-	{
-		.name = "aff",
-		.code = 0x10,
-		.argc = 1,
-		.arg_types = {T_REG, 0, 0},
-		.function = func_aff
-	}
-};

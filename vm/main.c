@@ -11,14 +11,17 @@
 /* ************************************************************************** */
 
 #include "vm.h"
+#include "functions.h"
 #include <libft.h>
 #include <op.h>
+#include <stdio.h>
 
 #define USAGE	"Usage:<need fill>"
 
 #define FLAG_VERBOSE	1
 
-char g_flags = 0; // -v = verbose output
+char	g_flags = 0; // -v = verbose output
+t_game	g_game;
 
 int		new_champion(t_champion *champion)
 {
@@ -47,7 +50,7 @@ int		get_file(char *path)
 	return (fd);
 }
 
-void	read_params(int ac, char **av, t_game *core)
+void	read_params(int ac, char **av, t_game *game)
 {
 	int			i;
 	t_list		*players;
@@ -79,29 +82,119 @@ void	read_params(int ac, char **av, t_game *core)
 	}
 	amount = ft_lstlen(players);
 	error(amount < 1 || amount > MAX_PLAYERS, ERR_PLAYERS_AMOUNT);
-	core->players = players;
+	game->players = players;
 }
 
 void	map_create(t_game *game)
 {
+	int			len;
+	t_list		*tmp;
+	t_champion	*champ;
+	t_carriage	carriage;
 
+	ft_bzero(game->field, MEM_SIZE);
+	len = ft_lstlen(game->players);
+	carriage = (t_carriage){.carry = 0, .op = 0, .live = 0, .rest = 0};
+	tmp = game->players;
+	while (tmp)
+	{
+		champ = tmp->content;
+		carriage.id = champ->number;
+		carriage.reg[0] = -champ->number;
+		carriage.pos = (carriage.id - 1) * (MEM_SIZE / len);
+		ft_memcpy(game->field + carriage.pos, champ->code, champ->size);
+		ft_lstadd(&game->carriages, ft_lstnew(&carriage, sizeof(t_carriage)));
+		tmp = tmp->next;
+	}
+}
+
+void	exec_function(t_list *lst)
+{
+	t_carriage	*carriage;
+	t_operation	*operation;
+
+	carriage = lst->content;
+	if (carriage->rest > 0)
+		carriage->rest--;
+	else
+	{
+		carriage->op = g_game.field[carriage->pos];
+		if (carriage->op > 0 && carriage->op <= 16)
+			carriage->rest = g_op[carriage->op - 1].period - 1;
+		else
+		{
+			carriage->op = 0;
+			carriage->rest = 0;
+		}
+	}
+	if (carriage->rest > 0)
+		return ;
+	operation = (carriage->op > 0) ? &g_op[carriage->op - 1] : NULL;
+	if (operation)
+	{
+		// todo function arg_types parsing & validation
+		// todo function args parsing & validation
+		operation->function(&g_game, carriage);
+		carriage->pos += operation->length; // todo length estimation
+	}
+	else
+		carriage->pos++;
+}
+
+t_list	*carriage_filter(t_list *lst)
+{
+	t_list		*tmp;
+	t_carriage	*carriage;
+
+	carriage = lst->content;
+	while (carriage->live == 0)
+	{
+		tmp = lst;
+		lst = lst->next;
+		ft_lstdelone(&tmp, ft_lstrm);
+	}
+	return (lst);
 }
 
 int		main(int ac, char **av)
 {
-	t_game game;
 
-	game = (t_game){.players = NULL};
+	g_game = (t_game){.players = NULL, .survivor = NULL, .check_counter = 0,
+				   .check_period = 0, .check_amount = 0, .carriages = NULL,
+				   .cycle_counter = 0, .nbr_live = 0};
 	if (ac < 2)
 	{
 		ft_printf("%s\n", USAGE);
 		return (1);
 	}
-	read_params(ac, av, &game);
+	ft_printf("Introducing\n");
+	ft_lstiter(g_game.players, log_champ);
+	read_params(ac, av, &g_game);
 	ft_printf("map creating\n");
-	create_map(&game);
+	map_create(&g_game);
 
 	ft_printf("game start\n");
-//	cycle(&core);
+
+	// game loop
+	while (ft_lstlen(g_game.carriages))
+	{
+		g_game.cycle_counter++;
+		g_game.check_counter++;
+		ft_lstiter(g_game.carriages, exec_function);
+		if (g_game.check_counter == g_game.check_period)
+		{
+			g_game.check_amount++;
+			ft_lstmap(g_game.carriages, carriage_filter);
+			if (g_game.check_amount == MAX_CHECKS
+				|| g_game.nbr_live >= NBR_LIVE)
+			{
+				g_game.check_period -= CYCLE_DELTA;
+				g_game.check_counter = 0;
+			}
+		}
+	}
+	error(g_game.survivor==NULL, "Winner is disappear");
+	ft_printf("[%s<%d> has won!]\n",
+			g_game.survivor->header->prog_name, g_game.survivor->number);
 	return (0);
 }
