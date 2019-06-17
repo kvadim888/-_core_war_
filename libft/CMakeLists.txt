@@ -16,7 +16,3 @@ add_custom_command(TARGET ft POST_BUILD
         "Libft building complete")
 
 target_include_directories(ft PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/includes)
-
-add_executable(test main.c)
-target_include_directories(test PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/includes)
-target_link_libraries(test ft)
