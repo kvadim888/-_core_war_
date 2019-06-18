@@ -54,7 +54,6 @@ static int		get_file(char *path)
 	return (fd);
 }
 
-
 int				new_champion(char *path, t_champion *champion)
 {
 	int		size;

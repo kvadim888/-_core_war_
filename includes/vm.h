@@ -59,7 +59,7 @@ struct	s_champion
 struct	s_carriage
 {
 	uint16_t	id;
-	uint16_t	pos;
+	uint8_t		pos;
 	uint16_t	op;
 	uint16_t	live;
 	uint32_t	rest;
@@ -144,8 +144,10 @@ enum	e_function
 void			error(int trigger, char *msg);
 int				is_number(char *str);
 
+void			log_field(int width);
+void			log_champion(t_list *lst);
 
 int				new_champion(char *path, t_champion *champion);
-void			log_champion(t_list *lst);
+
 
 #endif //VM_H

@@ -102,6 +102,7 @@ void	exec_function(t_list *lst)
 {
 	t_carriage	*carriage;
 	t_operation	*operation;
+	t_operation	tmp;
 
 	carriage = lst->content;
 
@@ -123,6 +124,10 @@ void	exec_function(t_list *lst)
 	operation = (carriage->op > 0) ? &g_op[carriage->op - 1] : NULL;
 	if (operation)
 	{
+		tmp.arg_types[0] = (((uint8_t)carriage->pos >> 6) & 0b11);
+		tmp.arg_types[1] = (((uint8_t)carriage->pos >> 4) & 0b11);
+		tmp.arg_types[2] = (((uint8_t)carriage->pos >> 2) & 0b11);
+
 		// todo function arg_types parsing & validation
 		// todo function args parsing & validation
 		operation->function(&g_game, carriage);
@@ -156,21 +161,6 @@ t_list	*carriage_filter(t_list *lst)
 		}
 	}
 	return (head.next);
-}
-
-void	log_field(int width)
-{
-	int	pos;
-
-	pos = 0;
-	while (pos < MEM_SIZE)
-	{
-		if (pos % width == 0)
-			ft_printf("%.3p | ", pos);
-		ft_printf("%.2x ", g_game.field[pos]);
-		if (++pos % width == 0)
-			ft_printf("\n");
-	}
 }
 
 int		main(int ac, char **av)

@@ -23,3 +23,17 @@ void	log_champion(t_list *lst)
 				  champion->header->prog_name, champion->header->comment);
 }
 
+void	log_field(int width)
+{
+	int	pos;
+
+	pos = 0;
+	while (pos < MEM_SIZE)
+	{
+		if (pos % width == 0)
+			ft_printf("%.3p | ", pos);
+		ft_printf("%.2x ", g_game.field[pos]);
+		if (++pos % width == 0)
+			ft_printf("\n");
+	}
+}
