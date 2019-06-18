@@ -28,6 +28,11 @@ typedef struct s_champion	t_champion;
 typedef struct s_operation	t_operation;
 typedef struct s_carriage	t_carriage;
 
+// Globals
+
+uint8_t		g_flag;
+t_game		g_game;
+
 struct	s_game
 {
 	t_champion	*survivor;
@@ -39,6 +44,7 @@ struct	s_game
 	int			check_period;
 	int			check_amount;
 	int			nbr_live;
+	int			dump_period;
 };
 
 struct	s_champion
@@ -78,6 +84,8 @@ struct	s_operation
 ** Error messages
 */
 
+# define USAGE					"Usage : "
+
 # define ERR_PLAYERS_AMOUNT		"Invalid players' amount"
 # define ERR_INIT_PLAYER		"Unable to initialise player"
 # define ERR_INIT_CARRIAGE		"Unable to initialise carriage"
@@ -87,11 +95,24 @@ struct	s_operation
 # define ERR_INVALID_BINARY		"Invalid binary file"
 # define ERR_INVALID_HEADER		"Invalid magic header"
 
+
+/*
+** flags
+*/
+
+typedef enum	e_flag
+{
+	UNKNOWN,
+	VERBOSE,
+	DUMP,
+	CHAMPION_NUMBER
+}				t_flag;
+
 /*
 **	functions
 */
 
-enum	e_operation
+enum	e_function
 {
 	LIVE,
 	LD,
@@ -109,7 +130,7 @@ enum	e_operation
 	LLDI,
 	LFORK,
 	AFF
-};
+}		t_function;
 
 //typedef struct	s_operation
 //{
@@ -120,10 +141,11 @@ enum	e_operation
 //	int8_t		dir_number; // label size
 //}				t_operation;
 
-
 void			error(int trigger, char *msg);
 int				is_number(char *str);
 
-void			log_champ(t_list *lst);
+
+int				new_champion(char *path, t_champion *champion);
+void			log_champion(t_list *lst);
 
 #endif //VM_H

@@ -15,82 +15,83 @@
 
 //todo write functions
 
-void	func_live()
+
+void func_live()
 {
 	ft_printf("func_live\n");
 }
 
-void	func_ld()
+void func_ld()
 {
 	ft_printf("func_ld\n");
 }
 
-void	func_st()
+void func_st()
 {
 	ft_printf("func_st\n");
 }
 
-void	func_add()
+void func_add()
 {
 	ft_printf("func_add\n");
 }
 
-void	func_sub()
+void func_sub()
 {
 	ft_printf("func_sub\n");
 }
 
-void	func_and()
+void func_and()
 {
 	ft_printf("func_and\n");
 }
 
-void	func_or()
+void func_or()
 {
 	ft_printf("func_or\n");
 }
 
-void	func_xor()
+void func_xor()
 {
 	ft_printf("func_xor\n");
 }
 
-void	func_zjmp()
+void func_zjmp()
 {
 	ft_printf("func_zjmp\n");
 }
 
-void	func_ldi()
+void func_ldi()
 {
 	ft_printf("func_ldi\n");
 }
 
-void	func_sti()
+void func_sti()
 {
 	ft_printf("func_sti\n");
 }
 
-void	func_fork()
+void func_fork()
 {
 	ft_printf("func_fork\n");
 }
 
-void	func_lld()
+void func_lld()
 {
 	ft_printf("func_lld\n");
 }
 
-void	func_lldi()
+void func_lldi()
 {
 	ft_printf("func_lldi\n");
 }
 
-void	func_lfork()
+void func_lfork()
 {
 	ft_printf("func_lfork\n");
 }
 
-void	func_aff()
+void func_aff()
 {
 	ft_printf("func_aff\n");
 }

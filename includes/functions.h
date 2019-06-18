@@ -3,6 +3,22 @@
 
 #include <vm.h>
 
+void	func_live();
+void	func_ld();
+void	func_st();
+void	func_add();
+void	func_sub();
+void	func_and();
+void	func_or();
+void	func_xor();
+void	func_zjmp();
+void	func_ldi();
+void	func_sti();
+void	func_fork();
+void	func_lld();
+void	func_lldi();
+void	func_lfork();
+void	func_aff();
 
 // todo set function period
 
