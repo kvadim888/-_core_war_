@@ -18,6 +18,7 @@
 
 void func_live()
 {
+	s
 	ft_printf("func_live\n");
 }
 
