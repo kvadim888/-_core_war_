@@ -12,8 +12,8 @@
 
 #include "vm.h"
 #include "functions.h"
-#include <libft.h>
-#include <op.h>
+//#include <libft.h>
+#include "op.h"
 #include <stdio.h>
 
 int 	get_flag(char *str)
@@ -72,6 +72,7 @@ void	read_params(int ac, char **av)
 		}
 	}
 	amount = ft_lstlen(g_game.players);
+	g_id = amount;
 	error(amount < 1 || amount > MAX_PLAYERS, ERR_PLAYERS_AMOUNT);
 }
 
@@ -112,7 +113,9 @@ void	exec_function(t_list *lst)
 	{
 		carriage->op = g_game.field[carriage->pos];
 		if (carriage->op > 0 && carriage->op <= 16)
+		{
 			carriage->rest = g_op[carriage->op - 1].period - 1;
+		}
 		else
 		{
 			carriage->op = 0;
@@ -124,14 +127,17 @@ void	exec_function(t_list *lst)
 	operation = (carriage->op > 0) ? &g_op[carriage->op - 1] : NULL;
 	if (operation)
 	{
-		tmp.arg_types[0] = (((uint8_t)carriage->pos >> 6) & 0b11);
-		tmp.arg_types[1] = (((uint8_t)carriage->pos >> 4) & 0b11);
-		tmp.arg_types[2] = (((uint8_t)carriage->pos >> 2) & 0b11);
+		//printf("pos = %i\n", carriage->id);
+		tmp.arg_types[0] = (((uint8_t)g_game.field[carriage->pos] >> 6) & 0b11);
+		tmp.arg_types[1] = (((uint8_t)g_game.field[carriage->pos] >> 4) & 0b11);
+		tmp.arg_types[2] = (((uint8_t)g_game.field[carriage->pos] >> 2) & 0b11);
+		printf("type = %i\n", tmp.arg_types[0]);
 
 		// todo function arg_types parsing & validation
 		// todo function args parsing & validation
+		carriage->pos = read_values(&g_game, carriage, carriage->pos);
 		operation->function(&g_game, carriage);
-		carriage->pos++;// todo length estimation
+		carriage->pos += 7; // todo length estimation
 	}
 	else
 		carriage->pos++;

@@ -32,6 +32,7 @@ typedef struct s_carriage	t_carriage;
 
 uint8_t		g_flag;
 t_game		g_game;
+int32_t		g_id;
 
 struct	s_game
 {
@@ -45,6 +46,7 @@ struct	s_game
 	int			check_amount;
 	int			nbr_live;
 	int			dump_period;
+	int			pamount;
 };
 
 struct	s_champion
@@ -59,11 +61,13 @@ struct	s_champion
 struct	s_carriage
 {
 	uint16_t	id;
-	uint8_t		pos;
+	uint16_t	pos;
 	uint16_t	op;
 	uint16_t	live;
 	uint32_t	rest;
 	uint8_t		carry;
+	char		param_types[3];
+	uint32_t	param_values[3];
 	uint32_t	reg[REG_NUMBER];
 	// todo complete structure
 };
@@ -76,7 +80,9 @@ struct	s_operation
 	uint16_t	argc;
 	uint16_t	arg_types[3];
 	uint32_t	period;
+	short		cycle_value;
 	void		(*function)();
+	int			(*check)(char *c, t_carriage  *pr);
 	uint16_t	length;
 };
 
@@ -143,7 +149,9 @@ enum	e_function
 
 void			error(int trigger, char *msg);
 int				is_number(char *str);
-
+char    		*hex_to_bin(unsigned char b, unsigned char m);
+int				hex_to_dec(unsigned char *buf, int i);
+int   			read_values(t_game *game, t_carriage  *pr, int p);
 void			log_field(int width);
 void			log_champion(t_list *lst);
 
