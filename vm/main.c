@@ -27,6 +27,45 @@ int 	get_flag(char *str)
 	return (UNKNOWN);
 }
 
+void swap(t_list *a, t_list *b) 
+{
+	t_champion	*champ;
+
+	champ = a->content;
+	a->content = b->content;
+    b->content = champ; 
+} 
+
+void sort_chmps() 
+{
+    int		swapped;
+	t_champion *cht;
+	t_champion *ncht;
+	t_list	*tmp;
+	t_list	*ltmp;
+
+	ltmp = NULL;
+	swapped = 1;
+	while (swapped)
+	{
+        swapped = 0; 
+        tmp = g_game.players;
+        while (tmp->next != ltmp) 
+        {
+			cht = tmp->content;
+			ncht = tmp->next->content;
+            if (cht->number > ncht->number) 
+            {  
+                swap(tmp, tmp->next); 
+                swapped = 1; 
+            } 
+            tmp = tmp->next; 
+        } 
+        ltmp = tmp; 
+    }
+} 
+
+
 void	read_params(int ac, char **av)
 {
 	int			i;
@@ -66,6 +105,7 @@ void	read_params(int ac, char **av)
 		else
 		{
 			champion.number = champion_number;
+			printf("champion.number = %i\n", champion.number);
 			error(new_champion(av[i], &champion), ERR_INIT_PLAYER);
 			ft_lstappend(&g_game.players, ft_lstnew(&champion, sizeof(t_champion)));
 			champion_number = 0;
@@ -73,6 +113,7 @@ void	read_params(int ac, char **av)
 	}
 	amount = ft_lstlen(g_game.players);
 	g_id = amount;
+	sort_chmps();
 	error(amount < 1 || amount > MAX_PLAYERS, ERR_PLAYERS_AMOUNT);
 }
 
