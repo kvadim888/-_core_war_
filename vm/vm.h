@@ -47,6 +47,7 @@ struct	s_game
 	int			nbr_live;
 	int			dump_period;
 	int			pamount;
+	int			ch_count;
 };
 
 struct	s_champion

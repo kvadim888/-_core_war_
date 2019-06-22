@@ -68,6 +68,13 @@ int				new_champion(char *path, t_champion *champion)
 	size = read(fd, champion->code, champion->header->prog_size);
 	error(size < champion->header->prog_size, ERR_INVALID_BINARY);
 	error(read(fd, NULL, 1) != 0, ERR_INVALID_BINARY);
+	/*int i = -1;
+	printf("ch prog_size: %i\n", champion->header->prog_size);
+	while (++i < champion->header->prog_size){
+		ft_printf("%.2x ",champion->code[i]);
+	}
+	printf("\n");
+//	printf("\n ch code: %s\n", champion->code);*/
 	close(fd);
 	return (0); // return 0 if reading is complete
 }

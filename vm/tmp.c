@@ -27,61 +27,28 @@ int 	get_flag(char *str)
 	return (UNKNOWN);
 }
 
-void swap(t_list *a, t_list *b) 
-{
-	t_champion	*champ;
 
-	champ = a->content;
-	a->content = b->content;
-    b->content = champ; 
-} 
 
-void sort_chmps(int	swapped) 
-{
-	t_champion *cht;
-	t_champion *ncht;
-	t_list	*tmp;
-	t_list	*ltmp;
 
-	ltmp = NULL;
-	//swapped = 1;
-	while (swapped)
-	{
-        swapped = 0; 
-        tmp = g_game.players;
-        while (tmp->next != ltmp) 
+
+
+
+
+
+
+
+
+
+int     process_file(char **av, int i)
+{ 
+    int f;
+    t_champion ch;
+    f = 0;
+
+    ch.number = ++g_game->ch_count;
+    if (ft_strequ("-n", av[i])){
+        if (av[++i] && ft_atoi(av[i]) > 0)
         {
-			cht = tmp->content;
-			ncht = tmp->next->content;
-			error(cht->number < 1 || cht->number > g_game.ch_count, ERR_INVALID_CH_NUMBER);
-            if (cht->number > ncht->number) 
-            {
-                swap(tmp, tmp->next); 
-                swapped = 1; 
-            }
-            tmp = tmp->next; 
-        }
-		error(ncht->number < 1 || ncht->number > g_game.ch_count, ERR_INVALID_CH_NUMBER);
-        ltmp = tmp;
-    }
-} 
-
-
-void	read_params(int ac, char **av)
-{
-	int			i;
-	t_champion	champion;
-	int			amount;
-	int			flag;
-	int			champion_number;
-
-	champion_number = g_game.ch_count + 1;
-	i = 0;
-	while (++i < ac)
-	{
-		ft_bzero(&champion, sizeof(t_champion)); // clear fields
-		if (*av[i] == '-') // if arg is flag
-		{
 			flag = get_flag(av[i]);
 			if (flag == UNKNOWN)
 			{
@@ -93,28 +60,134 @@ void	read_params(int ac, char **av)
 			if (flag == DUMP)
 			{
 				error(!is_number(av[++i]), ERR_D_NOT_DIGIT);
-				g_game.dump_period = ft_atoi(av[i]);
+				g_game.dump_period = ft_atoi(av[i++]);
 				error(g_game.dump_period < 0, ERR_INVALID_DUMP);
 			}
 			if (flag == CHAMPION_NUMBER)
 			{
 				error(!is_number(av[++i]), ERR_N_NOT_DIGIT);
-				champion_number = ft_atoi(av[i]);
-			}
+				champion_number = ft_atoi(av[i++]);
+				error(champion_number < 1 || champion_number > 4, ERR_INVALID_CH_NUMBER);
+				ch.number = champion_number;
+			} 
+         //   printf("n = %i\n", ch.number);     
+    } 
+    if (check_file_format(av[i], &ch)){
+        open_read_file(core, &ch);
+        core->chmps[core->ch_number] = ch;
+        i++;
+    }   else {
+         printf("Wrong file format");
+    }
+    return i;
+}
+
+int    sort_chmps(t_core *core)
+{
+    t_champion  tch;
+    int i;
+    int j;
+
+  //  printf("core->ch_number %i\n",core->ch_number);
+    i = -1;
+    while (++i < core->ch_number)
+    {
+        //printf("ch name %s\n",core->chmps[i].name);
+      //  printf("ch number %i\n",core->chmps[i].number);
+            j = -1;
+        while (++j < core->ch_number)
+        {
+			
+            if (core->chmps[i].number < 1 || core->chmps[i].number > core->ch_number)
+            {
+                printf("wrong champion number\n");
+                return (0);
+            }
+            if (core->chmps[j].number > core->chmps[i].number)               
+			{
+				tch = core->chmps[i];
+				core->chmps[i] = core->chmps[j];
+				core->chmps[j] = tch;
+			}  
+        }
+    }
+   // printf("-------------------------------\n");
+    return (1);
+}
+
+int     read_params(int ac, char **av)
+{
+    int i;
+
+    i = 1;
+    core->ch_number = 0;
+    if (ac == 1)
+    {
+        printf("Please specify cor files");
+    }
+    else {
+        while(i < ac && av[i] && core->ch_number < MAX_PLAYERS)
+        {
+           // printf("I before: %i\n", i);
+           // printf("ch_number before: %i\n", core->ch_number);
+            i = process_file(av, i, core);
+            core->ch_number++;
+           // printf("I after: %i\n", i);
+           // printf("ch_number after: %i\n", core->ch_number);
+        }
+    }
+    if (core->ch_number == MAX_PLAYERS && i < ac)
+    {
+        printf("Too much parameters\n");
+    }
+    sort_chmps(core);
+
+
+    for (int i = 0; i < 4; i++){
+        printf("ch name %s\n",core->chmps[i].name);
+    }
+    return (1);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+void	read_params(int ac, char **av)
+{
+	int			i;
+	t_champion	champion;
+	int			amount;
+	int			flag;
+	int			champion_number;
+
+	champion_number = 0;
+	i = 0;
+	while (++i < ac)
+	{
+		ft_bzero(&champion, sizeof(t_champion)); // clear fields
+		if (*av[i] == '-') // if arg is flag
+		{
+			
 		}
 		else
 		{
 			champion.number = champion_number;
-			g_game.ch_count++;
-			printf("champion.number = %i\n", champion.number);
+			printf("new champion \n");
 			error(new_champion(av[i], &champion), ERR_INIT_PLAYER);
 			ft_lstappend(&g_game.players, ft_lstnew(&champion, sizeof(t_champion)));
-			champion_number = g_game.ch_count + 1;
+			champion_number = 0;
 		}
 	}
 	amount = ft_lstlen(g_game.players);
 	g_id = amount;
-	sort_chmps(1);
 	error(amount < 1 || amount > MAX_PLAYERS, ERR_PLAYERS_AMOUNT);
 }
 
@@ -124,9 +197,6 @@ void	map_create(t_game *game)
 	t_list		*tmp;
 	t_champion	*champ;
 	t_carriage	carriage;
-	int i;
-
-	i = 0;
 
 	ft_bzero(game->field, MEM_SIZE);
 	len = ft_lstlen(game->players);
@@ -232,10 +302,10 @@ int		main(int ac, char **av)
 
 	ft_printf("Map creating\n");
 	map_create(&g_game);
-	log_field(32);
+	//log_field(32);
 
 	ft_printf("Game start\n");
-
+/*
 	// game loop
 	while (g_game.carriages && ft_lstlen(g_game.carriages))
 	{
@@ -255,6 +325,6 @@ int		main(int ac, char **av)
 	//winner output
 	error(g_game.survivor == NULL, ERR_WINNER_DISAPPEAR);
 	ft_printf("[%s<%d> has won!]\n",
-			g_game.survivor->header->prog_name, g_game.survivor->number);
+			g_game.survivor->header->prog_name, g_game.survivor->number);*/
 	return (0);
 }
