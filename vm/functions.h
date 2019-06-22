@@ -3,35 +3,24 @@
 
 #include "vm.h"
 
+void	func_live();
+void	func_ld();
+void	func_st();
+void	func_add();
+void	func_sub();
+void	func_and();
+void	func_or();
+void	func_xor();
+void	func_zjmp();
+void	func_ldi();
+void	func_sti();
+void	func_fork();
+void	func_lld();
+void	func_lldi();
+void	func_lfork();
+void	func_aff();
 
 // todo set function period
-
-void	func_aff();
-void    func_live();
-void    func_ld();
-void    func_st();
-void    func_add();
-void    func_sub();
-void    func_and();
-void    func_or();
-void    func_xor();
-void    func_zjmp();
-void    func_ldi();
-void    func_sti();
-void    func_fork();
-void    func_lld();
-void    func_lldi();
-void    func_lfork();
-
-/* Check codage */
-int     c_r_ri(char *c, t_carriage  *pr);
-int     c_di_r(char *c, t_carriage  *pr);
-int     c_r_r_r(char *c, t_carriage  *pr);
-int     c_rdi_rdi_r(char *c, t_carriage  *pr);
-int     c_rdi_rd_r(char *c, t_carriage  *pr);
-int     c_r_rdi_rd(char *c, t_carriage  *pr);
-int     c_r(char *c, t_carriage  *pr);
-
 
 t_operation	g_op[16] =
 {
@@ -41,8 +30,7 @@ t_operation	g_op[16] =
 		.argc = 1,
 		.arg_types = {T_DIR, 0, 0},
 		.function = func_live,
-		.check = NULL,
-		.cycle_value = 10
+		.period = 10
 	},
 	{
 		.name = "ld",
@@ -50,8 +38,7 @@ t_operation	g_op[16] =
 		.argc = 2,
 		.arg_types = {T_DIR | T_IND, T_REG, 0},
 		.function = func_ld,
-		.check = c_di_r,
-		.cycle_value = 5
+		.period = 5
 	},
 	{
 		.name = "st",
@@ -59,8 +46,7 @@ t_operation	g_op[16] =
 		.argc = 2,
 		.arg_types = {T_REG, T_REG | T_IND, 0},
 		.function = func_st,
-		.check = c_r_ri,
-		.cycle_value = 5
+		.period = 5
 	},
 	{
 		.name = "add",
@@ -68,8 +54,7 @@ t_operation	g_op[16] =
 		.argc = 3,
 		.arg_types = {T_REG, T_REG, T_REG},
 		.function = func_add,
-		.check = c_r_r_r,
-		.cycle_value = 10
+		.period = 10
 	},
 	{
 		.name = "sub",
@@ -77,8 +62,7 @@ t_operation	g_op[16] =
 		.argc = 3,
 		.arg_types = {T_REG, T_REG, T_REG},
 		.function = func_sub,
-		.check = c_r_r_r,
-		.cycle_value = 10
+		.period = 10
 	},
 	{
 		.name = "and",
@@ -86,8 +70,7 @@ t_operation	g_op[16] =
 		.argc = 3,
 		.arg_types = {T_REG | T_DIR | T_IND, T_REG | T_DIR | T_IND, T_REG},
 		.function = func_and,
-		.check = c_rdi_rdi_r,
-		.cycle_value = 6
+		.period = 6
 	},
 	{
 		.name = "or",
@@ -95,8 +78,7 @@ t_operation	g_op[16] =
 		.argc = 3,
 		.arg_types = {T_REG | T_DIR | T_IND, T_REG | T_DIR | T_IND, T_REG},
 		.function = func_or,
-		.check = c_rdi_rdi_r,
-		.cycle_value = 6
+		.period = 6
 	},
 	{
 		.name = "xor",
@@ -104,8 +86,7 @@ t_operation	g_op[16] =
 		.argc = 3,
 		.arg_types = {T_REG | T_DIR | T_IND, T_REG | T_DIR | T_IND, T_REG},
 		.function = func_xor,
-		.check = c_rdi_rdi_r,
-		.cycle_value = 6
+		.period = 6
 	},
 	{
 		.name = "zjmp",
@@ -113,8 +94,7 @@ t_operation	g_op[16] =
 		.argc = 1,
 		.arg_types = {T_DIR, 0, 0},
 		.function = func_zjmp,
-		.check = NULL,
-		.cycle_value = 20
+		.period = 20
 	},
 	{
 		.name = "ldi",
@@ -122,8 +102,7 @@ t_operation	g_op[16] =
 		.argc = 3,
 		.arg_types = {T_REG | T_DIR | T_IND, T_REG | T_DIR, T_REG},
 		.function = func_ldi,
-		.check = c_rdi_rd_r,
-		.cycle_value = 25
+		.period = 25
 	},
 	{
 		.name = "sti",
@@ -131,8 +110,7 @@ t_operation	g_op[16] =
 		.argc = 3,
 		.arg_types = {T_REG, T_REG | T_DIR | T_IND, T_REG | T_DIR},
 		.function = func_sti,
-		.check = c_r_rdi_rd,
-		.cycle_value = 25
+		.period = 25
 	},
 	{
 		.name = "fork",
@@ -140,8 +118,7 @@ t_operation	g_op[16] =
 		.argc = 1,
 		.arg_types = {T_DIR, 0, 0},
 		.function = func_fork,
-		.check = NULL,
-		.cycle_value = 800
+		.period = 800
 	},
 	{
 		.name = "lld",
@@ -149,8 +126,7 @@ t_operation	g_op[16] =
 		.argc = 2,
 		.arg_types = {T_DIR | T_IND, T_REG, 0},
 		.function = func_lld,
-		.check = c_di_r,
-		.cycle_value = 10
+		.period = 10
 	},
 	{
 		.name = "lldi",
@@ -158,8 +134,7 @@ t_operation	g_op[16] =
 		.argc = 3,
 		.arg_types = {T_REG | T_DIR | T_IND, T_REG | T_DIR, T_REG},
 		.function = func_lldi,
-		.check = c_rdi_rd_r,
-		.cycle_value = 50
+		.period = 50
 	},
 	{
 		.name = "lfork",
@@ -167,8 +142,7 @@ t_operation	g_op[16] =
 		.argc = 1,
 		.arg_types = {T_DIR, 0, 0},
 		.function = func_lfork,
-		.check = NULL,
-		.cycle_value = 1000
+		.period = 1000
 	},
 	{
 		.name = "aff",
@@ -176,8 +150,7 @@ t_operation	g_op[16] =
 		.argc = 1,
 		.arg_types = {T_REG, 0, 0},
 		.function = func_aff,
-		.check = c_r,
-		.cycle_value = 2
+		.period = 2
 	}
 };
 

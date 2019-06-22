@@ -12,105 +12,68 @@
 
 #include "vm.h"
 #include "functions.h"
-#include "../libft/includes/libft.h"
+//#include <libft.h>
 #include "op.h"
 #include <stdio.h>
 
-#define USAGE	"Usage:<need fill>"
-
-#define FLAG_VERBOSE	1
-
-char	g_flags = 0; // -v = verbose output
-t_game	g_game;
-
-
-int		new_champion(t_champion *ch)
+int 	get_flag(char *str)
 {
-	//todo fill champion structure
-	unsigned char	buf[REG_SIZE];
-
-	ch->header = (t_header*)ft_memalloc(sizeof(t_header));
-    error(read(ch->fd, buf, REG_SIZE) < 0, ERR_READ_BINARY); 
-    error((ch->header->magic = hex_to_dec(buf, REG_SIZE)) != COREWAR_EXEC_MAGIC, ERR_INVALID_HEADER);
-	//printf("header = %i\n", hex_to_dec(buf, REG_SIZE));
-	ft_bzero(ch->header->prog_name, PROG_NAME_LENGTH + 1);
-    error(read(ch->fd, ch->header->prog_name, PROG_NAME_LENGTH) < 0, ERR_READ_BINARY);
-//	printf("ch->header->prog_name = %s\n", ch->header->prog_name);
-	ft_bzero(buf, REG_SIZE);
-    error(read(ch->fd, buf, REG_SIZE) < 0, ERR_READ_BINARY); 
-    error((hex_to_dec(buf, REG_SIZE) != 0), "Champion file must contain null\n");
-	ft_bzero(buf, REG_SIZE);
-    error(read(ch->fd, buf, REG_SIZE) < 0, ERR_READ_BINARY); 
-    error((ch->header->prog_size = hex_to_dec(buf, REG_SIZE)) > CHAMP_MAX_SIZE, "Champion size too big\n");
-//	printf("ch->header->prog_size = %i\n", ch->header->prog_size);
-	ft_bzero(ch->header->comment, COMMENT_LENGTH + 1);
-    error(read(ch->fd, ch->header->comment, COMMENT_LENGTH) < 0, ERR_READ_BINARY);
-//	printf("ch->header->comment = %s\n", ch->header->comment);
-	ft_bzero(buf, REG_SIZE);
-    error((read(ch->fd, buf, REG_SIZE) < 0), ERR_READ_BINARY);
-    error((hex_to_dec(buf, REG_SIZE) != 0), "Champion file must contain null\n");
-	ch->code = ft_memalloc(sizeof(uint8_t) * ch->header->prog_size);
-	ft_bzero(ch->code, ch->header->prog_size);
-    error((read(ch->fd, ch->code, ch->header->prog_size) < 0), ERR_READ_BINARY);
-	return (0);
+	if (ft_strequ(str, "-v") || ft_strequ(str, "--verbose"))
+		return (VERBOSE);
+	if (ft_strequ(str, "-d") || ft_strequ(str, "--dump"))
+		return (DUMP);
+	if (ft_strequ(str, "-n"))
+		return (CHAMPION_NUMBER);
+	return (UNKNOWN);
 }
 
-int		get_file(char *path)
-{
-	char		*localname;
-	char		*extension;
-	int			fd;
-	uint32_t	header;
-
-	localname = ft_strrchr(path, '/');
-	localname == NULL ? path : localname++;
-	extension = ft_strrchr(path, '.');
-	error(!(*extension), "File extension is not specified");
-	error((extension <= localname), "Invalid filename");
-	extension = ft_strdup(extension);
-	error(ft_strcmp(extension, BINARY_EXTENSION), "Invalid file extension");
-	error((fd = open(path, O_RDONLY)) == -1, ERR_OPEN_BINARY);
-
-	//error(read(fd, &header, sizeof(header)) < 0, ERR_READ_BINARY);
-	//printf("header = %u\n", header);
-	//printf("header = %u\n", COREWAR_EXEC_MAGIC);
-//	error(header != COREWAR_EXEC_MAGIC, ERR_INVALID_HEADER);
-	return (fd);
-}
-
-void	read_params(int ac, char **av, t_game *game)
+void	read_params(int ac, char **av)
 {
 	int			i;
-	t_list		*players;
 	t_champion	champion;
-	int		amount;
+	int			amount;
+	int			flag;
+	int			champion_number;
 
-	players = NULL;
+	champion_number = 0;
 	i = 0;
 	while (++i < ac)
 	{
-		if (ft_strequ(av[i], "-v") || ft_strequ(av[i], "--verbose"))
+		ft_bzero(&champion, sizeof(t_champion)); // clear fields
+		if (*av[i] == '-') // if arg is flag
 		{
-			g_flags |= FLAG_VERBOSE;
-			ft_printf("verbose enabled\n");
-			//todo: verbose output
-		}
-		else if (ft_strequ(av[i], "-n"))
-		{
-			ft_bzero(&champion, sizeof(t_champion)); // clear fields
-			error(!is_number(av[++i]), "Error: after -n must be digit");
-			champion.number = ft_atoi(av[i]);
-			error(champion.number > 4 || champion.number < 1, "Invalid champion number");
-			champion.fd = get_file(av[++i]);
-			error(new_champion(&champion), ERR_INVALID_BINARY);
-			ft_lstadd(&players, ft_lstnew(&champion, sizeof(t_champion)));
+			flag = get_flag(av[i]);
+			if (flag == UNKNOWN)
+			{
+				ft_printf("%s\n", USAGE);
+				exit(1);
+			}
+			if (flag == VERBOSE)
+				g_flag |= 1 << VERBOSE;
+			if (flag == DUMP)
+			{
+				error(!is_number(av[++i]), ERR_D_NOT_DIGIT);
+				g_game.dump_period = ft_atoi(av[i]);
+				error(g_game.dump_period < 0, ERR_INVALID_DUMP);
+			}
+			if (flag == CHAMPION_NUMBER)
+			{
+				error(!is_number(av[++i]), ERR_N_NOT_DIGIT);
+				champion_number = ft_atoi(av[i]);
+				error(champion_number < 1 || champion_number > 4, ERR_INVALID_CH_NUMBER);
+			}
 		}
 		else
-			error(1, "Invalid parameters\n");
+		{
+			champion.number = champion_number;
+			error(new_champion(av[i], &champion), ERR_INIT_PLAYER);
+			ft_lstappend(&g_game.players, ft_lstnew(&champion, sizeof(t_champion)));
+			champion_number = 0;
+		}
 	}
-	amount = ft_lstlen(players);
+	amount = ft_lstlen(g_game.players);
+	g_id = amount;
 	error(amount < 1 || amount > MAX_PLAYERS, ERR_PLAYERS_AMOUNT);
-	game->players = players;
 }
 
 void	map_create(t_game *game)
@@ -122,7 +85,7 @@ void	map_create(t_game *game)
 
 	ft_bzero(game->field, MEM_SIZE);
 	len = ft_lstlen(game->players);
-	carriage = (t_carriage){.carry = 0, .op = 0, .live = 0, .rest = 0, .param_types = {0, 0, 0}};
+	carriage = (t_carriage){.carry = 0, .op = 0, .live = 0, .rest = 0};
 	tmp = game->players;
 	while (tmp)
 	{
@@ -140,15 +103,19 @@ void	exec_function(t_list *lst)
 {
 	t_carriage	*carriage;
 	t_operation	*operation;
+	t_operation	tmp;
 
 	carriage = lst->content;
+
 	if (carriage->rest > 0)
 		carriage->rest--;
 	else
 	{
 		carriage->op = g_game.field[carriage->pos];
 		if (carriage->op > 0 && carriage->op <= 16)
+		{
 			carriage->rest = g_op[carriage->op - 1].period - 1;
+		}
 		else
 		{
 			carriage->op = 0;
@@ -159,13 +126,18 @@ void	exec_function(t_list *lst)
 		return ;
 	operation = (carriage->op > 0) ? &g_op[carriage->op - 1] : NULL;
 	if (operation)
-	{	
-		if (operation->check(hex_to_bin(g_game.field[++carriage->pos], 1), carriage)){
-			printf("Codage checked\n");
-			carriage->pos = read_values(&g_game, carriage, carriage->pos);
-		}
+	{
+		//printf("pos = %i\n", carriage->id);
+		tmp.arg_types[0] = (((uint8_t)g_game.field[carriage->pos] >> 6) & 0b11);
+		tmp.arg_types[1] = (((uint8_t)g_game.field[carriage->pos] >> 4) & 0b11);
+		tmp.arg_types[2] = (((uint8_t)g_game.field[carriage->pos] >> 2) & 0b11);
+		printf("type = %i\n", tmp.arg_types[0]);
+
+		// todo function arg_types parsing & validation
+		// todo function args parsing & validation
+		carriage->pos = read_values(&g_game, carriage, carriage->pos);
 		operation->function(&g_game, carriage);
-		carriage->pos += operation->length; // todo length estimation
+		carriage->pos += 7; // todo length estimation
 	}
 	else
 		carriage->pos++;
@@ -173,57 +145,70 @@ void	exec_function(t_list *lst)
 
 t_list	*carriage_filter(t_list *lst)
 {
-	t_list		*tmp;
+	t_list		head;
+	t_list		*prev;
 	t_carriage	*carriage;
 
-	carriage = lst->content;
-	while (carriage->live == 0)
+	head.next = lst;
+	prev = &head;
+	while (lst)
 	{
-		tmp = lst;
-		lst = lst->next;
-		ft_lstdelone(&tmp, ft_lstrm);
+		carriage = lst->content;
+		if (carriage->live == 0)
+		{
+			prev->next = lst->next;
+			ft_lstdelone(&lst, ft_lstrm);
+			lst = prev->next;
+		}
+		else
+		{
+			prev = lst;
+			lst = lst->next;
+		}
 	}
-	return (lst);
+	return (head.next);
 }
 
 int		main(int ac, char **av)
 {
-
-	g_game = (t_game){.players = NULL, .survivor = NULL, .check_counter = 0,
-				   .check_period = 0, .check_amount = 0, .carriages = NULL,
-				   .cycle_counter = 0, .nbr_live = 0};
 	if (ac < 2)
 	{
 		ft_printf("%s\n", USAGE);
 		return (1);
 	}
-	ft_printf("Introducing\n");
-	ft_lstiter(g_game.players, log_champ);
-	read_params(ac, av, &g_game);
-	ft_printf("map creating\n");
-	map_create(&g_game);
+	g_game = (t_game){.players = NULL, .survivor = NULL, .check_counter = 0,
+			.check_period = CYCLE_TO_DIE, .check_amount = 0, .carriages = NULL,
+			.cycle_counter = 0, .nbr_live = 0};
 
-	ft_printf("game start\n");
+	read_params(ac, av);
+
+	ft_printf("Introducing\n");
+	ft_lstiter(g_game.players, log_champion);
+
+	ft_printf("Map creating\n");
+	map_create(&g_game);
+	log_field(32);
+
+	ft_printf("Game start\n");
 
 	// game loop
-	while (ft_lstlen(g_game.carriages))
+	while (g_game.carriages && ft_lstlen(g_game.carriages))
 	{
 		g_game.cycle_counter++;
 		g_game.check_counter++;
 		ft_lstiter(g_game.carriages, exec_function);
-		if (g_game.check_counter == g_game.check_period)
+		if (g_game.check_counter >= g_game.check_period)
 		{
-			g_game.check_amount++;
-			ft_lstmap(g_game.carriages, carriage_filter);
-			if (g_game.check_amount == MAX_CHECKS
-				|| g_game.nbr_live >= NBR_LIVE)
-			{
-				g_game.check_period -= CYCLE_DELTA;
-			}
 			g_game.check_counter = 0;
+			g_game.check_amount++;
+			g_game.carriages = carriage_filter(g_game.carriages);
+			if (g_game.check_amount == MAX_CHECKS || g_game.nbr_live >= NBR_LIVE)
+				g_game.check_period -= (g_game.check_period > 0) ? CYCLE_DELTA : 0;
 		}
 	}
-	error(g_game.survivor==NULL, "Winner is disappear");
+
+	//winner output
+	error(g_game.survivor == NULL, ERR_WINNER_DISAPPEAR);
 	ft_printf("[%s<%d> has won!]\n",
 			g_game.survivor->header->prog_name, g_game.survivor->number);
 	return (0);

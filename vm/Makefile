@@ -2,7 +2,7 @@ NAME = funct_test_v
 
 FLAGS = -Wall -Werror -Wextra
 
-VM =  main.c utilities.c logger.c functions.c alert.c codage.c param_values.c
+VM =  main.c utilities.c logger.c functions.c alert.c codage.c param_values.c init_champion.c
 
 INCLUDES = ../includes/functions.h ../includes/op.h ../includes/vm.h
 
