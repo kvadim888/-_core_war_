@@ -42,9 +42,10 @@ void sort_chmps(int	swapped)
 	t_champion *ncht;
 	t_list	*tmp;
 	t_list	*ltmp;
-
 	ltmp = NULL;
-	//swapped = 1;
+	ncht = NULL;
+
+		//swapped = 1;
 	while (swapped)
 	{
         swapped = 0; 
@@ -61,7 +62,7 @@ void sort_chmps(int	swapped)
             }
             tmp = tmp->next; 
         }
-		error(ncht->number < 1 || ncht->number > g_game.ch_count, ERR_INVALID_CH_NUMBER);
+		error(ncht != NULL && (ncht->number < 1 || ncht->number > g_game.ch_count), ERR_INVALID_CH_NUMBER);
         ltmp = tmp;
     }
 } 
@@ -102,7 +103,7 @@ void	read_params(int ac, char **av)
 				champion_number = ft_atoi(av[i]);
 			}
 		}
-		else
+		else if (i < ac)
 		{
 			champion.number = champion_number;
 			g_game.ch_count++;
@@ -182,7 +183,7 @@ void	exec_function(t_list *lst)
 		// todo function args parsing & validation
 		carriage->pos = read_values(&g_game, carriage, carriage->pos);
 		operation->function(&g_game, carriage);
-		carriage->pos += 7; // todo length estimation
+		carriage->pos = (carriage->pos + 7) % MEM_SIZE; // todo length estimation
 	}
 	else
 		carriage->pos++;
