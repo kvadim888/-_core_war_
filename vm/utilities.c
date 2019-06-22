@@ -31,9 +31,8 @@ char    *hex_to_bin(unsigned char b, unsigned char m)
 	i = -1;
 	bits = ft_memalloc(sizeof(char) * 9);
 	ft_bzero(bits, 9);
-	while (++i < 8){
+	while (++i < 8)
 		bits[8 - i - 1] = ((b & (m << i)) != 0) ? '1' : '0';
-	}
 	return bits;
 }
 

@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+	/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
@@ -10,10 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "vm.h"
-#include "functions.h"
-//#include <libft.h>
-#include "op.h"
+#include <vm.h>
+#include <op.h>
+
+#include <functions.h>
+#include <libft.h>
+
 #include <stdio.h>
 
 int 	get_flag(char *str)
@@ -104,6 +106,7 @@ void	exec_function(t_list *lst)
 	t_carriage	*carriage;
 	t_operation	*operation;
 	t_operation	tmp;
+	t_argtype	arg_types;
 
 	carriage = lst->content;
 
@@ -128,11 +131,13 @@ void	exec_function(t_list *lst)
 	if (operation)
 	{
 		//printf("pos = %i\n", carriage->id);
-		tmp.arg_types[0] = (((uint8_t)g_game.field[carriage->pos] >> 6) & 0b11);
-		tmp.arg_types[1] = (((uint8_t)g_game.field[carriage->pos] >> 4) & 0b11);
-		tmp.arg_types[2] = (((uint8_t)g_game.field[carriage->pos] >> 2) & 0b11);
-		printf("type = %i\n", tmp.arg_types[0]);
 
+		arg_types.cell = g_game.field[carriage->pos];
+		tmp.arg_types[0] = arg_types.arg1;
+		tmp.arg_types[1] = arg_types.arg2;
+		tmp.arg_types[2] = arg_types.arg3;
+
+		printf("type = %i\n", tmp.arg_types[0]);
 		// todo function arg_types parsing & validation
 		// todo function args parsing & validation
 		carriage->pos = read_values(&g_game, carriage, carriage->pos);

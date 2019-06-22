@@ -1,20 +1,15 @@
 #include "vm.h"
 
-int get_val_size(int op_code, char t){
+int get_val_size(int op_code, char t)
+{
     if (t == 'r')
-    {
         return 1;
-    } else if (t == 'd' && ((op_code > 8 &&
-    op_code < 13) || (op_code > 13 && op_code < 16)))
-    {
+    else if (t == 'd' && ((op_code > 8 && op_code < 13) || (op_code > 13 && op_code < 16)))
         return 2;
-    } else if (t == 'd')
-    {
+    else if (t == 'd')
         return 4;
-    } else if (t == 'i')
-    {
+    else if (t == 'i')
         return 2;
-    }
     return -1;
 }
 
