@@ -32,11 +32,13 @@ typedef struct s_carriage	t_carriage;
 
 uint8_t		g_flag;
 t_game		g_game;
+uint32_t	g_id;
 
 struct	s_game
 {
 	t_champion	*survivor;
 	t_list		*players; // t_champion
+	size_t		players_amount;
 	t_list		*carriages; // t_champion
 	uint8_t		field[MEM_SIZE];
 	int			check_counter;
@@ -64,7 +66,10 @@ struct	s_carriage
 	uint16_t	live;
 	uint32_t	rest;
 	uint8_t		carry;
+	uint32_t 	param_values[3];
+	uint32_t 	param_types[3];
 	uint32_t	reg[REG_NUMBER];
+	t_operation *operation;
 	// todo complete structure
 };
 
@@ -74,11 +79,35 @@ struct	s_operation
 	char 		*name;
 	uint8_t		code;
 	uint16_t	argc;
+	uint16_t	argv[3];
 	uint16_t	arg_types[3];
 	uint32_t	period;
 	void		(*function)();
 	uint16_t	length;
 };
+
+
+# pragma pack(push, 1)
+
+typedef union	u_agrtype
+{
+	uint8_t		cell;
+	struct
+	{
+		uint8_t	arg1:2;
+		uint8_t	arg2:2;
+		uint8_t	arg3:2;
+		uint8_t	dump:2;
+	};
+}				t_argtype;
+
+typedef union	u_value
+{
+	uint32_t	word;
+	uint8_t		byte[REG_SIZE];
+}				t_value;
+
+# pragma pack(pop)
 
 /*
 ** Error messages
@@ -132,22 +161,15 @@ enum	e_function
 	AFF
 }		t_function;
 
-//typedef struct	s_operation
-//{
-//	void		(*function)(void);
-//	int			(*check)(char *c1, char *c2); // check
-//	short		cycle_value;
-//	char*		label;
-//	int8_t		dir_number; // label size
-//}				t_operation;
-
 void			error(int trigger, char *msg);
 int				is_number(char *str);
+
+void			set_value(int32_t addr, uint32_t value);
+uint32_t		get_value(uint32_t addr);
 
 void			log_field(int width);
 void			log_champion(t_list *lst);
 
 int				new_champion(char *path, t_champion *champion);
-
 
 #endif //VM_H

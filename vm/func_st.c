@@ -12,7 +12,7 @@
 
 #include <functions.h>
 
-void func_st(t_game *game, t_carriage	*carriage)
+void func_st(t_carriage *carriage)
 {
 	int	a1;
 	int a2;
@@ -29,7 +29,7 @@ void func_st(t_game *game, t_carriage	*carriage)
 	ft_printf("func_st\n");
 }
 
-void func_sti(t_game *game, t_carriage	*carriage)
+void func_sti(t_carriage *carriage)
 {
 	ft_printf("func_sti\n");
 	int a1;
@@ -38,6 +38,6 @@ void func_sti(t_game *game, t_carriage	*carriage)
 
 	a1 = carriage->param_values[0];
 	if (check_reg(a1, a1, a1) && check_param(carriage, 1, &a2) && check_param(carriage, 2, &a3))
-		setvalue((((a2 + a3) + MEM_SIZE) % MEM_SIZE), carriage->reg[a1 - 1]);
+		set_value((((a2 + a3) + MEM_SIZE) % MEM_SIZE), carriage->reg[a1 - 1]);
 }
 

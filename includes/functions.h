@@ -3,25 +3,28 @@
 
 #include <vm.h>
 
-void	func_live();
-void	func_ld();
-void	func_st();
-void	func_add();
-void	func_sub();
-void	func_and();
-void	func_or();
-void	func_xor();
-void	func_zjmp();
-void	func_ldi();
-void	func_sti();
-void	func_fork();
-void	func_lld();
-void	func_lldi();
-void	func_lfork();
-void	func_aff();
+void	func_live(t_carriage *carriage);
+void	func_zjmp(t_carriage *carriage);
+void	func_aff(t_carriage *carriage);
 
-// todo set function period
+void	func_ld(t_carriage *carriage);
+void	func_lld(t_carriage *carriage);
+void	func_ldi(t_carriage *carriage);
+void	func_lldi(t_carriage *carriage);
 
+void	func_st(t_carriage *carriage);
+void	func_sti(t_carriage *carriage);
+
+void	func_add(t_carriage *carriage);
+void	func_sub(t_carriage *carriage);
+void	func_and(t_carriage *carriage);
+void	func_or(t_carriage *carriage);
+void	func_xor(t_carriage *carriage);
+
+void	func_fork(t_carriage *carriage);
+void	func_lfork(t_carriage *carriage);
+
+//todo function period
 t_operation	g_op[16] =
 {
 	{
