@@ -14,56 +14,61 @@
 
 void func_add(t_carriage *carriage)
 {
-	ft_printf("func_add\n");
-	int	a1;
-	int a2;
-	int a3;
+	t_operation *operation;
+	int32_t		arg_1;
+	int32_t		arg_2;
+	int32_t		arg_3;
 
-	a1 = (int32_t)carriage->param_values[0] - 1;
-	a2 = (int32_t)carriage->param_values[1] - 1;
-	a3 = (int32_t)carriage->param_values[2] - 1;
-	if (a1 < 0 || a2 < 0 || a3 < 0 ||
-		a1 > REG_NUMBER || a2 > REG_NUMBER || a3 > REG_NUMBER)
-	{
-		carriage->reg[a3] = carriage->reg[a1] + carriage->reg[a2];
-		carriage->carry = (carriage->reg[a3]) ? 0 : 1;
-	}
+	operation = carriage->operation;
+	if (check_arg(operation->argt[0], operation->argv[0]) != T_REG
+		|| check_arg(operation->argt[1], operation->argv[1]) != T_REG
+		|| check_arg(operation->argt[2], operation->argv[2]) != T_REG)
+		return ;
+	arg_1 = operation->argv[0] - 1;
+	arg_2 = operation->argv[1] - 1;
+	arg_3 = operation->argv[2] - 1;
+	carriage->reg[arg_3] = carriage->reg[arg_1] + carriage->reg[arg_2];
+	carriage->carry = (carriage->reg[arg_3]) ? 0 : 1;
+	ft_printf("func_add\n");
 }
 
 void func_sub(t_carriage *carriage)
 {
-	ft_printf("func_sub\n");
-	int	a1;
-	int a2;
-	int a3;
+	t_operation *operation;
+	int32_t		arg_1;
+	int32_t		arg_2;
+	int32_t		arg_3;
 
-	a1 = (int32_t)carriage->param_values[0] - 1;
-	a2 = (int32_t)carriage->param_values[1] - 1;
-	a3 = (int32_t)carriage->param_values[2] - 1;
-	if (a1 < 0 || a2 < 0 || a3 < 0 ||
-		a1 > REG_NUMBER || a2 > REG_NUMBER || a3 > REG_NUMBER)
-	{
-		carriage->reg[a3] = carriage->reg[a1] - carriage->reg[a2];
-		carriage->carry = (carriage->reg[a3]) ? 0 : 1;
-	}
+	operation = carriage->operation;
+	if (check_arg(operation->argt[0], operation->argv[0]) != T_REG
+		|| check_arg(operation->argt[1], operation->argv[1]) != T_REG
+		|| check_arg(operation->argt[2], operation->argv[2]) != T_REG)
+		return ;
+	arg_1 = operation->argv[0] - 1;
+	arg_2 = operation->argv[1] - 1;
+	arg_3 = operation->argv[2] - 1;
+	carriage->reg[arg_3] = carriage->reg[arg_1] - carriage->reg[arg_2];
+	carriage->carry = (carriage->reg[arg_3]) ? 0 : 1;
+	ft_printf("func_sub\n");
 }
 
 void func_and(t_carriage *carriage)
 {
-	ft_printf("func_and...");
+	t_operation *operation;
 	int a1;
 	int a2;
 	int a3;
 
+	operation = carriage->operation;
 	a3 = carriage->param_values[2] - 1;
-	if ((a3 < 0 || a3 > REG_NUMBER)
+	if (check_arg(operation->argt[0], operation->argv[0]) != T_REG
 		&& check_param(carriage, 0, &a1)
 		&& check_param(carriage, 1, &a2))
 	{
 		carriage->reg[a3] = a1 & a2;
 		carriage->carry = (carriage->reg[a3 - 1]) ? 0 : 1;
 	}
-	ft_printf("complete\n");
+	ft_printf("func_and\n");
 }
 
 void func_or(t_carriage *carriage)

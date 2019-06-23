@@ -54,21 +54,25 @@ static int		get_file(char *path)
 	return (fd);
 }
 
-int				new_champion(char *path, t_champion *champion)
+t_champion		*new_champion(char *path, int number)
 {
-	int		size;
-	int		fd;
+	t_champion	*champion;
+	int			size;
+	int			fd;
+	int			j;
 
-	if (champion == NULL)
-		return (1);
+	champion = ft_memalloc(sizeof(t_champion));
+	ft_bzero(champion, sizeof(t_champion));
+	error(champion == NULL, ERR_INIT_PLAYER);
 	fd = get_file(path);
 	champion->header = get_header(fd);
+	champion->number = number;
 	champion->code = ft_memalloc(champion->header->prog_size * sizeof(uint8_t));
 	ft_bzero(champion->code, champion->header->prog_size);
 	size = read(fd, champion->code, champion->header->prog_size);
 	error(size < champion->header->prog_size, ERR_INVALID_BINARY);
 	error(read(fd, NULL, 1) != 0, ERR_INVALID_BINARY);
 	close(fd);
-	return (0); // return 0 if reading is complete
+	return (champion);
 }
 

@@ -17,25 +17,20 @@
 int		check_arg(uint32_t type, uint32_t arg)
 {
 	if (type == T_REG)
-		return (arg < 1 || arg > REG_NUMBER);
-	return (type == T_IND || type == T_DIR);
+		return (arg < 1 || arg > REG_NUMBER) ? T_REG : 0;
+	if (type == T_IND)
+		return (T_IND);
+	if (type == T_DIR)
+		return (T_DIR);
+	return (0);
 }
 
-uint32_t get_arg(uint32_t type, uint32_t arg)
+uint32_t get_arg(t_carriage *cr, uint32_t type, uint32_t arg)
 {
 	if (type == T_REG)
-
-		return (arg < 1 || arg > REG_NUMBER);
-	return (type == T_IND || type == T_DIR);
+		return (cr->reg[arg - 1]);
+	if (type == T_IND)
+		return (get_value(((cr->pos + (arg) % IDX_MOD) + MEM_SIZE) % MEM_SIZE));
+	if (type == T_DIR)
+		return (arg);
 }
-
-//		return (0);
-////		*a = carriage->reg[carriage->param_values[i] - 1];
-//		return (0);
-////		*a = getvalue(((carriage->pos + (carriage->param_values[i]) % IDX_MOD) + MEM_SIZE) % MEM_SIZE);
-//	if (carriage->param_types[i] == T_DIR)
-//		return (0);
-////		*a = carriage->param_values[i];
-//	return (1);
-//}
-

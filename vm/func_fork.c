@@ -24,7 +24,7 @@ void func_fork(t_carriage	*carriage)
 	ft_printf("func_fork\n");
 }
 
-void func_lfork(t_game *game, t_carriage *carriage)
+void func_lfork(t_carriage *carriage)
 {
 	t_carriage *new;
 
