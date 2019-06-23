@@ -101,11 +101,19 @@ struct	s_operation
 # define ERR_READ_BINARY		"Binary file cannot be read"
 # define ERR_INVALID_BINARY		"Invalid binary file"
 # define ERR_INVALID_HEADER		"Invalid magic header"
+
+/*nastia*/
 # define ERR_INVALID_CH_NUMBER	"Invalid champion_number value"
 # define ERR_N_NOT_DIGIT		"The argument after -n must be a digit"
 # define ERR_D_NOT_DIGIT		"The argument after -d (--dump) must be a digit"
 # define ERR_INVALID_DUMP		"Invalid dump value"
 # define ERR_WINNER_DISAPPEAR	"Winner is disappear"
+# define ERR_NO_NULL			"No null 4 bytes"
+# define ERR_INVALID_SIZE		"Invalid prog_size"
+# define ERR_NO_FILE_EXTENSION 	"File extension is not specified"
+# define ERR_INVALID_FILE_NAME	"Invalid filename"	
+# define ERR_INVALID_FILE_EXT	"Invalid file extension"	
+
 
 /*
 ** flags

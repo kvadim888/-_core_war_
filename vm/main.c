@@ -45,7 +45,7 @@ void sort_chmps(int	swapped)
 	ltmp = NULL;
 	ncht = NULL;
 
-		//swapped = 1;
+	//swapped = 1;
 	while (swapped)
 	{
         swapped = 0; 
@@ -65,6 +65,14 @@ void sort_chmps(int	swapped)
 		error(ncht != NULL && (ncht->number < 1 || ncht->number > g_game.ch_count), ERR_INVALID_CH_NUMBER);
         ltmp = tmp;
     }
+	tmp = g_game.players;
+	while (tmp)
+	{
+		cht = tmp->content;
+		cht->number = ++swapped;
+		tmp = tmp->next;
+
+	}
 } 
 
 
@@ -145,6 +153,40 @@ void	map_create(t_game *game)
 	}
 }
 
+int		steps_estimation(t_operation	operation, int op_code)
+{
+	int s;
+	int i;
+	int tl;
+
+	s = 1;
+	if (op_code != 1 && op_code != 9 && op_code != 12 & op_code != 15)
+		s += 1;
+	i = -1;
+//	printf("operation.code = %i\n", op_code);
+	while (++i < 3)
+	{
+		tl = 1;
+	//	printf("type %i = %i\n", i, operation.arg_types[i]);
+		if (operation.arg_types[i] == T_DIR)
+		{	
+			if (op_code < 8 || op_code == 13 || op_code == 16)
+			{
+				tl = 4;
+			} else
+				tl = 2;
+		} else if (operation.arg_types[i] == T_IND)
+		{
+			tl = 2;
+		} else if (operation.arg_types[i] == T_REG){
+			tl = 1;
+		}
+		s += tl;
+	}
+	printf("steps = %i\n", s);
+	return (s);
+}
+
 void	exec_function(t_list *lst)
 {
 	t_carriage	*carriage;
@@ -174,16 +216,16 @@ void	exec_function(t_list *lst)
 	if (operation)
 	{
 		//printf("pos = %i\n", carriage->id);
-		tmp.arg_types[0] = (((uint8_t)g_game.field[carriage->pos] >> 6) & 0b11);
-		tmp.arg_types[1] = (((uint8_t)g_game.field[carriage->pos] >> 4) & 0b11);
-		tmp.arg_types[2] = (((uint8_t)g_game.field[carriage->pos] >> 2) & 0b11);
-		printf("type = %i\n", tmp.arg_types[0]);
+		tmp.arg_types[0] = (((uint8_t)g_game.field[carriage->pos + 1] >> 6) & 0b11);
+		tmp.arg_types[1] = (((uint8_t)g_game.field[carriage->pos + 1] >> 4) & 0b11);
+		tmp.arg_types[2] = (((uint8_t)g_game.field[carriage->pos + 1] >> 2) & 0b11);
+		//printf("type = %i\n", tmp.arg_types[0]);
 
 		// todo function arg_types parsing & validation
 		// todo function args parsing & validation
 		carriage->pos = read_values(&g_game, carriage, carriage->pos);
 		operation->function(&g_game, carriage);
-		carriage->pos = (carriage->pos + 7) % MEM_SIZE; // todo length estimation
+		carriage->pos = (carriage->pos + steps_estimation(tmp, carriage->op)) % MEM_SIZE; // todo length estimation
 	}
 	else
 		carriage->pos++;
