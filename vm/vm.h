@@ -32,12 +32,13 @@ typedef struct s_carriage	t_carriage;
 
 uint8_t		g_flag;
 t_game		g_game;
-int32_t		g_id;
+uint32_t	g_id;
 
 struct	s_game
 {
 	t_champion	*survivor;
 	t_list		*players; // t_champion
+	size_t		players_amount;
 	t_list		*carriages; // t_champion
 	uint8_t		field[MEM_SIZE];
 	int			check_counter;
@@ -45,8 +46,8 @@ struct	s_game
 	int			check_period;
 	int			check_amount;
 	int			nbr_live;
+		int			pamount;
 	int			dump_period;
-	int			pamount;
 	int			ch_count;
 };
 
@@ -62,14 +63,15 @@ struct	s_champion
 struct	s_carriage
 {
 	uint16_t	id;
-	uint16_t	pos;
+	uint8_t		pos;
 	uint16_t	op;
 	uint16_t	live;
 	uint32_t	rest;
 	uint8_t		carry;
-	char		param_types[3];
-	uint32_t	param_values[3];
+	uint32_t 	param_values[3];
+	uint32_t 	param_types[3];
 	uint32_t	reg[REG_NUMBER];
+	t_operation *operation;
 	// todo complete structure
 };
 
@@ -79,13 +81,35 @@ struct	s_operation
 	char 		*name;
 	uint8_t		code;
 	uint16_t	argc;
+	uint16_t	argv[3];
 	uint16_t	arg_types[3];
 	uint32_t	period;
-	short		cycle_value;
 	void		(*function)();
-	int			(*check)(char *c, t_carriage  *pr);
 	uint16_t	length;
 };
+
+
+# pragma pack(push, 1)
+
+typedef union	u_agrtype
+{
+	uint8_t		cell;
+	struct
+	{
+		uint8_t	arg1:2;
+		uint8_t	arg2:2;
+		uint8_t	arg3:2;
+		uint8_t	dump:2;
+	};
+}				t_argtype;
+
+typedef union	u_value
+{
+	uint32_t	word;
+	uint8_t		byte[REG_SIZE];
+}				t_value;
+
+# pragma pack(pop)
 
 /*
 ** Error messages
@@ -112,8 +136,7 @@ struct	s_operation
 # define ERR_INVALID_SIZE		"Invalid prog_size"
 # define ERR_NO_FILE_EXTENSION 	"File extension is not specified"
 # define ERR_INVALID_FILE_NAME	"Invalid filename"	
-# define ERR_INVALID_FILE_EXT	"Invalid file extension"	
-
+# define ERR_INVALID_FILE_EXT	"Invalid file extension"
 
 /*
 ** flags
@@ -151,24 +174,15 @@ enum	e_function
 	AFF
 }		t_function;
 
-//typedef struct	s_operation
-//{
-//	void		(*function)(void);
-//	int			(*check)(char *c1, char *c2); // check
-//	short		cycle_value;
-//	char*		label;
-//	int8_t		dir_number; // label size
-//}				t_operation;
-
 void			error(int trigger, char *msg);
 int				is_number(char *str);
-char    		*hex_to_bin(unsigned char b, unsigned char m);
+
+void			set_value(int32_t addr, uint32_t value);
+uint32_t		get_value(uint32_t addr);
 int				hex_to_dec(unsigned char *buf, int i);
-int   			read_values(t_game *game, t_carriage  *pr, int p);
 void			log_field(int width);
 void			log_champion(t_list *lst);
-
+int   			read_values(t_game *game, t_carriage  *pr, int p);
 int				new_champion(char *path, t_champion *champion);
-
 
 #endif //VM_H

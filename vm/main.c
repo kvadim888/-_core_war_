@@ -294,10 +294,11 @@ int		main(int ac, char **av)
 				g_game.check_period -= (g_game.check_period > 0) ? CYCLE_DELTA : 0;
 		}
 	}
-
+	system("leaks funct_test_v");
 	//winner output
 	error(g_game.survivor == NULL, ERR_WINNER_DISAPPEAR);
 	ft_printf("[%s<%d> has won!]\n",
 			g_game.survivor->header->prog_name, g_game.survivor->number);
+
 	return (0);
 }
