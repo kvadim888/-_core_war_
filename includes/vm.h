@@ -159,6 +159,7 @@ int				is_number(char *str);
 
 void			set_value(int32_t addr, uint32_t value);
 uint32_t		get_value(uint32_t addr);
+void	        exec_function(t_list *lst);
 
 void			log_field(int width);
 void			log_champion(t_list *lst);
@@ -167,5 +168,9 @@ int				check_arg(uint32_t type, uint32_t arg);
 uint32_t		get_arg(t_carriage *cr, uint32_t type, uint32_t arg);
 
 t_champion		*new_champion(char *path, int number);
+
+t_list		    *carriage_filter(t_list *lst);
+void	        field_init();
+t_champion	    *game_loop();
 
 #endif //VM_H

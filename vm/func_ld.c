@@ -14,9 +14,11 @@
 
 void func_ld(t_carriage *carriage)
 {
+    t_operation *operation;
 	int	arg1;
 	int arg2;
 
+    operation = carriage->operation;
 	if (!check_arg(carriage->param_types[1], carriage->param_values[1]))
 		return ;
 	arg2 = carriage->param_values[1] - 1;
@@ -26,27 +28,36 @@ void func_ld(t_carriage *carriage)
 	else if (check_arg(carriage->param_types[0], carriage->param_values[0]) == T_DIR)
 		carriage->reg[arg2] = carriage->param_values[0];
 	carriage->carry = (carriage->reg[arg2]) ? 0 : 1;
+	if (g_flag & 4)
+	    ft_printf("P%5d | ld %i r%i\n", carriage->id, arg1, operation->argv[1]);
 	ft_printf("func_ld\n");
 }
 
 void func_ldi(t_carriage *carriage)
 {
+    t_operation *operation;
 	int	a1;
 	int a2;
 	int a3;
 
+    operation = carriage->operation;
 	a3 = carriage->param_values[2];
 	
 	if (check_arg(a3, a3, a3) && check_param(carriage, 0, &a1) && check_param(carriage, 0, &a2))
 		carriage->reg[a3 - 1] = get_value((((a1 + a2) % IDX_MOD) + MEM_SIZE) % MEM_SIZE);
+    if (g_flag & 4)
+        ft_printf("P%5i | ldi r%i %i %i\n       | -> load from %i + %i = %i (with pc and mod %i\n",
+                  carriage->id, operation->argv[0], a2, a3, a2, a3, a2 + a3, carriage->pos + ((a2 + a3) % IDX_MOD));
 	ft_printf("func_ldi\n");
 }
 
 void func_lld(t_carriage *carriage)
 {
+    t_operation *operation;
 	int	a1;
 	int a2;
 
+    operation = carriage->operation;
 	a1 = carriage->param_values[0];
 	a2 = carriage->param_values[1];
 	if (!check_reg(a1, a2, a2))
@@ -59,19 +70,25 @@ void func_lld(t_carriage *carriage)
 	else
 		carriage->reg[a2 - 1] = a1;
 	carriage->carry = (carriage->reg[a2 - 1]) ? 0 : 1;
+	if (g_flag & 4)
+	    ft_printf("P%5i | lld %i r%i", carriage->pos, a1, operation->argv[1]);
 	ft_printf("func_lld\n");
 }
 
 void func_lldi(t_carriage *carriage)
 {
+    t_operation *operation;
 	int	a1;
 	int a2;
 	int a3;
 
+    operation = carriage->operation;
 	a3 = carriage->param_values[2];
 	if (check_reg(a3, a3, a3) && check_param(carriage, 0, &a1) && check_param(carriage, 0, &a2))
 	{
 		carriage->reg[a3 - 1] = get_value((((a1 + a2)) + MEM_SIZE) % MEM_SIZE);
 	}
+	if (g_flag & 4)
+	    ft_printf("P%5i | lldi %i %i r%i\n", carriage->id, a1, a2, operation->argv[2]);
 	ft_printf("func_lldi\n");
 }
