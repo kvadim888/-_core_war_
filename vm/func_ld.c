@@ -18,7 +18,7 @@ void func_ld(t_carriage *carriage)
 	int	arg1;
 	int arg2;
 
-    operation = carriage->operation;
+    operation = &carriage->operation;
 	if (!check_arg(carriage->param_types[1], carriage->param_values[1]))
 		return ;
 	arg2 = carriage->param_values[1] - 1;
@@ -40,7 +40,7 @@ void func_ldi(t_carriage *carriage)
 	int a2;
 	int a3;
 
-    operation = carriage->operation;
+    operation = &carriage->operation;
 	a3 = carriage->param_values[2];
 	
 	if (check_arg(a3, a3, a3) && check_param(carriage, 0, &a1) && check_param(carriage, 0, &a2))
@@ -57,7 +57,7 @@ void func_lld(t_carriage *carriage)
 	int	a1;
 	int a2;
 
-    operation = carriage->operation;
+    operation = &carriage->operation;
 	a1 = carriage->param_values[0];
 	a2 = carriage->param_values[1];
 	if (!check_reg(a1, a2, a2))
@@ -82,7 +82,7 @@ void func_lldi(t_carriage *carriage)
 	int a2;
 	int a3;
 
-    operation = carriage->operation;
+    operation = &carriage->operation;
 	a3 = carriage->param_values[2];
 	if (check_reg(a3, a3, a3) && check_param(carriage, 0, &a1) && check_param(carriage, 0, &a2))
 	{

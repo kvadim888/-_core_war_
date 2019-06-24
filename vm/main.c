@@ -1,4 +1,4 @@
-	/* ************************************************************************** */
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
@@ -55,8 +55,8 @@ void	read_params(int ac, char **av)
 			{
 				error(!is_number(av[++i]),
 					  "The argument after -d (--dump) must be a digit");
-				g_game->dump_period = ft_atoi(av[i]);
-				error(g_game->dump_period < 0, "Invalid dump value");
+				g_game.dump_period = ft_atoi(av[i]);
+				error(g_game.dump_period < 0, "Invalid dump value");
 			}
 			if (flag == CHAMPION_NUMBER)
 			{
@@ -71,14 +71,14 @@ void	read_params(int ac, char **av)
 		{
 			champion = new_champion(av[i], champion_number);
 			if (champion->number != 0)
-				g_game->players[champion->number] = champion;
+				g_game.players[champion->number] = champion;
 			else
 			{
 				int j = 0;
-				while (j < MAX_PLAYERS && g_game->players[j] != NULL)
+				while (j < MAX_PLAYERS && g_game.players[j] != NULL)
 					j++;
 				error(j == MAX_PLAYERS, ERR_PLAYERS_AMOUNT);
-				g_game->players[j] = champion;
+				g_game.players[j] = champion;
 				champion->number = j;
 			}
 			champion_number = 0;

@@ -15,24 +15,21 @@
 void func_add(t_carriage *carriage)
 {
 	t_operation *operation;
-	int32_t		arg_1;
-	int32_t		arg_2;
-	int32_t		arg_3;
+	int32_t		*argv;
 
-	operation = carriage->operation;
+	operation = &carriage->operation;
 	if (check_arg(operation->argt[0], operation->argv[0]) != T_REG
 		|| check_arg(operation->argt[1], operation->argv[1]) != T_REG
 		|| check_arg(operation->argt[2], operation->argv[2]) != T_REG)
 		return ;
-	arg_1 = operation->argv[0] - 1;
-	arg_2 = operation->argv[1] - 1;
-	arg_3 = operation->argv[2] - 1;
-	carriage->reg[arg_3] = carriage->reg[arg_1] + carriage->reg[arg_2];
-	carriage->carry = (carriage->reg[arg_3]) ? 0 : 1;
+	argv = operation->argv;
+	carriage->reg[argv[2] - 1] =
+			carriage->reg[argv[0] - 1] + carriage->reg[argv[1] - 1];
+	carriage->carry = (carriage->reg[argv[2] - 1]) ? 0 : 1;
+
 	if (g_flag & 4)
-	    ft_printf("P%5d | add r%i r%i r%i\n", carriage->id, operation->argv[0],
-	            operation->argv[1], operation->argv[2]);
-	ft_printf("func_add\n");
+	    ft_printf("P%5d | add r%i r%i r%i\n", carriage->id,
+	    	operation->argv[0], operation->argv[1], operation->argv[2]);
 }
 
 void func_sub(t_carriage *carriage)
@@ -42,7 +39,7 @@ void func_sub(t_carriage *carriage)
 	int32_t		arg_2;
 	int32_t		arg_3;
 
-	operation = carriage->operation;
+	operation = &carriage->operation;
 	if (check_arg(operation->argt[0], operation->argv[0]) != T_REG
 		|| check_arg(operation->argt[1], operation->argv[1]) != T_REG
 		|| check_arg(operation->argt[2], operation->argv[2]) != T_REG)
@@ -52,9 +49,11 @@ void func_sub(t_carriage *carriage)
 	arg_3 = operation->argv[2] - 1;
 	carriage->reg[arg_3] = carriage->reg[arg_1] - carriage->reg[arg_2];
 	carriage->carry = (carriage->reg[arg_3]) ? 0 : 1;
+
     if (g_flag & 4)
         ft_printf("P%5d | add r%i r%i r%i\n", carriage->id, operation->argv[0],
                   operation->argv[1], operation->argv[2]);
+
 	ft_printf("func_sub\n");
 }
 
@@ -65,7 +64,7 @@ void func_and(t_carriage *carriage)
 	int a2;
 	int a3;
 
-	operation = carriage->operation;
+	operation = &carriage->operation;
 	a3 = carriage->param_values[2] - 1;
 	if (check_arg(operation->argt[0], operation->argv[0]) != T_REG
 		&& check_param(carriage, 0, &a1)

@@ -1,21 +1,19 @@
-#ifndef COREWAR_FUNCTIONS_H
-#define COREWAR_FUNCTIONS_H
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   functions.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vkryvono <vkryvono@student.unit.ua>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/06/11 01:42:00 by vkryvono          #+#    #+#             */
+/*   Updated: 2019/06/11 01:42:00 by vkryvono         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-#include <vm.h>
+#ifndef FUNCTIONS_H
+# define FUNCTIONS_H
 
-typedef struct s_carriage t_carriage;
-
-typedef struct	s_operation
-{
-	char 		*name;
-	uint8_t		code;
-	uint8_t		codage;
-	uint16_t	argc;
-	uint16_t	argv[3];
-	uint16_t	argt[3];
-	uint32_t	period;
-	void		(*function)();
-}				t_operation;
+# include <vm.h>
 
 void	func_live(t_carriage *carriage);
 void	func_zjmp(t_carriage *carriage);
@@ -38,7 +36,6 @@ void	func_xor(t_carriage *carriage);
 void	func_fork(t_carriage *carriage);
 void	func_lfork(t_carriage *carriage);
 
-//todo function period
 t_operation	g_op[16] =
 {
 	{
@@ -46,7 +43,7 @@ t_operation	g_op[16] =
 		.code = 0x01,
 		.argc = 1,
 		.argv = {0, 0, 0},
-		.arg_types = {T_DIR, 0, 0},
+		.argt = {T_DIR, 0, 0},
 		.function = func_live,
 		.period = 10
 	},
@@ -55,7 +52,7 @@ t_operation	g_op[16] =
 		.code = 0x02,
 		.argc = 2,
 		.argv = {0, 0, 0},
-		.arg_types = {T_DIR | T_IND, T_REG, 0},
+		.argt = {T_DIR | T_IND, T_REG, 0},
 		.function = func_ld,
 		.period = 5
 	},
@@ -64,7 +61,7 @@ t_operation	g_op[16] =
 		.code = 0x03,
 		.argc = 2,
 		.argv = {0, 0, 0},
-		.arg_types = {T_REG, T_REG | T_IND, 0},
+		.argt = {T_REG, T_REG | T_IND, 0},
 		.function = func_st,
 		.period = 5
 	},
@@ -73,7 +70,7 @@ t_operation	g_op[16] =
 		.code = 0x04,
 		.argc = 3,
 		.argv = {0, 0, 0},
-		.arg_types = {T_REG, T_REG, T_REG},
+		.argt = {T_REG, T_REG, T_REG},
 		.function = func_add,
 		.period = 10
 	},
@@ -82,7 +79,7 @@ t_operation	g_op[16] =
 		.code = 0x05,
 		.argc = 3,
 		.argv = {0, 0, 0},
-		.arg_types = {T_REG, T_REG, T_REG},
+		.argt = {T_REG, T_REG, T_REG},
 		.function = func_sub,
 		.period = 10
 	},
@@ -91,7 +88,7 @@ t_operation	g_op[16] =
 		.code = 0x06,
 		.argc = 3,
 		.argv = {0, 0, 0},
-		.arg_types = {T_REG | T_DIR | T_IND, T_REG | T_DIR | T_IND, T_REG},
+		.argt = {T_REG | T_DIR | T_IND, T_REG | T_DIR | T_IND, T_REG},
 		.function = func_and,
 		.period = 6
 	},
@@ -100,7 +97,7 @@ t_operation	g_op[16] =
 		.code = 0x07,
 		.argc = 3,
 		.argv = {0, 0, 0},
-		.arg_types = {T_REG | T_DIR | T_IND, T_REG | T_DIR | T_IND, T_REG},
+		.argt = {T_REG | T_DIR | T_IND, T_REG | T_DIR | T_IND, T_REG},
 		.function = func_or,
 		.period = 6
 	},
@@ -109,7 +106,7 @@ t_operation	g_op[16] =
 		.code = 0x08,
 		.argc = 3,
 		.argv = {0, 0, 0},
-		.arg_types = {T_REG | T_DIR | T_IND, T_REG | T_DIR | T_IND, T_REG},
+		.argt = {T_REG | T_DIR | T_IND, T_REG | T_DIR | T_IND, T_REG},
 		.function = func_xor,
 		.period = 6
 	},
@@ -118,7 +115,7 @@ t_operation	g_op[16] =
 		.code = 0x09,
 		.argc = 1,
 		.argv = {0, 0, 0},
-		.arg_types = {T_DIR, 0, 0},
+		.argt = {T_DIR, 0, 0},
 		.function = func_zjmp,
 		.period = 20
 	},
@@ -127,7 +124,7 @@ t_operation	g_op[16] =
 		.code = 0x0A,
 		.argc = 3,
 		.argv = {0, 0, 0},
-		.arg_types = {T_REG | T_DIR | T_IND, T_REG | T_DIR, T_REG},
+		.argt = {T_REG | T_DIR | T_IND, T_REG | T_DIR, T_REG},
 		.function = func_ldi,
 		.period = 25
 	},
@@ -136,7 +133,7 @@ t_operation	g_op[16] =
 		.code = 0x0B,
 		.argc = 3,
 		.argv = {0, 0, 0},
-		.arg_types = {T_REG, T_REG | T_DIR | T_IND, T_REG | T_DIR},
+		.argt = {T_REG, T_REG | T_DIR | T_IND, T_REG | T_DIR},
 		.function = func_sti,
 		.period = 25
 	},
@@ -145,7 +142,7 @@ t_operation	g_op[16] =
 		.code = 0x0C,
 		.argc = 1,
 		.argv = {0, 0, 0},
-		.arg_types = {T_DIR, 0, 0},
+		.argt = {T_DIR, 0, 0},
 		.function = func_fork,
 		.period = 800
 	},
@@ -154,7 +151,7 @@ t_operation	g_op[16] =
 		.code = 0x0D,
 		.argc = 2,
 		.argv = {0, 0, 0},
-		.arg_types = {T_DIR | T_IND, T_REG, 0},
+		.argt = {T_DIR | T_IND, T_REG, 0},
 		.function = func_lld,
 		.period = 10
 	},
@@ -163,7 +160,7 @@ t_operation	g_op[16] =
 		.code = 0x0E,
 		.argc = 3,
 		.argv = {0, 0, 0},
-		.arg_types = {T_REG | T_DIR | T_IND, T_REG | T_DIR, T_REG},
+		.argt = {T_REG | T_DIR | T_IND, T_REG | T_DIR, T_REG},
 		.function = func_lldi,
 		.period = 50
 	},
@@ -172,7 +169,7 @@ t_operation	g_op[16] =
 		.code = 0x0F,
 		.argc = 1,
 		.argv = {0, 0, 0},
-		.arg_types = {T_DIR, 0, 0},
+		.argt = {T_DIR, 0, 0},
 		.function = func_lfork,
 		.period = 1000
 	},
@@ -181,10 +178,10 @@ t_operation	g_op[16] =
 		.code = 0x10,
 		.argc = 1,
 		.argv = {0, 0, 0},
-		.arg_types = {T_REG, 0, 0},
+		.argt = {T_REG, 0, 0},
 		.function = func_aff,
 		.period = 2
 	}
 };
 
-#endif //COREWAR_FUNCTIONS_H
+#endif
