@@ -13,8 +13,9 @@
 #ifndef VM_H
 #define VM_H
 
-#include "../libft/includes/libft.h"
-#include "op.h"
+#include <libft.h>
+#include <op.h>
+#include "functions.h"
 
 #define		CODE_EXTENSION		".s"
 #define		BINARY_EXTENSION	".cor"
@@ -25,28 +26,30 @@
 
 typedef struct s_game		t_game;
 typedef struct s_champion	t_champion;
-typedef struct s_operation	t_operation;
 typedef struct s_carriage	t_carriage;
 
 // Globals
+static t_game	*g_game = NULL;
 
 uint8_t		g_flag;
-t_game		g_game;
 uint32_t	g_id;
 
 struct	s_game
 {
 	t_champion	*survivor;
-	t_list		*players; // t_champion
+	t_champion	*players[MAX_PLAYERS]; // t_champion
 	size_t		players_amount;
 	t_list		*carriages; // t_champion
 	uint8_t		field[MEM_SIZE];
-	int			check_counter;
-	int			cycle_counter;
-	int			check_period;
-	int			check_amount;
-	int			nbr_live;
-	int			dump_period;
+	int32_t		check_counter;
+	int32_t		check_period;
+	int32_t		check_amount;
+	int32_t		cycle_counter;
+	int32_t		live_counter;
+	int32_t		dump_period;
+	int32_t		dump_counter;
+	int32_t		show_period;
+	int32_t		show_counter;
 };
 
 struct	s_champion
@@ -62,29 +65,17 @@ struct	s_carriage
 {
 	uint16_t	id;
 	uint8_t		pos;
-	uint16_t	op;
 	uint16_t	live;
 	uint32_t	rest;
 	uint8_t		carry;
 	uint32_t 	param_values[3];
 	uint32_t 	param_types[3];
 	uint32_t	reg[REG_NUMBER];
-	t_operation *operation;
+	t_operation operation;
 	// todo complete structure
 };
 
 
-struct	s_operation
-{
-	char 		*name;
-	uint8_t		code;
-	uint16_t	argc;
-	uint16_t	argv[3];
-	uint16_t	arg_types[3];
-	uint32_t	period;
-	void		(*function)();
-	uint16_t	length;
-};
 
 
 # pragma pack(push, 1)
@@ -161,6 +152,8 @@ enum	e_function
 	AFF
 }		t_function;
 
+t_game			*get_instance();
+
 void			error(int trigger, char *msg);
 int				is_number(char *str);
 
@@ -170,6 +163,9 @@ uint32_t		get_value(uint32_t addr);
 void			log_field(int width);
 void			log_champion(t_list *lst);
 
-int				new_champion(char *path, t_champion *champion);
+int				check_arg(uint32_t type, uint32_t arg);
+uint32_t		get_arg(t_carriage *cr, uint32_t type, uint32_t arg);
+
+t_champion		*new_champion(char *path, int number);
 
 #endif //VM_H
