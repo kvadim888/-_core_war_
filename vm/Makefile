@@ -1,4 +1,4 @@
-NAME = funct_test_v
+NAME = corewar
 
 FLAGS = -Wall -Werror -Wextra
 

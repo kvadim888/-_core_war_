@@ -166,10 +166,15 @@ int				is_number(char *str);
 
 void			set_value(int32_t addr, uint32_t value);
 uint32_t		get_value(uint32_t addr);
+void	        exec_function(t_list *lst);
 
 void			log_field(int width);
 void			log_champion(t_list *lst);
 
 int				new_champion(char *path, t_champion *champion);
+
+t_list		    *carriage_filter(t_list *lst);
+void	        field_init();
+t_champion	    *game_loop();
 
 #endif //VM_H

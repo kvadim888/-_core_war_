@@ -34,3 +34,41 @@ uint32_t get_arg(t_carriage *cr, uint32_t type, uint32_t arg)
 	if (type == T_DIR)
 		return (arg);
 }
+
+void	exec_function(t_list *lst)
+{
+    uint32_t	op;
+    t_carriage	*carriage;
+    t_operation	*operation;
+    t_operation	tmp;
+    t_argtype	arg_types;
+
+    carriage = lst->content;
+    if (carriage->operation.period > 0)
+        carriage->operation.period--;
+    else
+    {
+        op = g_game->field[carriage->pos++];
+        if (op > 0 && op <= 16)
+            ft_memcpy(&carriage->operation, &g_op[op - 1], sizeof(t_operation));
+        else
+            ft_bzero(&carriage->operation, sizeof(t_operation));
+    }
+    if (carriage->operation.period > 0)
+        return ;
+    if (carriage->operation.code > 0)
+    {
+        if (carriage->operation.codage)
+        {
+            arg_types.cell = g_game->field[carriage->pos];
+            tmp.argt[0] = arg_types.arg1;
+            tmp.argt[1] = arg_types.arg2;
+            tmp.argt[2] = arg_types.arg3;
+        }
+        read_values(&g_game, carriage, carriage->pos);
+        operation->function(&g_game, carriage);
+        carriage->pos += 7; // todo length estimation
+    }
+    else
+        carriage->pos++;
+}
