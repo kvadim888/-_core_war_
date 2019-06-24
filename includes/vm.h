@@ -13,7 +13,7 @@
 #ifndef VM_H
 #define VM_H
 
-#include "libft.h"
+#include "../libft/includes/libft.h"
 #include "op.h"
 
 #define		CODE_EXTENSION		".s"
@@ -28,10 +28,17 @@ typedef struct s_champion	t_champion;
 typedef struct s_operation	t_operation;
 typedef struct s_carriage	t_carriage;
 
+// Globals
+
+uint8_t		g_flag;
+t_game		g_game;
+uint32_t	g_id;
+
 struct	s_game
 {
 	t_champion	*survivor;
 	t_list		*players; // t_champion
+	size_t		players_amount;
 	t_list		*carriages; // t_champion
 	uint8_t		field[MEM_SIZE];
 	int			check_counter;
@@ -39,6 +46,7 @@ struct	s_game
 	int			check_period;
 	int			check_amount;
 	int			nbr_live;
+	int			dump_period;
 };
 
 struct	s_champion
@@ -53,12 +61,15 @@ struct	s_champion
 struct	s_carriage
 {
 	uint16_t	id;
-	uint16_t	pos;
+	uint8_t		pos;
 	uint16_t	op;
 	uint16_t	live;
 	uint32_t	rest;
 	uint8_t		carry;
+	uint32_t 	param_values[3];
+	uint32_t 	param_types[3];
 	uint32_t	reg[REG_NUMBER];
+	t_operation *operation;
 	// todo complete structure
 };
 
@@ -68,15 +79,41 @@ struct	s_operation
 	char 		*name;
 	uint8_t		code;
 	uint16_t	argc;
+	uint16_t	argv[3];
 	uint16_t	arg_types[3];
 	uint32_t	period;
 	void		(*function)();
 	uint16_t	length;
 };
 
+
+# pragma pack(push, 1)
+
+typedef union	u_agrtype
+{
+	uint8_t		cell;
+	struct
+	{
+		uint8_t	arg1:2;
+		uint8_t	arg2:2;
+		uint8_t	arg3:2;
+		uint8_t	dump:2;
+	};
+}				t_argtype;
+
+typedef union	u_value
+{
+	uint32_t	word;
+	uint8_t		byte[REG_SIZE];
+}				t_value;
+
+# pragma pack(pop)
+
 /*
 ** Error messages
 */
+
+# define USAGE					"Usage : "
 
 # define ERR_PLAYERS_AMOUNT		"Invalid players' amount"
 # define ERR_INIT_PLAYER		"Unable to initialise player"
@@ -87,11 +124,24 @@ struct	s_operation
 # define ERR_INVALID_BINARY		"Invalid binary file"
 # define ERR_INVALID_HEADER		"Invalid magic header"
 
+
+/*
+** flags
+*/
+
+typedef enum	e_flag
+{
+	UNKNOWN,
+	VERBOSE,
+	DUMP,
+	CHAMPION_NUMBER
+}				t_flag;
+
 /*
 **	functions
 */
 
-enum	e_operation
+enum	e_function
 {
 	LIVE,
 	LD,
@@ -109,21 +159,17 @@ enum	e_operation
 	LLDI,
 	LFORK,
 	AFF
-};
-
-//typedef struct	s_operation
-//{
-//	void		(*function)(void);
-//	int			(*check)(char *c1, char *c2); // check
-//	short		cycle_value;
-//	char*		label;
-//	int8_t		dir_number; // label size
-//}				t_operation;
-
+}		t_function;
 
 void			error(int trigger, char *msg);
 int				is_number(char *str);
 
-void			log_champ(t_list *lst);
+void			set_value(int32_t addr, uint32_t value);
+uint32_t		get_value(uint32_t addr);
+
+void			log_field(int width);
+void			log_champion(t_list *lst);
+int   			read_values(t_game *game, t_carriage  *pr, int p);
+int				new_champion(char *path, t_champion *champion);
 
 #endif //VM_H
