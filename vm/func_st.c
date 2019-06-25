@@ -15,38 +15,40 @@
 void func_st(t_carriage *carriage)
 {
     t_operation *operation;
-	int	a1;
-	int a2;
+	uint16_t	*argv;
 
-    operation = carriage->operation;
-	a1 = carriage->param_values[0];
-	a2 = carriage->param_values[1];
-	if (check_reg(a1, a1, a1))
-	{
-		if (carriage->param_types[1] == T_REG && check_reg(a2, a2, a2))
-			carriage->reg[a2 - 1] = carriage->reg[a1 - 1];
-		if (carriage->param_types[1] == T_IND)
-			set_value((((carriage->pos + (a2 % IDX_MOD)) + MEM_SIZE) % MEM_SIZE), carriage->reg[a1 - 1]);
-	}
+    operation = &carriage->operation;
+    argv = operation->argv;
+	if (check_arg(operation->argt[0], operation->argv[0]) != T_REG)
+		return;
+	if (check_arg(operation->argt[1], operation->argv[1]) == T_REG)
+		carriage->reg[argv[1] - 1] = carriage->reg[argv[0] - 1];
+	if (check_arg(operation->argt[1], operation->argv[1]) == T_IND)
+		set_value((((carriage->pos + (argv[1] % IDX_MOD)) + MEM_SIZE) % MEM_SIZE),
+				carriage->reg[argv[0] - 1]);
 	if (g_flag & 4)
-	    ft_printf("P%5i | st r%i %i\n", carriage->id, operation->argv[0], a2);
-	ft_printf("func_st\n");
+	    ft_printf("P%5i | st r%i %i\n", carriage->id, argv[0], argv[1]);
 }
 
 void func_sti(t_carriage *carriage)
 {
-	ft_printf("func_sti\n");
     t_operation *operation;
-	int a1;
-	int a2;
-	int a3;
+	uint16_t	*argv;
 
-    operation = carriage->operation;
-	a1 = carriage->param_values[0];
-	if (check_reg(a1, a1, a1) && check_param(carriage, 1, &a2) && check_param(carriage, 2, &a3))
-		set_value((((a2 + a3) + MEM_SIZE) % MEM_SIZE), carriage->reg[a1 - 1]);
+    operation = &carriage->operation;
+	if (check_arg(operation->argt[0], operation->argv[0]) != T_REG)
+		return ;
+	if (!check_arg(operation->argt[1], operation->argv[1]) ||
+		!check_arg(operation->argt[2], operation->argv[2]))
+		return ;
+	argv = operation->argv;
+	set_value((((argv[1] + argv[2]) + MEM_SIZE) % MEM_SIZE),
+			carriage->reg[argv[0] - 1]);
 	if (g_flag & 4)
-	    ft_printf("P%5i | sti r%i %i %i\n       | -> store to %i + %i = %i (with pc and mod %i\n",
-	            carriage->id, operation->argv[0], a2, a3, a2, a3, a2 + a3, carriage->pos + ((a2 + a3) % IDX_MOD));
+	    ft_printf("P%5i | sti r%i %i %i\n"
+			"     | -> store to %i + %i = %i (with pc and mod %i)\n",
+			carriage->id, operation->argv[0], argv[1], argv[2],
+			argv[1], argv[2], argv[1] + argv[2],
+			carriage->pos + ((argv[1] + argv[2]) % IDX_MOD));
 }
 

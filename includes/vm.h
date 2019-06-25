@@ -19,7 +19,18 @@
 # define		CODE_EXTENSION		".s"
 # define		BINARY_EXTENSION	".cor"
 
-# define USAGE				"Usage : "
+# define USAGE "Usage : ./corewar [-dump N -n N -v N] <champion1.cor> <...>\n\
+\t -dump N\t: Dumps memory after N cycles then exits\n\
+\t -n N\t: Define champion number\n\
+\t -v N\t: Verbosity levels, can be added together to enable several\n\
+\t \t 0\t: Show only essentials\n\
+\t \t 1\t: Show lives\n\
+\t \t 2\t: Show cycles\n\
+\t \t 4\t: Show operations (Params are NOT litteral ...)\n\
+\t \t 8\t: Show deaths\n\
+\t \t 16\t: Show PC movements (Except for jumps)\n\
+#############################################################################\n"
+
 # define ERR_PLAYERS_AMOUNT	"Invalid players' amount"
 # define ERR_INIT_PLAYER	"Unable to initialise player"
 # define ERR_INIT_CARRIAGE	"Unable to initialise carriage"
@@ -95,10 +106,10 @@ typedef union				u_agrtype
 	uint8_t					cell;
 	struct
 	{
-		uint8_t				arg1;
-		uint8_t				arg2;
-		uint8_t				arg3;
-		uint8_t				dump;
+		uint8_t				arg1:2;
+		uint8_t				arg2:2;
+		uint8_t				arg3:2;
+		uint8_t				dump:2;
 	};
 }							t_argtype;
 
@@ -129,7 +140,7 @@ void						log_champion(t_list *lst);
 int							check_arg(uint32_t type, uint32_t arg);
 uint32_t					get_arg(t_carriage *cr, uint32_t type, uint32_t arg);
 
-t_champion					*new_champion(char *path, int number);
+int							new_champion(char *path, t_champion *champion);
 
 t_list		    			*carriage_filter(t_list *lst);
 void	        			field_init();
