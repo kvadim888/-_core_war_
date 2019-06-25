@@ -7,7 +7,7 @@ aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR} VM_SRC)
 
 #set(CMAKE_C_FLAGS "-Wall -Wextra -Werror")
 
-add_executable(vm ${VM_SRC})
+add_executable(vm ${VM_SRC} g_operations.c)
 
 target_include_directories(vm PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/inc
         ${CMAKE_CURRENT_SOURCE_DIR}/../includes

@@ -32,6 +32,7 @@ void func_st(t_carriage *carriage)
 
 void func_sti(t_carriage *carriage)
 {
+	printf("sti\n");
     t_operation *operation;
 	uint16_t	*argv;
 

@@ -218,9 +218,8 @@ int		main(int ac, char **av)
 	log_field(32); //fixme delete
 
 	ft_printf("Game start\n");
-	int i = 3;
-	while (--i > 0)
-		winer = game_loop();
+	g_game.check_period = CYCLE_TO_DIE;
+	winer = game_loop();
 
 	error(g_game.survivor == NULL, "Winner is disappear"); //fixme delete
 	ft_printf("[%s<%d> has won!]\n",

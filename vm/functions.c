@@ -69,7 +69,7 @@ int		steps_estimation(t_operation	operation, int op_code)
 
 void	exec_function(t_list *lst)
 {
-  //  printf("exec function\n");
+   // printf("exec function\n");
     uint32_t	op;
     t_carriage	*carriage;
     t_operation	*operation;
@@ -83,9 +83,10 @@ void	exec_function(t_list *lst)
     {
         op = g_game.field[carriage->pos++];
         if (op > 0 && op <= 16){
-            ft_memcpy(&carriage->operation, &g_op[op - 1], sizeof(t_operation));
-            carriage->operation.period = g_op[carriage->operation.code].period;
-            //carriage->operation.period = 0;
+          //  ft_memcpy(&carriage->operation, &g_op[op - 1], sizeof(t_operation));
+            carriage->operation.period = g_op[op - 1].period;
+            carriage->operation.codage = g_op[op - 1].codage;
+            carriage->operation.code = op;
         }
         else{
             
@@ -93,15 +94,17 @@ void	exec_function(t_list *lst)
            // carriage->operation.period = 0;
         }
     }
-     printf("exec function 2\n");
+    // printf("exec function 2\n");
      printf("carriage->operation.period %i\n", carriage->operation.period);
     if (carriage->operation.period > 0)
         return ;
-    //printf("exec function 3\n");
-    //printf("carriage->operation.code %i\n", carriage->operation.code);
+    printf("exec function 3\n");
+    
     if (carriage->operation.code > 0)
     {
-     //    printf("carriage->operation.codage %i\n", carriage->operation.codage);
+        printf("carriage->operation.code %i\n", carriage->operation.code);
+       //  printf("carriage->operation.codage %i\n", carriage->operation.codage);
+        // printf("absolut codage %i\n",  g_op[carriage->operation.code].codage);
         if (carriage->operation.codage)
         {
             arg_types.cell = g_game.field[carriage->pos];
@@ -111,7 +114,7 @@ void	exec_function(t_list *lst)
         }
 
        // read_values(&g_game, carriage);
-         //printf("operation->function %p\n",  operation->function);
+         printf("operation->function\n");
 
        g_op[carriage->operation.code].function(carriage);
         printf("operation->function\n");
