@@ -69,7 +69,7 @@ int		steps_estimation(t_operation	operation, int op_code)
 
 void	exec_function(t_list *lst)
 {
-    printf("exec function\n");
+  //  printf("exec function\n");
     uint32_t	op;
     t_carriage	*carriage;
     t_operation	*operation;
@@ -82,18 +82,26 @@ void	exec_function(t_list *lst)
     else
     {
         op = g_game.field[carriage->pos++];
-        if (op > 0 && op <= 16)
+        if (op > 0 && op <= 16){
             ft_memcpy(&carriage->operation, &g_op[op - 1], sizeof(t_operation));
-        else
+            carriage->operation.period = g_op[carriage->operation.code].period;
+            //carriage->operation.period = 0;
+        }
+        else{
+            
             ft_bzero(&carriage->operation, sizeof(t_operation));
+           // carriage->operation.period = 0;
+        }
     }
      printf("exec function 2\n");
      printf("carriage->operation.period %i\n", carriage->operation.period);
     if (carriage->operation.period > 0)
         return ;
-    printf("exec function 3\n");
+    //printf("exec function 3\n");
+    //printf("carriage->operation.code %i\n", carriage->operation.code);
     if (carriage->operation.code > 0)
     {
+     //    printf("carriage->operation.codage %i\n", carriage->operation.codage);
         if (carriage->operation.codage)
         {
             arg_types.cell = g_game.field[carriage->pos];
@@ -101,8 +109,12 @@ void	exec_function(t_list *lst)
             tmp.argt[1] = arg_types.arg2;
             tmp.argt[2] = arg_types.arg3;
         }
+
        // read_values(&g_game, carriage);
-        operation->function(&g_game, carriage);
+         //printf("operation->function %p\n",  operation->function);
+
+       g_op[carriage->operation.code].function(carriage);
+        printf("operation->function\n");
         carriage->pos = (carriage->pos + steps_estimation(tmp, carriage->op)) % MEM_SIZE; // todo length estimation
     }
     else

@@ -11,7 +11,7 @@ t_list		*carriage_filter(t_list *lst)
     while (lst)
     {
         carriage = lst->content;
-        if (carriage->live <= 0)
+        if (carriage->live <= 0 )
         {
             prev->next = lst->next;
             ft_lstdelone(&lst, ft_lstrm);
@@ -29,11 +29,15 @@ t_list		*carriage_filter(t_list *lst)
 t_champion	*game_loop()
 {
     printf("g_game.carriages carr %p\n", g_game.carriages);
+    	
     while (g_game.carriages && ft_lstlen(g_game.carriages))
     {
+        printf(">>>>>>>>>>>>>>>>>>>>>len 1%i\n", (int)ft_lstlen(g_game.carriages));
         g_game.cycle_counter++;
         g_game.check_counter++;
         ft_lstiter(g_game.carriages, exec_function);
+        printf("g_game.check_counter  %i\n", g_game.check_counter);
+       // printf("g_game.check_period %i\n", g_game.check_period);
         if (g_game.check_counter >= g_game.check_period)
         {
             g_game.check_counter = 0;
