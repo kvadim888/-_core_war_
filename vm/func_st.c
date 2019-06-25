@@ -42,6 +42,8 @@ void func_sti(t_carriage *carriage)
 		!check_arg(operation->argt[2], operation->argv[2]))
 		return ;
 	argv = operation->argv;
+    argv[1] = get_arg(carriage, operation->argt[1], argv[2]);
+    argv[2] = get_arg(carriage, operation->argt[2], argv[1]);
 	set_value((((argv[1] + argv[2]) + MEM_SIZE) % MEM_SIZE),
 			carriage->reg[argv[0] - 1]);
 	if (g_flag & 4)
