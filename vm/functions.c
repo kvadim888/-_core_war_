@@ -32,27 +32,6 @@ uint32_t get_arg(t_carriage *cr, uint32_t type, uint32_t arg)
 		return (arg);
 }
 
-int32_t		get_op_arg(t_vm *vm, t_cursor *cursor, uint8_t index, t_bool mod)
-{
-	t_op		*op;
-	int32_t		value;
-	int32_t		addr;
-
-	op = &g_op[INDEX(cursor->op_code)];
-	value = 0;
-	if (cursor->args_types[INDEX(index)] & T_REG)
-		value = cursor->reg[INDEX(get_byte(vm, cursor->pc, cursor->step))];
-	else if (cursor->args_types[INDEX(index)] & T_DIR)
-		value = bytecode_to_int32(vm->arena, cursor->pc + cursor->step, op->t_dir_size);
-	else if (cursor->args_types[INDEX(index)] & T_IND)
-	{
-		addr = bytecode_to_int32(vm->arena, cursor->pc + cursor->step, IND_SIZE);
-		value = bytecode_to_int32(vm->arena, cursor->pc + (mod ? (addr % IDX_MOD) : addr), DIR_SIZE);
-	}
-	cursor->step += step_size(cursor->args_types[INDEX(index)], op);
-	return (value);
-}
-
 void	exec_function(t_list *lst)
 {
     uint32_t	op;
