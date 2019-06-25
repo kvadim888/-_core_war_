@@ -1,8 +1,8 @@
-NAME = funct_test_v
+NAME = corewar
 
 FLAGS = -Wall -Werror -Wextra
 
-VM =  main.c utilities.c logger.c functions.c alert.c codage.c param_values.c init_champion.c
+VM =  main.c utilities.c logger.c functions.c alert.c init_champion.c func_math.c game.c func_st.c func_misc.c func_ld.c func_fork.c g_operations.c
 
 INCLUDES = ../includes/functions.h ../includes/op.h ../includes/vm.h
 
@@ -24,10 +24,10 @@ liball:
 	
 clean:
 	@rm -f *.o
-	make clean -C ../libft/
+	# make clean -C ../libft/
 
 fclean: clean
-	make fclean -C ../libft/
+	# make fclean -C ../libft/
 	rm -rf $(NAME)
 
 re: fclean all

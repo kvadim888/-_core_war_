@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "vm.h"
+#include "../includes/vm.h"
 
 static t_header	*get_header(int fd)
 {
@@ -69,6 +69,6 @@ int				new_champion(char *path, t_champion *champion)
 	error(size < champion->header->prog_size, ERR_INVALID_BINARY);
 	error(read(fd, NULL, 1) != 0, ERR_INVALID_BINARY);
 	close(fd);
-	return (0); // return 0 if reading is complete
+	return (0);
 }
 

@@ -67,4 +67,4 @@ typedef struct					s_header
 	char						comment[COMMENT_LENGTH + 1];
 }								t_header;
 
-#endif //OP_H
+#endif
