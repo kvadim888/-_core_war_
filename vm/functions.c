@@ -91,22 +91,25 @@ void	exec_function(t_list *lst)
         else{
             
             ft_bzero(&carriage->operation, sizeof(t_operation));
-           // carriage->operation.period = 0;
+            carriage->operation.code = 0;
+            carriage->operation.period = 0;
+        //    printf("carriage->operation.code = 0 %i\n", carriage->operation.code);
         }
     }
     // printf("exec function 2\n");
-     printf("carriage->operation.period %i\n", carriage->operation.period);
+   //  printf("carriage->operation.period %i\n", carriage->operation.period);
     if (carriage->operation.period > 0)
         return ;
-    printf("exec function 3\n");
+  //  printf("exec function 3\n");
     
     if (carriage->operation.code > 0)
     {
-        printf("carriage->operation.code %i\n", carriage->operation.code);
+       // printf("carriage->operation.code %i\n", carriage->operation.code);
        //  printf("carriage->operation.codage %i\n", carriage->operation.codage);
         // printf("absolut codage %i\n",  g_op[carriage->operation.code].codage);
         if (carriage->operation.codage)
         {
+        //    printf("carriage->operation.codage %i\n", carriage->operation.codage);
             arg_types.cell = g_game.field[carriage->pos];
             tmp.argt[0] = arg_types.arg1;
             tmp.argt[1] = arg_types.arg2;
@@ -114,11 +117,11 @@ void	exec_function(t_list *lst)
         }
 
        // read_values(&g_game, carriage);
-         printf("operation->function\n");
+       //  printf("operation->function 1\n");
 
-       g_op[carriage->operation.code].function(carriage);
-        printf("operation->function\n");
-        carriage->pos = (carriage->pos + steps_estimation(tmp, carriage->op)) % MEM_SIZE; // todo length estimation
+       g_op[carriage->operation.code - 1].function(carriage);
+      //  printf("operation->function 2\n");
+        carriage->pos = (carriage->pos + steps_estimation(tmp, carriage->operation.code)) % MEM_SIZE; // todo length estimation
     }
     else
         carriage->pos++;
