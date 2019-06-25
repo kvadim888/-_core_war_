@@ -14,25 +14,35 @@
 
 void func_fork(t_carriage	*carriage)
 {
+    t_operation *operation;
 	t_carriage *new;
 
+    operation = &carriage->operation;
 	ft_lstadd(&g_game.carriages, ft_lstnew(carriage, sizeof(carriage)));
 	new = g_game.carriages->content;
 	new->pos = ((carriage->param_values[0] % IDX_MOD) + MEM_SIZE) % MEM_SIZE;
 	new->id = ++g_id;
-	new->op = 0;
+//	new->op = 0;
+	if (g_flag & 4)
+	    ft_printf("P%5i | fork %i (%i)\n",
+	    	carriage->id, operation->argv[0], (operation->argv[0] % IDX_MOD));
 	ft_printf("func_fork\n");
 }
 
-void func_lfork(t_game *game, t_carriage *carriage)
+void func_lfork(t_carriage *carriage)
 {
+    t_operation *operation;
 	t_carriage *new;
 
+    operation = &carriage->operation;
 	ft_lstadd(&g_game.carriages, ft_lstnew(carriage, sizeof(carriage)));
 	new = g_game.carriages->content;
-	new->pos = (carriage->pos + carriage->param_values[0]) % MEM_SIZE;
+	new->pos = (carriage->pos + operation->argv[0]) % MEM_SIZE;
 	new->id = ++g_id;
-	new->op = 0;
+//	new->op = 0;
+    if (g_flag & 4)
+        ft_printf("P%5i | fork %i (%i)\n",
+        	carriage->id, operation->argv[0], (operation->argv[0] + carriage->pos));
 	ft_printf("func_lfork\n");
 }
 

@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "vm.h"
+#include "../includes/vm.h"
 
-int			is_number(char *str) //todo move to libft
+int			is_number(char *str)
 {
 	while (ft_iswhspace(*str))
 		str++;
@@ -23,42 +23,31 @@ int			is_number(char *str) //todo move to libft
 	return (*str == '\0');
 }
 
-char    *hex_to_bin(unsigned char b, unsigned char m)
+void		set_value(int32_t addr, uint32_t value)
 {
-	char *bits;
-	int i;
+	int		i;
+	t_value	val;
 
-	i = -1;
-	bits = ft_memalloc(sizeof(char) * 9);
-	ft_bzero(bits, 9);
-	while (++i < 8){
-		bits[8 - i - 1] = ((b & (m << i)) != 0) ? '1' : '0';
+	val.word = value;
+	i = 0;
+	while (i < REG_SIZE)
+	{
+		g_game.field[(addr + i + MEM_SIZE) % MEM_SIZE] = val.byte[i];
+		i++;
 	}
-	return bits;
 }
 
-int				hex_to_dec(unsigned char *buf, int i)
+uint32_t	get_value(uint32_t addr)
 {
-	int res;
+	int 	i;
+	t_value	value;
 
-	res = 0;
-	if (!i)
-		return (0);
-    if (i == 4)
+	value.word = 0;
+	i = 0;
+	while (i < REG_SIZE)
 	{
-		res += buf[0] * 16777216;
-		res += buf[1] * 65536;
-		res += buf[2] * 256;
-		res += buf[3];
-	} else 
-    {
-	    if (i == 2)
-	    {
-		    res += buf[0] * 256;
-		    res += buf[1];
-        } else 
-           res += buf[0];
-		res = (short)res;
+		value.byte[i] = g_game.field[(addr + i + MEM_SIZE) % MEM_SIZE];
+		i++;
 	}
-	return (res);
+	return (value.word);
 }

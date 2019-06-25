@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "vm.h"
+#include "../includes/vm.h"
 
 static t_header	*get_header(int fd)
 {
@@ -22,14 +22,14 @@ static t_header	*get_header(int fd)
 	error(read(fd, &header->prog_name, PROG_NAME_LENGTH) < PROG_NAME_LENGTH,
 		  ERR_INVALID_BINARY);
 	error(read(fd, &buff, REG_SIZE) < REG_SIZE, ERR_INVALID_BINARY);
-	error(buff, ERR_NO_NULL);
+	error(buff, "No null 4 bytes");
 	error(read(fd, &buff, REG_SIZE) < REG_SIZE, ERR_INVALID_BINARY);
 	header->prog_size = ft_swap32(buff);
-	error(header->prog_size > CHAMP_MAX_SIZE, ERR_INVALID_SIZE);
+	error(header->prog_size > CHAMP_MAX_SIZE, "Invalid prog_size");
 	error(read(fd, &header->comment, COMMENT_LENGTH) < COMMENT_LENGTH,
 		  ERR_INVALID_BINARY);
 	error(read(fd, &buff, REG_SIZE) < REG_SIZE, ERR_INVALID_BINARY);
-	error(buff, ERR_NO_NULL);
+	error(buff, "No null 4 bytes");
 	return (header);
 }
 
@@ -43,10 +43,10 @@ static int		get_file(char *path)
 	localname = ft_strrchr(path, '/');
 	localname == NULL ? path : localname++;
 	extension = ft_strrchr(path, '.');
-	error(!(*extension), ERR_NO_FILE_EXTENSION);
-	error((extension <= localname), ERR_INVALID_FILE_NAME);
+	error(!(*extension), "File extension is not specified");
+	error((extension <= localname), "Invalid filename");
 	extension = ft_strdup(extension);
-	error(ft_strcmp(extension, BINARY_EXTENSION), ERR_INVALID_FILE_EXT);
+	error(ft_strcmp(extension, BINARY_EXTENSION), "Invalid file extension");
 	error((fd = open(path, O_RDONLY)) == -1, ERR_OPEN_BINARY);
 	error(read(fd, &header, sizeof(uint32_t)) < 0, ERR_READ_BINARY);
 	error(header != ft_swap32(COREWAR_EXEC_MAGIC), ERR_INVALID_HEADER);
@@ -68,14 +68,7 @@ int				new_champion(char *path, t_champion *champion)
 	size = read(fd, champion->code, champion->header->prog_size);
 	error(size < champion->header->prog_size, ERR_INVALID_BINARY);
 	error(read(fd, NULL, 1) != 0, ERR_INVALID_BINARY);
-	int i = -1;
-	/*printf("ch prog_size: %i\n", champion->header->prog_size);
-	while (++i < champion->header->prog_size){
-		ft_printf("%.2x ",champion->code[i]);
-	}
-	printf("\n");
-//	printf("\n ch code: %s\n", champion->code);*/
 	close(fd);
-	return (0); // return 0 if reading is complete
+	return (0);
 }
 
