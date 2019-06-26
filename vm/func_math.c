@@ -17,6 +17,7 @@ void func_add(t_carriage *carriage)
 	t_operation *operation;
 	uint16_t	*argv;
 
+    ft_printf(("add\n"));
 	operation = &carriage->operation;
 	if (check_arg(operation->argt[0], operation->argv[0]) != T_REG
 		|| check_arg(operation->argt[1], operation->argv[1]) != T_REG
@@ -58,12 +59,10 @@ void func_and(t_carriage *carriage)
 
 	operation = &carriage->operation;
 	if (check_arg(operation->argt[2], operation->argv[2]) != T_REG
-		|| !check_arg(operation->argt[0], operation->argv[0])
-		|| !check_arg(operation->argt[1], operation->argv[1]))
+		|| check_arg(operation->argt[0], operation->argv[0])
+		|| check_arg(operation->argt[1], operation->argv[1]))
 		return ;
 	argv = operation->argv;
-    argv[0] = get_arg(carriage, operation->argt[0], argv[0]);
-    argv[1] = get_arg(carriage, operation->argt[1], argv[1]);
 	carriage->reg[argv[2] - 1] = argv[0] & argv[1];
 	carriage->carry = (carriage->reg[argv[2] - 1]) ? 0 : 1;
     if (g_flag & 4)
@@ -78,12 +77,10 @@ void func_or(t_carriage *carriage)
 
 	operation = &carriage->operation;
 	if (check_arg(operation->argt[2], operation->argv[2]) != T_REG
-		|| !check_arg(operation->argt[0], operation->argv[0])
-		|| !check_arg(operation->argt[1], operation->argv[1]))
+		|| check_arg(operation->argt[0], operation->argv[0])
+		|| check_arg(operation->argt[1], operation->argv[1]))
 		return ;
 	argv = operation->argv;
-    argv[0] = get_arg(carriage, operation->argt[0], argv[0]);
-    argv[1] = get_arg(carriage, operation->argt[1], argv[1]);
 	carriage->reg[argv[2] - 1] = argv[0] | argv[1];
 	carriage->carry = (carriage->reg[argv[2] - 1]) ? 0 : 1;
     if (g_flag & 4)
@@ -98,14 +95,10 @@ void func_xor(t_carriage *carriage)
 
 	operation = &carriage->operation;
 	if (check_arg(operation->argt[2], operation->argv[2]) != T_REG
-		|| !check_arg(operation->argt[0], operation->argv[0])
-		|| !check_arg(operation->argt[1], operation->argv[1]))
+		|| check_arg(operation->argt[0], operation->argv[0])
+		|| check_arg(operation->argt[1], operation->argv[1]))
 		return ;
 	argv = operation->argv;
-    argv[0] = get_arg(carriage, operation->argt[0], argv[0]);
-    argv[1] = get_arg(carriage, operation->argt[1], argv[1]);
-    argv[0] = get_arg(carriage, operation->argt[0], argv[0]);
-    argv[1] = get_arg(carriage, operation->argt[1], argv[1]);
 	carriage->reg[argv[2] - 1] = argv[0] ^ argv[1];
 	carriage->carry = (carriage->reg[argv[2] - 1]) ? 0 : 1;
 	if (g_flag & 4)

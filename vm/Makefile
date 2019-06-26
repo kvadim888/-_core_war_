@@ -2,7 +2,7 @@ NAME = corewar
 
 FLAGS = -Wall -Werror -Wextra
 
-VM =  main.c utilities.c logger.c functions.c alert.c init_champion.c func_math.c game.c func_st.c func_misc.c func_ld.c func_fork.c g_operations.c
+VM =  main.c utilities.c logger.c functions.c alert.c init_champion.c func_math.c game.c func_st.c func_misc.c func_ld.c func_fork.c
 
 INCLUDES = ../includes/functions.h ../includes/op.h ../includes/vm.h
 
