@@ -47,7 +47,7 @@ void	exec_function(t_list *lst)
 		if (g_game.field[carriage->pos] > 0 && g_game.field[carriage->pos] < 16)
 		{
 			memcpy(&carriage->operation,
-				&g_op[g_game.field[carriage->pos]], sizeof(t_operation));
+				&g_op[g_game.field[carriage->pos] - 1], sizeof(t_operation));
 			carriage->rest = carriage->operation.period - 1;
 		}
 		else
@@ -59,7 +59,7 @@ void	exec_function(t_list *lst)
 	if (carriage->rest > 0)
 		return ;
 	operation = &carriage->operation;
-	if (operation->code > 0 && operation->code < 16)
+	if (operation->code > 0 && operation->code <= 16)
 	{
 		argtype.cell = g_game.field[carriage->pos];
 		operation->argt[0] = (uint16_t)(argtype.arg1);
