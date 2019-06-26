@@ -65,7 +65,7 @@ void	exec_function(t_list *lst)
 		operation->argt[0] = (uint16_t)(argtype.arg1);
 		operation->argt[1] = (uint16_t)(argtype.arg2);
 		operation->argt[2] = (uint16_t)(argtype.arg3);
-		operation->function(&g_game, carriage);
+		operation->function(carriage);
 		carriage->pos += 7; // todo length estimation
 	}
 }
