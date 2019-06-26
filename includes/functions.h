@@ -36,7 +36,7 @@ void	func_xor(t_carriage *carriage);
 void	func_fork(t_carriage *carriage);
 void	func_lfork(t_carriage *carriage);
 
-t_operation	g_op[16] =
+static const t_operation	g_op[16] =
 {
 	{
 		.name = "live",

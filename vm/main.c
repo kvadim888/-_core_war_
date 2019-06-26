@@ -93,7 +93,7 @@ void	map_create(t_game *game)
 
 	ft_bzero(game->field, MEM_SIZE);
 	len = ft_lstlen(game->players);
-	carriage = (t_carriage){.carry = 0, .op = 0, .live = 0, .rest = 0};
+	carriage = (t_carriage){.carry = 0, .live = 0, .rest = 0};
 	tmp = game->players;
 	while (tmp)
 	{
@@ -104,45 +104,6 @@ void	map_create(t_game *game)
 		ft_memcpy(game->field + carriage.pos, champ->code, champ->header->prog_size);
 		ft_lstadd(&game->carriages, ft_lstnew(&carriage, sizeof(t_carriage)));
 		tmp = tmp->next;
-	}
-}
-
-void	exec_function(t_list *lst)
-{
-	t_carriage	*carriage;
-	t_operation	*operation;
-	t_operation	tmp;
-
-	carriage = lst->content;
-
-	if (carriage->rest > 0)
-		carriage->rest--;
-	else
-	{
-		carriage->op = g_game.field[carriage->pos];
-		if (carriage->op > 0 && carriage->op <= 16)
-		{
-			carriage->rest = g_op[carriage->op - 1].period - 1;
-		}
-		else
-		{
-			carriage->op = 0;
-			carriage->rest = 0;
-		}
-	}
-	if (carriage->rest > 0)
-		return ;
-	operation = (carriage->op > 0) ? &g_op[carriage->op - 1] : NULL;
-	if (operation)
-	{
-		tmp.argt[0] = (uint16_t)(g_game.field[carriage->pos] >> 6 & 0b11);
-		tmp.argt[1] = (uint16_t)(g_game.field[carriage->pos] >> 4 & 0b11);
-		tmp.argt[2] = (uint16_t)(g_game.field[carriage->pos] >> 2 & 0b11);
-		printf("type = %i\n", tmp.arg_types[0]);
-
-		carriage->pos = read_values(&g_game, carriage, carriage->pos);
-		operation->function(&g_game, carriage);
-		carriage->pos += 7; // todo length estimation
 	}
 }
 
@@ -160,7 +121,7 @@ int		main(int ac, char **av)
 	ft_printf("Introducing players\n");
 	ft_lstiter(g_game.players, log_champion);
 
-	ft_printf("Map c.ating\n");
+	ft_printf("Map creating\n");
 	field_init();
 	log_field(32); //fixme delete
 

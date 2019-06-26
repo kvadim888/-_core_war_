@@ -20,15 +20,15 @@
 # define		BINARY_EXTENSION	".cor"
 
 # define USAGE "Usage : ./corewar [-dump N -n N -v N] <champion1.cor> <...>\n\
-\t -dump N\t: Dumps memory after N cycles then exits\n\
-\t -n N\t: Define champion number\n\
-\t -v N\t: Verbosity levels, can be added together to enable several\n\
-\t \t 0\t: Show only essentials\n\
-\t \t 1\t: Show lives\n\
-\t \t 2\t: Show cycles\n\
-\t \t 4\t: Show operations (Params are NOT litteral ...)\n\
-\t \t 8\t: Show deaths\n\
-\t \t 16\t: Show PC movements (Except for jumps)\n\
+\t\t-dump N\t: Dumps memory after N cycles then exits\n\
+\t\t-n N\t: Define champion number\n\
+\t\t-v N\t: Verbosity levels, can be added together to enable several\n\
+\t\t\t0\t: Show only essentials\n\
+\t\t\t1\t: Show lives\n\
+\t\t\t2\t: Show cycles\n\
+\t\t\t4\t: Show operations (Params are NOT litteral ...)\n\
+\t\t\t8\t: Show deaths\n\
+\t\t\t16\t: Show PC movements (Except for jumps)\n\
 #############################################################################\n"
 
 # define ERR_PLAYERS_AMOUNT	"Invalid players' amount"

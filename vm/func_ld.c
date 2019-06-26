@@ -40,14 +40,15 @@ void func_ldi(t_carriage *carriage)
 	if (check_arg(operation->argt[2], operation->argv[2]) != T_REG)
 		return ;
 	argv = operation->argv;
-	if (check_param(carriage, 0, &a1) && check_param(carriage, 0, &a2))
-		carriage->reg[argv[2] - 1] =
-				get_value((((a1 + a2) % IDX_MOD) + MEM_SIZE) % MEM_SIZE);
-    if (g_flag & 4)
-        ft_printf("P%5i | ldi r%i %i %i\n"
-				  "     | -> load from %i + %i = %i (with pc and mod %i\n",
-                  carriage->id, operation->argv[0], a2, a3, a2, a3, a2 + a3, carriage->pos + ((a2 + a3) % IDX_MOD));
-	ft_printf("func_ldi\n");
+	argv[0] = get_arg(carriage, operation->argt[0], operation->argv[0]);
+	argv[1] = get_arg(carriage, operation->argt[1], operation->argv[1]);
+	carriage->reg[argv[2] - 1] =
+			get_value((((argv[0] + argv[1]) % IDX_MOD) + MEM_SIZE) % MEM_SIZE);
+	if (g_flag & 4)
+		ft_printf("P%5i | ldi r%i %i %i\n"
+			"     | -> load from %i + %i = %i (with pc and mod %i\n",
+			carriage->id, operation->argv[0], argv[1], argv[2], argv[1],
+			argv[2], argv[1] + argv[2], carriage->pos + ((argv[1] + argv[2]) % IDX_MOD));
 }
 
 void func_lld(t_carriage *carriage)
@@ -75,12 +76,12 @@ void func_lldi(t_carriage *carriage)
     operation = &carriage->operation;
 	if (check_arg(operation->argt[2], operation->argv[2]) != T_REG)
 		return ;
-	if (check_arg(operation->argt[0], operation->argv[0]) != (T_REG | T_DIR | T_IND) ||
-		check_arg(operation->argt[1], operation->argv[1]) != (T_REG | T_DIR))
-		return ;
 	argv = operation->argv;
-	if (check_param(carriage, 0, &a1) && check_param(carriage, 0, &a2))
-		carriage->reg[argv[2] - 1] = get_value((((a1 + a2)) + MEM_SIZE) % MEM_SIZE);
+	argv[0] = get_arg(carriage, operation->argt[0], operation->argv[0]);
+	argv[1] = get_arg(carriage, operation->argt[1], operation->argv[1]);
+	carriage->reg[argv[2] - 1] =
+			get_value((((argv[0] + argv[1])) + MEM_SIZE) % MEM_SIZE);
 	if (g_flag & 4)
-	    ft_printf("P%5i | lldi %i %i r%i\n", carriage->id, a1, a2, operation->argv[2]);
+	    ft_printf("P%5i | lldi %i %i r%i\n",
+	    		carriage->id, argv[0], argv[1], operation->argv[2]);
 }
