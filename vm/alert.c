@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/vm.h"
+#include "vm.h"
 
 void	error(int trigger, char *msg)
 {
@@ -19,4 +19,10 @@ void	error(int trigger, char *msg)
 		ft_dprintf(2, "ERROR: %s\n", msg);
 		exit(1);
 	}
+}
+
+void	usage()
+{
+	ft_printf("%s\n", USAGE);
+	exit(0);
 }

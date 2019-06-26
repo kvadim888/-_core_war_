@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/vm.h"
-#include "../includes/functions.h"
+#include <vm.h>
+#include <functions.h>
 
 int		check_arg(uint32_t type, uint32_t arg)
 {
@@ -30,99 +30,43 @@ uint32_t get_arg(t_carriage *cr, uint32_t type, uint32_t arg)
 		return (get_value(((cr->pos + (arg) % IDX_MOD) + MEM_SIZE) % MEM_SIZE));
 	if (type == T_DIR)
 		return (arg);
-    return (0);
-}
-
-int		steps_estimation(t_operation	operation, int op_code)
-{
-	int s;
-	int i;
-	int tl;
-
-	s = 1;
-	if (op_code != 1 && op_code != 9 && op_code != 12 & op_code != 15)
-		s += 1;
-	i = -1;
-//	printf("operation.code = %i\n", op_code);
-	while (++i < 3)
-	{
-		tl = 1;
-	//	printf("type %i = %i\n", i, operation.arg_types[i]);
-		if (operation.argt[i] == T_DIR)
-		{	
-			if (op_code < 8 || op_code == 13 || op_code == 16)
-			{
-				tl = 4;
-			} else
-				tl = 2;
-		} else if (operation.argt[i] == T_IND)
-		{
-			tl = 2;
-		} else if (operation.argt[i] == T_REG){
-			tl = 1;
-		}
-		s += tl;
-	}
-	printf("steps = %i\n", s);
-	return (s);
 }
 
 void	exec_function(t_list *lst)
 {
-   // printf("exec function\n");
-    uint32_t	op;
-    t_carriage	*carriage;
-    t_operation	*operation;
-    t_operation	tmp;
-    t_argtype	arg_types;
+	t_carriage	*carriage;
+	t_operation	*operation;
+	t_argtype	argtype;
 
-    carriage = lst->content;
-    if (carriage->operation.period > 0)
-        carriage->operation.period--;
-    else
-    {
-        op = g_game.field[carriage->pos++];
-        if (op > 0 && op <= 16){
-          //  ft_memcpy(&carriage->operation, &g_op[op - 1], sizeof(t_operation));
-            carriage->operation.period = g_op[op - 1].period;
-            carriage->operation.codage = g_op[op - 1].codage;
-            carriage->operation.code = op;
-        }
-        else{
-            
-            ft_bzero(&carriage->operation, sizeof(t_operation));
-            carriage->operation.code = 0;
-            carriage->operation.period = 0;
-        //    printf("carriage->operation.code = 0 %i\n", carriage->operation.code);
-        }
-    }
-    // printf("exec function 2\n");
-   //  printf("carriage->operation.period %i\n", carriage->operation.period);
-    if (carriage->operation.period > 0)
-        return ;
-  //  printf("exec function 3\n");
-    
-    if (carriage->operation.code > 0)
-    {
-       // printf("carriage->operation.code %i\n", carriage->operation.code);
-       //  printf("carriage->operation.codage %i\n", carriage->operation.codage);
-        // printf("absolut codage %i\n",  g_op[carriage->operation.code].codage);
-        if (carriage->operation.codage)
-        {
-        //    printf("carriage->operation.codage %i\n", carriage->operation.codage);
-            arg_types.cell = g_game.field[carriage->pos];
-            tmp.argt[0] = arg_types.arg1;
-            tmp.argt[1] = arg_types.arg2;
-            tmp.argt[2] = arg_types.arg3;
-        }
+	carriage = lst->content;
 
-       // read_values(&g_game, carriage);
-       //  printf("operation->function 1\n");
-
-       g_op[carriage->operation.code - 1].function(carriage);
-      //  printf("operation->function 2\n");
-        carriage->pos = (carriage->pos + steps_estimation(tmp, carriage->operation.code)) % MEM_SIZE; // todo length estimation
-    }
-    else
-        carriage->pos++;
+	if (carriage->rest > 0)
+		carriage->rest--;
+	else
+	{
+		if (g_game.field[carriage->pos] > 0 && g_game.field[carriage->pos] < 16)
+		{
+			memcpy(&carriage->operation,
+				&g_op[g_game.field[carriage->pos] - 1], sizeof(t_operation));
+			carriage->rest = carriage->operation.period - 1;
+		}
+		else
+		{
+			carriage->operation.code = -1;
+			carriage->rest = 0;
+		}
+	}
+	if (carriage->rest > 0)
+		return ;
+	operation = &carriage->operation;
+	if (operation->code > 0 && operation->code <= 16)
+	{
+		argtype.cell = g_game.field[carriage->pos];
+		operation->argt[0] = (uint16_t)(argtype.arg1);
+		operation->argt[1] = (uint16_t)(argtype.arg2);
+		operation->argt[2] = (uint16_t)(argtype.arg3);
+		operation->function(carriage);
+		carriage->pos += 7; // todo length estimation
+	}
 }
+

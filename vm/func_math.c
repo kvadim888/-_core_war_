@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/functions.h"
+#include <functions.h>
 
 void func_add(t_carriage *carriage)
 {

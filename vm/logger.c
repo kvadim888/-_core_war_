@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/vm.h"
+#include "vm.h"
 
 void	log_champion(t_list *lst)
 {
@@ -19,8 +19,16 @@ void	log_champion(t_list *lst)
 	champion = lst->content;
 	if (champion)
 		ft_printf("* Player %d, weighing %d bytes, \"%s\" (\"%s\") !\n",
-				  champion->number, champion->header->prog_size,
-				  champion->header->prog_name, champion->header->comment);
+					champion->number, champion->header->prog_size,
+					champion->header->prog_name, champion->header->comment);
+}
+
+void	log_winner(t_champion *champion)
+{
+	if (!champion)
+		return;
+	ft_printf("Contestant %d, \"%s\", has won !\n",
+			  champion->number, champion->header->prog_name);
 }
 
 void	log_field(int width)
@@ -31,7 +39,7 @@ void	log_field(int width)
 	while (pos < MEM_SIZE)
 	{
 		if (pos % width == 0)
-			ft_printf("%.3p : ", pos);
+			ft_printf("%.4p : ", pos);
 		ft_printf("%.2x ", g_game.field[pos]);
 		if (++pos % width == 0)
 			ft_printf("\n");
