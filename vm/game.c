@@ -55,28 +55,3 @@ t_champion	*game_loop()
     }
     return (g_game.survivor);
 }
-
-void	field_init()
-{
-    int			len;
-    t_list		*tmp;
-    t_champion	*champ;
-    t_carriage	carriage;
-
-    ft_bzero(g_game.field, MEM_SIZE);
-    len = ft_lstlen(g_game.players);
-    carriage = (t_carriage){.carry = 0, .live = 0, .rest = 0};
-    ft_bzero(&carriage.operation, sizeof(t_operation));
-    tmp = g_game.players;
-    while (tmp)
-    {
-        champ = tmp->content;
-        carriage.id = champ->number;
-        carriage.reg[0] = -champ->number;
-        carriage.pos = (carriage.id - 1) * (MEM_SIZE / len);
-        ft_memcpy(g_game.field + carriage.pos,
-                  champ->code, champ->header->prog_size);
-        ft_lstadd(&g_game.carriages, ft_lstnew(&carriage, sizeof(t_carriage)));
-        tmp = tmp->next;
-    }
-}

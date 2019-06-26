@@ -97,7 +97,7 @@ struct						s_operation
 struct						s_carriage
 {
 	uint16_t				id;
-	uint8_t					pos;
+	uint16_t					pos;
 	uint16_t				live;
 	uint32_t				rest;
 	uint8_t					carry;
@@ -153,7 +153,6 @@ uint32_t					get_arg(t_carriage *cr, uint32_t type, uint32_t arg);
 int							new_champion(char *path, t_champion *champion);
 
 t_list		    			*carriage_filter(t_list *lst);
-void	        			field_init();
 t_champion	    			*game_loop();
 
 #endif

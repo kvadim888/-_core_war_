@@ -19,15 +19,16 @@
 uint8_t		get_flag(char *str)
 {
 	ft_printf("flag = %s\n", str);
-	if (ft_strequ(str, "-v") || ft_strequ(str, "--verbose"))
+	if (ft_strequ(str, "-v") || ft_strequ(str, "-verbose"))
 		return (VERBOSE);
-	if (ft_strequ(str, "-d") || ft_strequ(str, "--dump"))
+	if (ft_strequ(str, "-d") || ft_strequ(str, "-dump"))
 		return (DUMP);
 	if (ft_strequ(str, "-n"))
 		return (CHAMPION_NUMBER);
 	return (UNKNOWN);
 }
 
+// todo replace error with usage()
 int		handle_flag(int flag, char *av)
 {
 	int	champion_number;
@@ -84,29 +85,23 @@ void	read_params(int ac, char **av)
 	error(amount < 1 || amount > MAX_PLAYERS, ERR_PLAYERS_AMOUNT);
 }
 
-void	map_create(t_game *game)
+void	fill_field(t_list *player_lst)
 {
-	int			len;
-	t_list		*tmp;
-	t_champion	*champ;
+	static uint16_t id = 1;
 	t_carriage	carriage;
+	t_champion *champion;
 
-	ft_bzero(game->field, MEM_SIZE);
-	len = ft_lstlen(game->players);
+	champion = player_lst->content;
 	ft_bzero(&carriage, sizeof(t_carriage));
-	tmp = game->players;
-	while (tmp)
-	{
-		champ = tmp->content;
-		carriage.id = champ->number;
-		carriage.reg[0] = -champ->number;
-		carriage.pos = (carriage.id - 1) * (MEM_SIZE / len);
-		ft_memcpy(game->field + carriage.pos, champ->code, champ->header->prog_size);
-		ft_lstadd(&game->carriages, ft_lstnew(&carriage, sizeof(t_carriage)));
-		tmp = tmp->next;
-	}
+	carriage.id = id++;
+	carriage.reg[0] = -champion->number;
+	// todo choose between carriage.id and champion.number
+	carriage.pos = (carriage.id *
+			(MEM_SIZE / ft_lstlen(g_game.players))) % MEM_SIZE;
+	ft_memcpy(g_game.field + carriage.pos,
+			champion->code, champion->header->prog_size);
+	ft_lstadd(&g_game.carriages, ft_lstnew(&carriage, sizeof(t_carriage)));
 }
-
 
 int		main(int ac, char **av)
 {
@@ -123,7 +118,9 @@ int		main(int ac, char **av)
 	ft_lstiter(g_game.players, log_champion);
 
 	ft_printf("Map creating\n");
-	field_init();
+	ft_bzero(g_game.field, MEM_SIZE);
+	ft_lstiter(g_game.players, fill_field);
+
 	log_field(32); //fixme delete
 	 ft_printf("Game start\n");
 	winer = game_loop();
