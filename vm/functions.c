@@ -44,7 +44,7 @@ void	exec_function(t_list *lst)
 		carriage->rest--;
 	else
 	{
-		if (carriage->pos > 0 && carriage->pos < 16)
+		if (g_game.field[carriage->pos] > 0 && g_game.field[carriage->pos] < 16)
 		{
 			memcpy(&carriage->operation,
 				   &g_op[carriage->pos], sizeof(t_operation));
