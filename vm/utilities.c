@@ -23,6 +23,38 @@ int			is_number(char *str)
 	return (*str == '\0');
 }
 
+static int	find_num(t_list *lst, int num)
+{
+	t_champion *champion;
+
+	while(lst)
+	{
+		champion = lst->content;
+		if (champion->number == num)
+			return (1);
+		lst = lst->next;
+	}
+	return (0);
+}
+
+void		choose_num(t_list *lst)
+{
+	static int	num = 1;
+	t_champion	*champion;
+
+	champion = lst->content;
+	if (champion->number != 0)
+		return ;
+	while (find_num(g_game.players, num) && num <= MAX_PLAYERS)
+		num++;
+	if (num > MAX_PLAYERS)
+	{
+		ft_printf(USAGE);
+		exit(0);
+	}
+	champion->number = num;
+}
+
 void		set_value(int32_t addr, uint32_t value)
 {
 	int		i;

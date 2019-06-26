@@ -22,7 +22,7 @@ void func_fork(t_carriage	*carriage)
 	new = g_game.carriages->content;
 	new->pos = ((carriage->param_values[0] % IDX_MOD) + MEM_SIZE) % MEM_SIZE;
 	new->id = ++g_id;
-	if (g_flag & 4)
+	if (g_flag & FLAG_VERBOSE_4)
 	    ft_printf("P%5i | fork %i (%i)\n",
 	    	carriage->id, operation->argv[0], (operation->argv[0] % IDX_MOD));
 }
@@ -37,7 +37,7 @@ void func_lfork(t_carriage *carriage)
 	new = g_game.carriages->content;
 	new->pos = (carriage->pos + operation->argv[0]) % MEM_SIZE;
 	new->id = ++g_id;
-    if (g_flag & 4)
+    if (g_flag & FLAG_VERBOSE_4)
         ft_printf("P%5i | fork %i (%i)\n", carriage->id, operation->argv[0],
         		(operation->argv[0] + carriage->pos));
 }

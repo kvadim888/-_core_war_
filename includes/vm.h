@@ -19,6 +19,12 @@
 # define		CODE_EXTENSION		".s"
 # define		BINARY_EXTENSION	".cor"
 
+# define		FLAG_DUMP			(uint8_t)0b00100000
+# define		FLAG_VERBOSE_8		(uint8_t)0b00001000
+# define		FLAG_VERBOSE_4		(uint8_t)0b00000100
+# define		FLAG_VERBOSE_2		(uint8_t)0b00000010
+# define		FLAG_VERBOSE_1		(uint8_t)0b00000001
+
 # define USAGE "Usage : ./corewar [-dump N -n N -v N] <champion1.cor> <...>\n\
 \t\t-dump N\t: Dumps memory after N cycles then exits\n\
 \t\t-n N\t: Define champion number\n\
@@ -127,8 +133,11 @@ typedef enum				e_flag
 	CHAMPION_NUMBER
 }							t_flag;
 
+void						usage();
 void						error(int trigger, char *msg);
 int							is_number(char *str);
+
+void						choose_num(t_list *lst);
 
 void						set_value(int32_t addr, uint32_t value);
 uint32_t					get_value(uint32_t addr);
@@ -136,6 +145,7 @@ void	        			exec_function(t_list *lst);
 
 void						log_field(int width);
 void						log_champion(t_list *lst);
+void						log_winner(t_champion *champion);
 
 int							check_arg(uint32_t type, uint32_t arg);
 uint32_t					get_arg(t_carriage *cr, uint32_t type, uint32_t arg);

@@ -1,8 +1,8 @@
-#include "vm.h"
+#include <vm.h>
 
 t_list		*carriage_filter(t_list *lst)
 {
-    t_list		head;
+	t_list		head;
     t_list		*prev;
     t_carriage	*carriage;
 
@@ -11,11 +11,13 @@ t_list		*carriage_filter(t_list *lst)
     while (lst)
     {
         carriage = lst->content;
-        if (carriage->live <= 0)
+        if (g_game.cycle_counter - carriage->live <= g_game.check_period)
         {
-            prev->next = lst->next;
-            ft_lstdelone(&lst, ft_lstrm);
-            lst = prev->next;
+            if (g_flag & FLAG_VERBOSE_8)
+            	ft_printf("Process %d hasn't lived for %d cycles (CTD %d)",
+            		carriage->id, g_game.cycle_counter - carriage->live,
+            		g_game.check_period);
+            ft_lstcut(&lst, prev, ft_lstrm);
         }
         else
         {
@@ -29,8 +31,10 @@ t_list		*carriage_filter(t_list *lst)
 t_champion	*game_loop()
 {
     while (g_game.carriages && ft_lstlen(g_game.carriages))
-    {
+	{
         g_game.cycle_counter++;
+        if (g_flag & FLAG_VERBOSE_2)
+        	ft_printf("It is now cycle %d\n", g_game.cycle_counter);
         g_game.check_counter++;
         ft_lstiter(g_game.carriages, exec_function);
         if (g_game.check_counter >= g_game.check_period)
@@ -43,13 +47,11 @@ t_champion	*game_loop()
                 g_game.check_period -= (g_game.check_period > 0)
                                         ? CYCLE_DELTA : 0;
         }
-        if (g_game.dump_counter >= g_game.dump_period)
+        if ((g_flag & FLAG_DUMP) && g_game.dump_counter >= g_game.dump_period)
         {
-            log_field(32); //todo log_mode
+            log_field(32);
             exit(0);
         }
-        if (g_game.show_counter >= g_game.show_period)
-            log_field(32); //todo log_mode
     }
     return (g_game.survivor);
 }
