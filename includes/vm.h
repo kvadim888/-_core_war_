@@ -40,19 +40,10 @@
 \t\t\t16\t: Show PC movements (Except for jumps)\n\
 ################################################################################\n"
 
-# define ERR_PLAYERS_AMOUNT	"Invalid players' amount"
-# define ERR_INIT_PLAYER	"Unable to initialise player"
-# define ERR_INIT_CARRIAGE	"Unable to initialise carriage"
-# define ERR_INIT_VM		"Unable to initialise virtual machine"
-# define ERR_OPEN_BINARY	"Binary file cannot be opened"
-# define ERR_READ_BINARY	"Binary file cannot be read"
-# define ERR_INVALID_BINARY	"Invalid binary file"
-
-
 /*nastia*/
 
 //Stadard
-# define ERR_CH_TOO_SMALL    "Error: File %s is too small to be a champion\n"
+# define ERR_CH_TOO_SMALL   "Error: File %s is too small to be a champion\n"
 # define ERR_CANT_READ_FILE "Can't read source file %s\n"
 # define ERR_INVALID_HEADER	"Error: File %s has an invalid header\n"
 # define ERR_INVALID_SIZE	"Error: File %s has a code size that differ from what its header says\n"
