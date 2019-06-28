@@ -12,7 +12,7 @@
 
 #include "vm.h"
 
-void	err_msgerror(int trigger, char *msg)
+void	error(int trigger, char *msg)
 {
 	if (trigger)
 	{
@@ -29,6 +29,15 @@ void	err_msg(int trigger, char *msg, char *var)
             ft_dprintf(2, msg, var);
         else
             ft_dprintf(2, msg);
+        exit(1);
+    }
+}
+
+void	err_too_big_code(int trigger, char *msg, char *n, int s)
+{
+    if (trigger)
+    {
+        ft_dprintf(2, msg, n, s);
         exit(1);
     }
 }

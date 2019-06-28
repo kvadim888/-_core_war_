@@ -55,6 +55,7 @@ int				new_champion(char *path, t_champion *champion)
 	size = read(fd, champion->code, champion->header->prog_size);
     err_msg(size < champion->header->prog_size, ERR_INVALID_SIZE, path);
     err_msg(read(fd, NULL, 1) != 0, ERR_INVALID_SIZE, path);
+    err_too_big_code((champion->header->prog_size > 682), ERR_TOO_BIG_CODE, path, champion->header->prog_size);
 	close(fd);
 	return (0);
 }

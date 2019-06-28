@@ -20,6 +20,7 @@
 # define		BINARY_EXTENSION	".cor"
 
 # define		FLAG_DUMP			(uint8_t)0b00100000
+# define		FLAG_AFF			(uint8_t)0b00100000
 # define		FLAG_VERBOSE_8		(uint8_t)0b00001000
 # define		FLAG_VERBOSE_4		(uint8_t)0b00000100
 # define		FLAG_VERBOSE_2		(uint8_t)0b00000010
@@ -54,6 +55,7 @@
 # define ERR_INVALID_HEADER	"Error: File %s has an invalid header\n"
 # define ERR_INVALID_SIZE	"Error: File %s has a code size that differ from what its header says\n"
 # define ERR_TOO_MANY_CHMPS	"Too many champions\n"
+# define ERR_TOO_BIG_CODE   "File %s has too large a code (%i bytes > 682 bytes)\n"
 
 //Custom
 # define INVALID_CH_NUMBER 	"Error: Champion number %s is invalid\n"
@@ -144,6 +146,7 @@ typedef enum				e_flag
 void						usage();
 void						error(int trigger, char *msg);
 void                        err_msg(int trigger, char *msg, char *var);
+void                        err_too_big_code(int trigger, char *msg, char *n, int s);
 int							is_number(char *str);
 
 void						choose_num(t_list *lst);
