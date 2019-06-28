@@ -13,6 +13,25 @@
 #include <vm.h>
 #include <functions.h>
 
+int		check_arg(uint32_t type, uint32_t arg)
+{
+	if (type == T_REG)
+		return (arg > 0 || arg < REG_NUMBER) ? T_REG : 0;
+	if (type == T_IND || type == T_DIR)
+		return (type);
+	return (0);
+}
+
+int32_t get_arg(t_carriage *cr, uint32_t type, uint32_t arg)
+{
+	if (type == T_REG)
+		return (cr->reg[arg - 1]);
+	if (type == T_IND)
+		return (get_value(((cr->pos + (arg) % IDX_MOD) + MEM_SIZE) % MEM_SIZE, REG_SIZE));
+	if (type == T_DIR)
+		return (arg);
+}
+
 int 	get_argtype(t_carriage *carriage)
 {
 	t_argtype		argtype;

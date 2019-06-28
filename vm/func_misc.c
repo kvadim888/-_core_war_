@@ -16,6 +16,7 @@ void func_live(t_carriage *carriage)
 {
     t_operation *operation;
 
+	get_argval(carriage);
     operation = &carriage->operation;
 	carriage->live = g_game.cycle_counter;
 	g_game.live_counter++;
@@ -32,6 +33,7 @@ void func_zjmp(t_carriage *carriage)
 {
     t_operation *operation;
 
+	get_argval(carriage);
     operation = &carriage->operation;
 	if (carriage->carry)
 	{
@@ -46,8 +48,9 @@ void func_zjmp(t_carriage *carriage)
 void func_aff(t_carriage *carriage)
 {
 	t_operation *operation;
-	uint16_t	*argv;
+	int32_t	*argv;
 
+	get_argval(carriage);
 	operation = &carriage->operation;
 	if (check_arg(operation->argt[0], operation->argv[0]) != T_REG)
 		return;

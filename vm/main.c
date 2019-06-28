@@ -30,7 +30,7 @@ uint8_t		get_flag(char *str)
 }
 
 // todo replace error with usage()
-int		handle_flag(int flag, char *av)
+int			handle_flag(int flag, char *av)
 {
 	int	champion_number;
 
@@ -42,7 +42,7 @@ int		handle_flag(int flag, char *av)
 	if (flag == VERBOSE)
 	{
 		error(!is_number(av), "The argument after -v (-verbose) must be a positive digit");
-		g_flag |= (uint8_t)ft_atoi(av);
+		g_flag |= FLAG_VERBOSE & (uint8_t)ft_atoi(av);
 	}
 	if (flag == DUMP)
 	{
@@ -61,7 +61,7 @@ int		handle_flag(int flag, char *av)
 	return (champion_number);
 }
 
-void	read_params(int ac, char **av)
+void		read_params(int ac, char **av)
 {
 	t_champion champion;
 	int i;
@@ -88,7 +88,7 @@ void	read_params(int ac, char **av)
 	error(amount < 1 || amount > MAX_PLAYERS, ERR_PLAYERS_AMOUNT);
 }
 
-void	fill_field(t_list *player_lst)
+void		fill_field(t_list *player_lst)
 {
 	static uint16_t id = 1;
 	t_carriage	carriage;
@@ -105,7 +105,7 @@ void	fill_field(t_list *player_lst)
 	ft_lstadd(&g_game.carriages, ft_lstnew(&carriage, sizeof(t_carriage)));
 }
 
-int		main(int ac, char **av)
+int			main(int ac, char **av)
 {
 	t_champion	*winer;
 

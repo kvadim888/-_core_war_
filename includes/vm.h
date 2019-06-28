@@ -21,6 +21,8 @@
 
 # define		FLAG_DUMP			(uint8_t)0b00100000
 # define		FLAG_AFF			(uint8_t)0b00010000
+
+# define		FLAG_VERBOSE		(uint8_t)0b00001111
 # define		FLAG_VERBOSE_8		(uint8_t)0b00001000
 # define		FLAG_VERBOSE_4		(uint8_t)0b00000100
 # define		FLAG_VERBOSE_2		(uint8_t)0b00000010
@@ -88,7 +90,7 @@ struct						s_operation
 	uint8_t					codage;
 	uint8_t					dir_size;
 	uint16_t				argc;
-	uint16_t				argv[3];
+	int32_t					argv[3];
 	uint8_t					argt[3];
 	uint32_t				period;
 	void					(*function)();
@@ -137,9 +139,13 @@ int							is_number(char *str);
 
 void						choose_num(t_list *lst);
 
+int							check_arg(uint32_t type, uint32_t arg);
+int32_t						get_arg(t_carriage *cr,
+										uint32_t type, uint32_t arg);
 void						set_value(int32_t addr,
 										uint32_t value, size_t size);
 uint32_t					get_value(uint32_t addr, size_t size);
+
 void	        			exec_function(t_list *lst);
 
 void						log_field(int width);
@@ -147,7 +153,9 @@ void						log_champion(t_list *lst);
 void						log_winner(t_champion *champion);
 
 int							check_arg(uint32_t type, uint32_t arg);
-uint32_t					get_arg(t_carriage *cr, uint32_t type, uint32_t arg);
+
+size_t						get_arglen(t_operation *operation);
+void						get_argval(t_carriage *carriage);
 
 int							new_champion(char *path, t_champion *champion);
 
