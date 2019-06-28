@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   game.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vkryvono <vkryvono@student.unit.ua>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/06/22 19:03:00 by vkryvono          #+#    #+#             */
+/*   Updated: 2019/06/22 19:03:00 by vkryvono         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <vm.h>
 
 t_list		*carriage_filter(t_list *lst)
@@ -17,7 +29,10 @@ t_list		*carriage_filter(t_list *lst)
             	ft_printf("Process %d hasn't lived for %d cycles (CTD %d)\n",
             		carriage->id, g_game.cycle_counter - carriage->live,
             		g_game.check_period);
-            ft_lstcut(&lst, prev, ft_lstrm);
+            if (head.next == lst)
+				ft_lstcut(&head.next, prev, ft_lstrm);
+            else
+				ft_lstcut(&lst, prev, ft_lstrm);
         }
         else
         {

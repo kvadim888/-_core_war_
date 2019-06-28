@@ -102,7 +102,7 @@ struct						s_carriage
 	uint16_t				pos;
 	uint16_t				live;
 	uint8_t					carry;
-	uint32_t				reg[REG_NUMBER];
+	int32_t					reg[REG_NUMBER];
 	t_operation 			operation;
 };
 
@@ -139,9 +139,9 @@ int							is_number(char *str);
 
 void						choose_num(t_list *lst);
 
-int							check_arg(uint32_t type, uint32_t arg);
-int32_t						get_arg(t_carriage *cr,
-										uint32_t type, uint32_t arg);
+uint8_t						check_arg(uint32_t type, uint32_t arg);
+int32_t						get_arg(t_carriage *carriage, uint32_t type,
+												uint32_t arg, int32_t divider);
 void						set_value(int32_t addr,
 										uint32_t value, size_t size);
 uint32_t					get_value(uint32_t addr, size_t size);
@@ -152,7 +152,7 @@ void						log_field(int width);
 void						log_champion(t_list *lst);
 void						log_winner(t_champion *champion);
 
-int							check_arg(uint32_t type, uint32_t arg);
+uint8_t						check_arg(uint32_t type, uint32_t arg);
 
 size_t						get_arglen(t_operation *operation);
 void						get_argval(t_carriage *carriage);

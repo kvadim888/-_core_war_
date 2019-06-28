@@ -64,8 +64,8 @@ void func_and(t_carriage *carriage)
 		|| !check_arg(operation->argt[0], argv[0])
 		|| !check_arg(operation->argt[1], argv[1]))
 		return ;
-	argv[0] = get_arg(carriage, operation->argt[0], argv[0]);
-	argv[1] = get_arg(carriage, operation->argt[1], argv[1]);
+	argv[0] = get_arg(carriage, operation->argt[0], argv[0], IDX_MOD);
+	argv[1] = get_arg(carriage, operation->argt[1], argv[1], IDX_MOD);
 	carriage->reg[argv[2] - 1] = (uint32_t)argv[0] & (uint32_t)argv[1];
 	carriage->carry = (carriage->reg[argv[2] - 1]) ? 0 : 1;
     if (g_flag & FLAG_VERBOSE_4)
@@ -85,8 +85,8 @@ void func_or(t_carriage *carriage)
 		|| !check_arg(operation->argt[0], argv[0])
 		|| !check_arg(operation->argt[1], argv[1]))
 		return ;
-	argv[0] = get_arg(carriage, operation->argt[0], argv[0]);
-	argv[1] = get_arg(carriage, operation->argt[1], argv[1]);
+	argv[0] = get_arg(carriage, operation->argt[0], argv[0], IDX_MOD);
+	argv[1] = get_arg(carriage, operation->argt[1], argv[1], IDX_MOD);
 	carriage->reg[argv[2] - 1] = (uint32_t)argv[0] | (uint32_t)argv[1];
 	carriage->carry = (carriage->reg[argv[2] - 1]) ? 0 : 1;
     if (g_flag & FLAG_VERBOSE_4)
@@ -106,8 +106,8 @@ void func_xor(t_carriage *carriage)
 		|| !check_arg(operation->argt[0], argv[0])
 		|| !check_arg(operation->argt[1], argv[1]))
 		return ;
-	argv[0] = get_arg(carriage, operation->argt[0], argv[0]);
-	argv[1] = get_arg(carriage, operation->argt[1], argv[1]);
+	argv[0] = get_arg(carriage, operation->argt[0], argv[0], IDX_MOD);
+	argv[1] = get_arg(carriage, operation->argt[1], argv[1], IDX_MOD);
 	carriage->reg[argv[2] - 1] = (uint32_t)argv[0] ^ (uint32_t)argv[1];
 	carriage->carry = (carriage->reg[argv[2] - 1]) ? 0 : 1;
 	if (g_flag & FLAG_VERBOSE_4)
