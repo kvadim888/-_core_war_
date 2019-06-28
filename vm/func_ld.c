@@ -17,7 +17,7 @@ void func_ld(t_carriage *carriage)
     t_operation *operation;
 	uint16_t	*argv;
 
-	ft_printf(("ld\n"));
+	ft_printf("ld\n");
     operation = &carriage->operation;
 	if (!check_arg(operation->argt[1], operation->argv[1]))
 		return ;
@@ -29,7 +29,7 @@ void func_ld(t_carriage *carriage)
 		carriage->reg[argv[1] - 1] = operation->argv[0];
 	carriage->carry = (carriage->reg[argv[1] - 1]) ? 0 : 1;
 	if (g_flag & FLAG_VERBOSE_4)
-	    ft_printf("P%5d | ld %i r%i\n", carriage->id, argv[1], argv[1]);
+	    ft_printf("P%5d | ld %i r%i\n", carriage->id, argv[0], argv[1]);
 }
 
 void func_ldi(t_carriage *carriage)
@@ -37,7 +37,7 @@ void func_ldi(t_carriage *carriage)
     t_operation *operation;
 	uint16_t	*argv;
 
-    ft_printf(("ldi\n"));
+    ft_printf("ldi\n");
     operation = &carriage->operation;
 	if (check_arg(operation->argt[2], operation->argv[2]) != T_REG)
 		return ;

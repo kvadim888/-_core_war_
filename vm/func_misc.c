@@ -24,7 +24,7 @@ void func_live(t_carriage *carriage)
 	if (g_flag & FLAG_VERBOSE_1)
 		ft_printf("Player %d (stayin' alive) is said to be alive\n",
 				operation->argv[0]);
-    if (g_flag & 4)
+    if (g_flag & FLAG_VERBOSE_4)
         ft_printf("P%5i | live %i\n", carriage->id, operation->argv[0]);
 }
 
@@ -32,12 +32,20 @@ void func_zjmp(t_carriage *carriage)
 {
     t_operation *operation;
 
-    operation = &carriage->operation;
+    ft_printf("zjmp\n");
+    operation = &(carriage)->operation;
 	if (carriage->carry)
 	{
-        carriage->pos = ((operation->argv[0] % IDX_MOD) + MEM_SIZE) % MEM_SIZE;
+        carriage->pos = (carriage->pos + (operation->argv[0] % IDX_MOD) + MEM_SIZE) % MEM_SIZE;
+        ft_printf("pos = %i\n", carriage->pos);
         if (g_flag & FLAG_VERBOSE_4)
             ft_printf("P%5i | zjmp %i OK\n", carriage->id, operation->argv[0]);
+        // VADIM ETO TO MESTO// VADIM ETO TO MESTO// VADIM ETO TO MESTO// VADIM ETO TO MESTO
+        // VADIM ETO TO MESTO// VADIM ETO TO MESTO// VADIM ETO TO MESTO// VADIM ETO TO MESTO
+        operation->length = 0; // VADIM ETO TO MESTO
+        // VADIM ETO TO MESTO// VADIM ETO TO MESTO// VADIM ETO TO MESTO// VADIM ETO TO MESTO// VADIM ETO TO MESTO
+        // VADIM ETO TO MESTO// VADIM ETO TO MESTO// VADIM ETO TO MESTO// VADIM ETO TO MESTO// VADIM ETO TO MESTO
+        return ;
     }
     if (g_flag & FLAG_VERBOSE_4)
         ft_printf("P%5i | zjmp %i FAILED\n", carriage->id, operation->argv[0]);

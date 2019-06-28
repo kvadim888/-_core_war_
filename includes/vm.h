@@ -88,7 +88,7 @@ struct						s_operation
 	uint8_t					code;
 	uint8_t					codage;
 	uint16_t				argc;
-	uint16_t				argv[3];
+	int16_t				    argv[3];
 	uint16_t				argt[3];
 	uint32_t				period;
 	uint32_t                length;

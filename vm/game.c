@@ -11,13 +11,16 @@ t_list		*carriage_filter(t_list *lst)
     while (lst)
     {
         carriage = lst->content;
-        if (g_game.cycle_counter - carriage->live <= g_game.check_period)
+        if (g_game.cycle_counter - carriage->live >= g_game.check_period)
         {
             if (g_flag & FLAG_VERBOSE_8)
-            	ft_printf("Process %d hasn't lived for %d cycles (CTD %d)",
+            	ft_printf("Process %d hasn't lived for %d cycles (CTD %d)\n",
             		carriage->id, g_game.cycle_counter - carriage->live,
             		g_game.check_period);
-            ft_lstcut(&lst, prev, ft_lstrm);
+            if (head.next == lst)
+                ft_lstcut(&head.next, prev, ft_lstrm);
+            else
+                ft_lstcut(&lst, prev, ft_lstrm);
         }
         else
         {
@@ -47,8 +50,9 @@ t_champion	*game_loop()
                 g_game.check_period -= (g_game.check_period > 0)
                                         ? CYCLE_DELTA : 0;
         }
-        if ((g_flag & FLAG_DUMP) && g_game.dump_counter >= g_game.dump_period)
+        if ((g_flag & FLAG_DUMP) && g_game.cycle_counter >= g_game.dump_period)
         {
+            ft_printf("\n\n\n\n\n\n\n\n\n");
             log_field(32);
             exit(0);
         }

@@ -114,7 +114,7 @@ void	read_params(int ac, char **av)
 	while (++i < ac)
 	{
 		if (*av[i] == '-') // if arg is flag
-		{
+        {
 			champion.number = handle_flag(get_flag(av[i]), av[i + 1]);
 			i++;
 		}
@@ -153,6 +153,7 @@ int		main(int ac, char **av)
 {
 	t_champion	*winer;
 
+	g_game.check_period = CYCLE_TO_DIE;
 	if (ac < 2)
 	{
 		ft_printf("%s\n", USAGE);

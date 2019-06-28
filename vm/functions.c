@@ -13,10 +13,11 @@
 #include "../includes/vm.h"
 #include "../includes/functions.h"
 
+
 int		check_arg(uint32_t type, uint32_t arg)
 {
 	if (type == T_REG)
-		return (arg < 1 || arg > REG_NUMBER) ? T_REG : 0;
+		return (arg < 1 || arg > REG_NUMBER) ? 0 : T_REG;
 	if (type == T_IND || type == T_DIR)
 		return (type);
 	return (0);
@@ -39,7 +40,7 @@ void		set_params(t_operation *operation, uint16_t pos)
     int op_code = operation->code;
 
     operation->length = 1;
-    if (op_code != 1 && op_code != 9 && op_code != 12 & op_code != 15) {
+    if (op_code != 1 && op_code != 9 && op_code != 12 && op_code != 15) {
         operation->length += 1;
     }
     i = -1;
@@ -51,8 +52,9 @@ void		set_params(t_operation *operation, uint16_t pos)
             if (op_code < 9 || op_code == 13 || op_code == 16)
             {
                 tl = 4;
-            } else
+            } else {
                 tl = 2;
+            }
             operation->argt[i] = T_DIR;
         } else if (operation->argt[i] == 3)
         {
@@ -94,15 +96,20 @@ void	exec_function(t_list *lst)
     if (carriage->rest > 0)
         return ;
     operation = &carriage->operation;
-    //ft_printf("%i\n", operation->code);
+    //ft_printf("code = %i\n", carriage->pos);
     if (operation->code > 0 && operation->code < 16)
     {
-        operation->argt[0] = (((uint8_t)g_game.field[carriage->pos + 1] >> 6) & 0b11);
-        operation->argt[1] = (((uint8_t)g_game.field[carriage->pos + 1] >> 4) & 0b11);
-        operation->argt[2] = (((uint8_t)g_game.field[carriage->pos + 1] >> 2) & 0b11);
-        set_params(operation, carriage->pos);
-        printf("argv %i\n", operation->argv[1]);
-        operation->function(&g_game, carriage);
-        carriage->pos += operation->length; // todo length estimation
+        if (operation->codage != 0) {
+            operation->argt[0] = (((uint8_t) g_game.field[carriage->pos + 1] >> 6) & 0b11);
+            operation->argt[1] = (((uint8_t) g_game.field[carriage->pos + 1] >> 4) & 0b11);
+            operation->argt[2] = (((uint8_t) g_game.field[carriage->pos + 1] >> 2) & 0b11);
+            set_params(operation, carriage->pos);
+        }
+        else {
+            operation->argv[0] = get_value((carriage->pos + 1) % MEM_SIZE, (operation->code == 1) ? 4 : 2);
+            operation->length = (operation->code == 1) ? 5 : 3;
+        }
+        operation->function(carriage);
+        carriage->pos = (carriage->pos + operation->length) % MEM_SIZE; // todo length estimation
     }
 }

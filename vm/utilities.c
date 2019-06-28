@@ -78,7 +78,7 @@ uint32_t	get_value(uint32_t addr, int size)
 	i = 0;
 	while (i < size)
 	{
-		value.byte[i] = g_game.field[(addr + i + MEM_SIZE) % MEM_SIZE];
+		value.byte[i] = g_game.field[(addr + size - 1 - i + MEM_SIZE) % MEM_SIZE];
 		i++;
 	}
 	return (value.word);
