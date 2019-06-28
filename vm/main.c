@@ -18,11 +18,12 @@
 
 uint8_t		get_flag(char *str)
 {
-	ft_printf("flag = %s\n", str);
 	if (ft_strequ(str, "-v") || ft_strequ(str, "-verbose"))
 		return (VERBOSE);
 	if (ft_strequ(str, "-d") || ft_strequ(str, "-dump"))
 		return (DUMP);
+	if (ft_strequ(str, "-a"))
+		return (AFF);
 	if (ft_strequ(str, "-n"))
 		return (CHAMPION_NUMBER);
 	return (UNKNOWN);
@@ -36,6 +37,8 @@ int		handle_flag(int flag, char *av)
 	champion_number = 0;
 	if (flag == UNKNOWN)
 		usage();
+	if (flag == AFF)
+		g_flag |= FLAG_AFF;
 	if (flag == VERBOSE)
 	{
 		error(!is_number(av), "The argument after -v (-verbose) must be a positive digit");
@@ -125,7 +128,7 @@ int		main(int ac, char **av)
 	ft_lstiter(g_game.players, fill_field);
 
 	log_field(32); //fixme delete
-	 ft_printf("Game start\n");
+	ft_printf("Game start\n");
 	winer = game_loop();
 	log_winner(winer);
 	return (0);

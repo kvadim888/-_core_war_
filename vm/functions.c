@@ -32,8 +32,8 @@ int 	get_argtype(t_carriage *carriage)
 
 size_t	get_arglen(t_operation *operation)
 {
-	size_t size;
-	int i;
+	size_t		size;
+	int 		i;
 
 	if (operation->codage == 0)
 		return (operation->dir_size);
@@ -41,18 +41,34 @@ size_t	get_arglen(t_operation *operation)
 	i = -1;
 	while (++i < operation->argc)
 	{
-		if (operation->argt[i] == T_DIR)
-			size += operation->dir_size;
-		else if (operation->argt[i] == T_REG)
-			size += 1;
-		else if (operation->argt[i] == T_IND)
-			size += IND_SIZE;
+		size += (operation->argt[i] == T_DIR) ? operation->dir_size : 0;
+		size += (operation->argt[i] == T_REG) ? 1 : 0;
+		size += (operation->argt[i] == T_IND) ? IND_SIZE : 0;
 	}
 	return (size);
 }
 
-uint32_t get_argval(t_carriage *carriage)
+void	get_argval(t_carriage *carriage)
 {
+	t_operation *operation;
+	size_t		size;
+	int 		i;
+
+	operation = &carriage->operation;
+	size = 0;
+	i = -1;
+	while (++i < operation->argc)
+	{
+		operation->argv[i] = (operation->argt[i] == T_DIR)
+			? get_value(carriage->pos + size, operation->dir_size) : 0;
+		operation->argv[i] = (operation->argt[i] == T_REG)
+			? get_value(carriage->pos + size, 1) : 0;
+		operation->argv[i] = (operation->argt[i] == T_IND)
+			? get_value(carriage->pos + size, IND_SIZE) : 0;
+		size += (operation->argt[i] == T_DIR) ? operation->dir_size : 0;
+		size += (operation->argt[i] == T_REG) ? 1 : 0;
+		size += (operation->argt[i] == T_IND) ? IND_SIZE : 0;
+	}
 }
 
 void	exec_function(t_list *lst)
@@ -70,18 +86,16 @@ void	exec_function(t_list *lst)
 			g_game.field[carriage->pos] <= 16)
 		{
 			memcpy(operation, &g_op[g_game.field[carriage->pos] - 1],
-				   sizeof(t_operation));
+					sizeof(t_operation));
 			operation->period--;
-		} else
+		}
+		else
 			ft_bzero(operation, sizeof(t_operation));
 		carriage->pos++;
 	}
 	if (operation->period > 0 || (operation->code - 1 > 15))
-		return;
+		return ;
 	if (get_argtype(carriage))
-	{
-		get_argval(carriage);
 		operation->function(carriage);
-	}
 	carriage->pos += get_arglen(operation);
 }

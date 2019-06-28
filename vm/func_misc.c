@@ -52,7 +52,8 @@ void func_aff(t_carriage *carriage)
 	if (check_arg(operation->argt[0], operation->argv[0]) != T_REG)
 		return;
 	argv = operation->argv;
-	ft_printf("%c\n", (char)carriage->reg[argv[0] - 1]);
+	if (g_flag & FLAG_AFF)
+		ft_printf("%c\n", (char)carriage->reg[argv[0] - 1]);
 	if (g_flag & FLAG_VERBOSE_4)
 	    ft_printf("P%5d | aff r%d\n", carriage->id, carriage->reg[argv[0] - 1]);
 }

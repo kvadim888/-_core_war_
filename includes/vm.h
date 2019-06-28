@@ -20,6 +20,7 @@
 # define		BINARY_EXTENSION	".cor"
 
 # define		FLAG_DUMP			(uint8_t)0b00100000
+# define		FLAG_AFF			(uint8_t)0b00010000
 # define		FLAG_VERBOSE_8		(uint8_t)0b00001000
 # define		FLAG_VERBOSE_4		(uint8_t)0b00000100
 # define		FLAG_VERBOSE_2		(uint8_t)0b00000010
@@ -126,6 +127,7 @@ typedef enum				e_flag
 	UNKNOWN,
 	VERBOSE,
 	DUMP,
+	AFF,
 	CHAMPION_NUMBER
 }							t_flag;
 
