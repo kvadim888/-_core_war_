@@ -12,13 +12,25 @@
 
 #include "vm.h"
 
-void	error(int trigger, char *msg)
+void	err_msgerror(int trigger, char *msg)
 {
 	if (trigger)
 	{
 		ft_dprintf(2, "ERROR: %s\n", msg);
 		exit(1);
 	}
+}
+
+void	err_msg(int trigger, char *msg, char *var)
+{
+    if (trigger)
+    {
+        if (var != NULL)
+            ft_dprintf(2, msg, var);
+        else
+            ft_dprintf(2, msg);
+        exit(1);
+    }
 }
 
 void	usage()

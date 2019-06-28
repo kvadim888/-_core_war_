@@ -44,7 +44,19 @@
 # define ERR_OPEN_BINARY	"Binary file cannot be opened"
 # define ERR_READ_BINARY	"Binary file cannot be read"
 # define ERR_INVALID_BINARY	"Invalid binary file"
-# define ERR_INVALID_HEADER	"Invalid magic header"
+
+
+/*nastia*/
+
+//Stadard
+# define ERR_CH_TOO_SMALL    "Error: File %s is too small to be a champion\n"
+# define ERR_CANT_READ_FILE "Can't read source file %s\n"
+# define ERR_INVALID_HEADER	"Error: File %s has an invalid header\n"
+# define ERR_INVALID_SIZE	"Error: File %s has a code size that differ from what its header says\n"
+# define ERR_TOO_MANY_CHMPS	"Too many champions\n"
+
+//Custom
+# define INVALID_CH_NUMBER 	"Error: Champion number %s is invalid\n"
 
 typedef struct s_game		t_game;
 typedef struct s_champion	t_champion;
@@ -131,6 +143,7 @@ typedef enum				e_flag
 
 void						usage();
 void						error(int trigger, char *msg);
+void                        err_msg(int trigger, char *msg, char *var);
 int							is_number(char *str);
 
 void						choose_num(t_list *lst);

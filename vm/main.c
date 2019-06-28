@@ -38,22 +38,21 @@ int		handle_flag(int flag, char *av)
 		usage();
 	if (flag == VERBOSE)
 	{
-		error(!is_number(av), "The argument after -v (-verbose) must be a positive digit");
 		g_flag |= (uint8_t)ft_atoi(av);
 	}
 	if (flag == DUMP)
 	{
-		error(!is_number(av), "The argument after -d (-dump) must be a positive digit");
-		g_game.dump_period = ft_atoi(av);
-		g_flag |= FLAG_DUMP;
-		error(g_game.dump_period < 0, "Invalid dump value");
+		if (ft_atoi(av) > 0)
+        {
+            g_game.dump_period = ft_atoi(av);
+            g_flag |= FLAG_DUMP;
+		}
 	}
 	if (flag == CHAMPION_NUMBER)
 	{
-		error(!is_number(av), "The argument after -n must be a positive digit");
 		champion_number = ft_atoi(av);
-		error(champion_number < 1 || champion_number > 4,
-			  "Invalid champion_number value");
+        err_msg(champion_number < 1 || champion_number > 4,
+                INVALID_CH_NUMBER, av);
 	}
 	return (champion_number);
 }
@@ -75,14 +74,15 @@ void	read_params(int ac, char **av)
 		}
 		else
 		{
-			error(new_champion(av[i], &champion), ERR_INIT_PLAYER);
+		    new_champion(av[i], &champion);
+			//error(new_champion(av[i], &champion), ERR_INIT_PLAYER);
 			ft_lstappend(&g_game.players, ft_lstnew(&champion, sizeof(t_champion)));
 			ft_bzero(&champion, sizeof(t_champion));
 		}
 	}
 	amount = ft_lstlen(g_game.players);
 	g_id = amount;
-	error(amount < 1 || amount > MAX_PLAYERS, ERR_PLAYERS_AMOUNT);
+    err_msg(amount < 1 || amount > MAX_PLAYERS, ERR_TOO_MANY_CHMPS, NULL);
 }
 
 void	fill_field(t_list *player_lst)
