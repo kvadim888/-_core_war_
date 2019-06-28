@@ -18,9 +18,9 @@ void func_fork(t_carriage	*carriage)
 	t_carriage *new;
 
     operation = &carriage->operation;
-	ft_lstadd(&g_game.carriages, ft_lstnew(carriage, sizeof(carriage)));
+	ft_lstadd(&g_game.carriages, ft_lstnew(carriage, sizeof(t_carriage)));
 	new = g_game.carriages->content;
-	new->pos = ((carriage->param_values[0] % IDX_MOD) + MEM_SIZE) % MEM_SIZE;
+	new->pos = ((operation->argv[0] % IDX_MOD) + MEM_SIZE) % MEM_SIZE;
 	new->id = ++g_id;
 	if (g_flag & FLAG_VERBOSE_4)
 	    ft_printf("P%5i | fork %i (%i)\n",

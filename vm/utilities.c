@@ -55,30 +55,31 @@ void		choose_num(t_list *lst)
 	champion->number = num;
 }
 
-void		set_value(int32_t addr, uint32_t value)
+void		set_value(int32_t addr, uint32_t value, size_t size)
 {
 	int		i;
 	t_value	val;
 
 	val.word = value;
 	i = 0;
-	while (i < REG_SIZE)
+	while (i < size)
 	{
 		g_game.field[(addr + i + MEM_SIZE) % MEM_SIZE] = val.byte[i];
 		i++;
 	}
 }
 
-uint32_t	get_value(uint32_t addr)
+uint32_t	get_value(uint32_t addr, size_t size)
 {
 	int 	i;
 	t_value	value;
 
 	value.word = 0;
 	i = 0;
-	while (i < REG_SIZE)
+	while (i < size)
 	{
-		value.byte[i] = g_game.field[(addr + i + MEM_SIZE) % MEM_SIZE];
+		value.byte[size - i + 1] =
+				g_game.field[(addr + i + MEM_SIZE) % MEM_SIZE];
 		i++;
 	}
 	return (value.word);

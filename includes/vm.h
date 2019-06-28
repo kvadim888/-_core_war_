@@ -69,8 +69,6 @@ struct						s_game
 	int32_t					live_counter;
 	int32_t					dump_period;
 	int32_t					dump_counter;
-	int32_t					show_period;
-	int32_t					show_counter;
 };
 
 struct						s_champion
@@ -87,9 +85,10 @@ struct						s_operation
 	char 					*name;
 	uint8_t					code;
 	uint8_t					codage;
+	uint8_t					dir_size;
 	uint16_t				argc;
 	uint16_t				argv[3];
-	uint16_t				argt[3];
+	uint8_t					argt[3];
 	uint32_t				period;
 	void					(*function)();
 };
@@ -97,12 +96,9 @@ struct						s_operation
 struct						s_carriage
 {
 	uint16_t				id;
-	uint16_t					pos;
+	uint16_t				pos;
 	uint16_t				live;
-	uint32_t				rest;
 	uint8_t					carry;
-	uint32_t 				param_values[3];
-	uint32_t 				param_types[3];
 	uint32_t				reg[REG_NUMBER];
 	t_operation 			operation;
 };
@@ -139,8 +135,9 @@ int							is_number(char *str);
 
 void						choose_num(t_list *lst);
 
-void						set_value(int32_t addr, uint32_t value);
-uint32_t					get_value(uint32_t addr);
+void						set_value(int32_t addr,
+										uint32_t value, size_t size);
+uint32_t					get_value(uint32_t addr, size_t size);
 void	        			exec_function(t_list *lst);
 
 void						log_field(int width);

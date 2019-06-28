@@ -27,7 +27,7 @@ void func_add(t_carriage *carriage)
 			carriage->reg[argv[0] - 1] + carriage->reg[argv[1] - 1];
 	carriage->carry = (carriage->reg[argv[2] - 1]) ? 0 : 1;
 
-	if (g_flag & 4)
+	if (g_flag & FLAG_VERBOSE_4)
 	    ft_printf("P%5d | add r%i r%i r%i\n", carriage->id,
 	    	operation->argv[0], operation->argv[1], operation->argv[2]);
 }
@@ -46,7 +46,7 @@ void func_sub(t_carriage *carriage)
 	carriage->reg[argv[2] - 1] =
 			carriage->reg[argv[0] - 1] - carriage->reg[argv[1] - 1];
 	carriage->carry = (carriage->reg[argv[2] - 1]) ? 0 : 1;
-    if (g_flag & 4)
+    if (g_flag & FLAG_VERBOSE_4)
         ft_printf("P%5d | add r%i r%i r%i\n",
         		carriage->id, argv[0], argv[1], argv[2]);
 }
@@ -64,7 +64,7 @@ void func_and(t_carriage *carriage)
 	argv = operation->argv;
 	carriage->reg[argv[2] - 1] = argv[0] & argv[1];
 	carriage->carry = (carriage->reg[argv[2] - 1]) ? 0 : 1;
-    if (g_flag & 4)
+    if (g_flag & FLAG_VERBOSE_4)
         ft_printf("P%5d | and %i %i r%i\n",
         		carriage->id, argv[0], argv[1], argv[2]);
 }
@@ -82,7 +82,7 @@ void func_or(t_carriage *carriage)
 	argv = operation->argv;
 	carriage->reg[argv[2] - 1] = argv[0] | argv[1];
 	carriage->carry = (carriage->reg[argv[2] - 1]) ? 0 : 1;
-    if (g_flag & 4)
+    if (g_flag & FLAG_VERBOSE_4)
         ft_printf("P%5d | or %i %i r%i\n",
         		carriage->id, argv[0], argv[1], argv[2]);
 }
@@ -100,7 +100,7 @@ void func_xor(t_carriage *carriage)
 	argv = operation->argv;
 	carriage->reg[argv[2] - 1] = argv[0] ^ argv[1];
 	carriage->carry = (carriage->reg[argv[2] - 1]) ? 0 : 1;
-	if (g_flag & 4)
+	if (g_flag & FLAG_VERBOSE_4)
         ft_printf("P%5d | xor %i %i r%i\n",
         		carriage->id, argv[0], argv[1], argv[2]);
 }

@@ -45,7 +45,9 @@ static const t_operation	g_op[16] =
 		.argv = {0, 0, 0},
 		.argt = {T_DIR, 0, 0},
 		.function = func_live,
-		.period = 10
+		.period = 10,
+		.codage = 0,
+		.dir_size = DIR_SIZE
 	},
 	{
 		.name = "ld",
@@ -54,7 +56,9 @@ static const t_operation	g_op[16] =
 		.argv = {0, 0, 0},
 		.argt = {T_DIR | T_IND, T_REG, 0},
 		.function = func_ld,
-		.period = 5
+		.period = 5,
+		.codage = 1,
+		.dir_size = DIR_SIZE
 	},
 	{
 		.name = "st",
@@ -63,7 +67,9 @@ static const t_operation	g_op[16] =
 		.argv = {0, 0, 0},
 		.argt = {T_REG, T_REG | T_IND, 0},
 		.function = func_st,
-		.period = 5
+		.period = 5,
+		.codage = 1,
+		.dir_size = DIR_SIZE
 	},
 	{
 		.name = "add",
@@ -72,7 +78,9 @@ static const t_operation	g_op[16] =
 		.argv = {0, 0, 0},
 		.argt = {T_REG, T_REG, T_REG},
 		.function = func_add,
-		.period = 10
+		.period = 10,
+		.codage = 1,
+		.dir_size = DIR_SIZE
 	},
 	{
 		.name = "sub",
@@ -81,7 +89,9 @@ static const t_operation	g_op[16] =
 		.argv = {0, 0, 0},
 		.argt = {T_REG, T_REG, T_REG},
 		.function = func_sub,
-		.period = 10
+		.period = 10,
+		.codage = 1,
+		.dir_size = DIR_SIZE
 	},
 	{
 		.name = "and",
@@ -90,7 +100,9 @@ static const t_operation	g_op[16] =
 		.argv = {0, 0, 0},
 		.argt = {T_REG | T_DIR | T_IND, T_REG | T_DIR | T_IND, T_REG},
 		.function = func_and,
-		.period = 6
+		.period = 6,
+		.codage = 1,
+		.dir_size = DIR_SIZE
 	},
 	{
 		.name = "or",
@@ -99,7 +111,9 @@ static const t_operation	g_op[16] =
 		.argv = {0, 0, 0},
 		.argt = {T_REG | T_DIR | T_IND, T_REG | T_DIR | T_IND, T_REG},
 		.function = func_or,
-		.period = 6
+		.period = 6,
+		.codage = 1,
+		.dir_size = DIR_SIZE
 	},
 	{
 		.name = "xor",
@@ -108,7 +122,9 @@ static const t_operation	g_op[16] =
 		.argv = {0, 0, 0},
 		.argt = {T_REG | T_DIR | T_IND, T_REG | T_DIR | T_IND, T_REG},
 		.function = func_xor,
-		.period = 6
+		.period = 6,
+		.codage = 1,
+		.dir_size = DIR_SIZE
 	},
 	{
 		.name = "zjmp",
@@ -117,7 +133,9 @@ static const t_operation	g_op[16] =
 		.argv = {0, 0, 0},
 		.argt = {T_DIR, 0, 0},
 		.function = func_zjmp,
-		.period = 20
+		.period = 20,
+		.codage = 0,
+		.dir_size = IND_SIZE
 	},
 	{
 		.name = "ldi",
@@ -126,7 +144,9 @@ static const t_operation	g_op[16] =
 		.argv = {0, 0, 0},
 		.argt = {T_REG | T_DIR | T_IND, T_REG | T_DIR, T_REG},
 		.function = func_ldi,
-		.period = 25
+		.period = 25,
+		.codage = 1,
+		.dir_size = IND_SIZE
 	},
 	{
 		.name = "sti",
@@ -135,7 +155,9 @@ static const t_operation	g_op[16] =
 		.argv = {0, 0, 0},
 		.argt = {T_REG, T_REG | T_DIR | T_IND, T_REG | T_DIR},
 		.function = func_sti,
-		.period = 25
+		.period = 25,
+		.codage = 1,
+		.dir_size = IND_SIZE
 	},
 	{
 		.name = "fork",
@@ -144,7 +166,9 @@ static const t_operation	g_op[16] =
 		.argv = {0, 0, 0},
 		.argt = {T_DIR, 0, 0},
 		.function = func_fork,
-		.period = 800
+		.period = 800,
+		.codage = 0,
+		.dir_size = IND_SIZE
 	},
 	{
 		.name = "lld",
@@ -153,7 +177,9 @@ static const t_operation	g_op[16] =
 		.argv = {0, 0, 0},
 		.argt = {T_DIR | T_IND, T_REG, 0},
 		.function = func_lld,
-		.period = 10
+		.period = 10,
+		.codage = 1,
+		.dir_size = DIR_SIZE
 	},
 	{
 		.name = "lldi",
@@ -162,7 +188,9 @@ static const t_operation	g_op[16] =
 		.argv = {0, 0, 0},
 		.argt = {T_REG | T_DIR | T_IND, T_REG | T_DIR, T_REG},
 		.function = func_lldi,
-		.period = 50
+		.period = 50,
+		.codage = 1,
+		.dir_size = IND_SIZE
 	},
 	{
 		.name = "lfork",
@@ -171,7 +199,9 @@ static const t_operation	g_op[16] =
 		.argv = {0, 0, 0},
 		.argt = {T_DIR, 0, 0},
 		.function = func_lfork,
-		.period = 1000
+		.period = 1000,
+		.codage = 0,
+		.dir_size = IND_SIZE
 	},
 	{
 		.name = "aff",
@@ -180,7 +210,9 @@ static const t_operation	g_op[16] =
 		.argv = {0, 0, 0},
 		.argt = {T_REG, 0, 0},
 		.function = func_aff,
-		.period = 2
+		.period = 2,
+		.codage = 1,
+		.dir_size = DIR_SIZE
 	}
 };
 
