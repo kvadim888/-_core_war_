@@ -14,7 +14,7 @@ t_list		*carriage_filter(t_list *lst)
         if (g_game.cycle_counter - carriage->live <= g_game.check_period)
         {
             if (g_flag & FLAG_VERBOSE_8)
-            	ft_printf("Process %d hasn't lived for %d cycles (CTD %d)",
+            	ft_printf("Process %d hasn't lived for %d cycles (CTD %d)\n",
             		carriage->id, g_game.cycle_counter - carriage->live,
             		g_game.check_period);
             ft_lstcut(&lst, prev, ft_lstrm);
@@ -36,6 +36,7 @@ t_champion	*game_loop()
         if (g_flag & FLAG_VERBOSE_2)
         	ft_printf("It is now cycle %d\n", g_game.cycle_counter);
         g_game.check_counter++;
+		g_game.dump_counter++;
         ft_lstiter(g_game.carriages, exec_function);
         if (g_game.check_counter >= g_game.check_period)
         {

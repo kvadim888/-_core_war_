@@ -24,7 +24,7 @@ void func_live(t_carriage *carriage)
 	if (g_flag & FLAG_VERBOSE_1)
 		ft_printf("Player %d (stayin' alive) is said to be alive\n",
 				operation->argv[0]);
-    if (g_flag & 4)
+    if (g_flag & FLAG_VERBOSE_4)
         ft_printf("P%5i | live %i\n", carriage->id, operation->argv[0]);
 }
 
@@ -45,7 +45,7 @@ void func_zjmp(t_carriage *carriage)
 
 void func_aff(t_carriage *carriage)
 {
-	t_operation *operation;
+	/*t_operation *operation;
 	uint16_t	*argv;
 
 	operation = &carriage->operation;
@@ -55,4 +55,5 @@ void func_aff(t_carriage *carriage)
 	ft_printf("%c\n", (char)carriage->reg[argv[0] - 1]);
 	if (g_flag & FLAG_VERBOSE_4)
 	    ft_printf("P%5d | aff r%d\n", carriage->id, carriage->reg[argv[0] - 1]);
+	    */
 }

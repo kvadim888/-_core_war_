@@ -13,60 +13,75 @@
 #include <vm.h>
 #include <functions.h>
 
-int		check_arg(uint32_t type, uint32_t arg)
+int 	get_argtype(t_carriage *carriage)
 {
-	if (type == T_REG)
-		return (arg < 1 || arg > REG_NUMBER) ? T_REG : 0;
-	if (type == T_IND || type == T_DIR)
-		return (type);
-	return (0);
+	t_argtype		argtype;
+	t_operation		*operation;
+
+	operation = &carriage->operation;
+	if (operation->codage == 0)
+		return (1);
+	argtype.cell = g_game.field[carriage->pos % MEM_SIZE];
+	operation->argt[0] = (argtype.arg1 & 3U) ? 1U << (argtype.arg1 - 1U) : 0;
+	operation->argt[1] = (argtype.arg2 & 3U) ? 1U << (argtype.arg2 - 1U) : 0;
+	operation->argt[2] = (argtype.arg3 & 3U) ? 1U << (argtype.arg3 - 1U) : 0;
+	return ((operation->argt[0] & g_op[operation->code - 1].argt[0]) &&
+			(operation->argt[1] & g_op[operation->code - 1].argt[1]) &&
+			(operation->argt[2] & g_op[operation->code - 1].argt[2]));
 }
 
-uint32_t get_arg(t_carriage *cr, uint32_t type, uint32_t arg)
+size_t	get_arglen(t_operation *operation)
 {
-	if (type == T_REG)
-		return (cr->reg[arg - 1]);
-	if (type == T_IND)
-		return (get_value(((cr->pos + (arg) % IDX_MOD) + MEM_SIZE) % MEM_SIZE));
-	if (type == T_DIR)
-		return (arg);
+	size_t size;
+	int i;
+
+	if (operation->codage == 0)
+		return (operation->dir_size);
+	size = operation->codage;
+	i = -1;
+	while (++i < operation->argc)
+	{
+		if (operation->argt[i] == T_DIR)
+			size += operation->dir_size;
+		else if (operation->argt[i] == T_REG)
+			size += 1;
+		else if (operation->argt[i] == T_IND)
+			size += IND_SIZE;
+	}
+	return (size);
+}
+
+uint32_t get_argval(t_carriage *carriage)
+{
 }
 
 void	exec_function(t_list *lst)
 {
-	t_carriage	*carriage;
-	t_operation	*operation;
-	t_argtype	argtype;
+	t_carriage *carriage;
+	t_operation *operation;
 
 	carriage = lst->content;
-
-	if (carriage->rest > 0)
-		carriage->rest--;
+	operation = &carriage->operation;
+	if (operation->period > 0)
+		operation->period--;
 	else
 	{
-		if (g_game.field[carriage->pos] > 0 && g_game.field[carriage->pos] < 16)
+		if (g_game.field[carriage->pos] > 0 &&
+			g_game.field[carriage->pos] <= 16)
 		{
-			memcpy(&carriage->operation,
-				&g_op[g_game.field[carriage->pos] - 1], sizeof(t_operation));
-			carriage->rest = carriage->operation.period - 1;
-		}
-		else
-		{
-			carriage->operation.code = -1;
-			carriage->rest = 0;
-		}
+			memcpy(operation, &g_op[g_game.field[carriage->pos] - 1],
+				   sizeof(t_operation));
+			operation->period--;
+		} else
+			ft_bzero(operation, sizeof(t_operation));
+		carriage->pos++;
 	}
-	if (carriage->rest > 0)
-		return ;
-	operation = &carriage->operation;
-	if (operation->code > 0 && operation->code <= 16)
+	if (operation->period > 0 || (operation->code - 1 > 15))
+		return;
+	if (get_argtype(carriage))
 	{
-		argtype.cell = g_game.field[carriage->pos];
-		operation->argt[0] = (uint16_t)(argtype.arg1);
-		operation->argt[1] = (uint16_t)(argtype.arg2);
-		operation->argt[2] = (uint16_t)(argtype.arg3);
+		get_argval(carriage);
 		operation->function(carriage);
-		carriage->pos += 7; // todo length estimation
 	}
+	carriage->pos += get_arglen(operation);
 }
-

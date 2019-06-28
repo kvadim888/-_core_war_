@@ -68,7 +68,7 @@ void	read_params(int ac, char **av)
 	ft_bzero(&champion, sizeof(t_champion));
 	while (++i < ac)
 	{
-		if (*av[i] == '-') // if arg is flag
+		if (*av[i] == '-')
 		{
 			champion.number = handle_flag(get_flag(av[i]), av[i + 1]);
 			i++;
@@ -95,7 +95,6 @@ void	fill_field(t_list *player_lst)
 	ft_bzero(&carriage, sizeof(t_carriage));
 	carriage.id = id++;
 	carriage.reg[0] = -champion->number;
-	// todo choose between carriage.id and champion.number
 	carriage.pos = (carriage.id *
 			(MEM_SIZE / ft_lstlen(g_game.players))) % MEM_SIZE;
 	ft_memcpy(g_game.field + carriage.pos,
@@ -112,8 +111,13 @@ int		main(int ac, char **av)
 		ft_printf("%s\n", USAGE);
 		return (1);
 	}
+
+	ft_bzero(&g_game, sizeof(t_game));
+	g_game.check_period = CYCLE_TO_DIE;
+
 	read_params(ac, av);
 	ft_lstiter(g_game.players, choose_num);
+    sort_chmps();
 	ft_printf("Introducing players\n");
 	ft_lstiter(g_game.players, log_champion);
 
