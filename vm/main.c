@@ -25,21 +25,18 @@ uint8_t		get_flag(char *str)
 		return (DUMP);
 	if (ft_strequ(str, "-n"))
 		return (CHAMPION_NUMBER);
+    if (ft_strequ(str, "-a"))
+        return (AFF);
 	return (UNKNOWN);
 }
 
 // todo replace error with usage()
-int		handle_flag(int flag, char *av)
+int		handle_flag(int flag, char *av, int	ch_nmb)
 {
-	int	champion_number;
-
-	champion_number = 0;
 	if (flag == UNKNOWN)
 		usage();
 	if (flag == VERBOSE)
-	{
 		g_flag |= (uint8_t)ft_atoi(av);
-	}
 	if (flag == DUMP)
 	{
 		if (ft_atoi(av) > 0)
@@ -50,11 +47,15 @@ int		handle_flag(int flag, char *av)
 	}
 	if (flag == CHAMPION_NUMBER)
 	{
-		champion_number = ft_atoi(av);
-        err_msg(champion_number < 1 || champion_number > 4,
-                INVALID_CH_NUMBER, av);
+        ch_nmb = ft_atoi(av);
+        err_msg(ch_nmb < 1 || ch_nmb > 4, INVALID_CH_NUMBER, av);
 	}
-	return (champion_number);
+	if (flag == AFF)
+    {
+        ch_nmb = -1;
+        g_flag |= FLAG_AFF;
+    }
+	return (ch_nmb);
 }
 
 void	read_params(int ac, char **av)
@@ -69,8 +70,8 @@ void	read_params(int ac, char **av)
 	{
 		if (*av[i] == '-')
 		{
-			champion.number = handle_flag(get_flag(av[i]), av[i + 1]);
-			i++;
+            champion.number = handle_flag(get_flag(av[i]), av[i + 1], 0);
+            (champion.number >= 0) ? i++ : 0;
 		}
 		else
 		{

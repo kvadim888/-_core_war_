@@ -43,7 +43,7 @@ void		choose_num(t_list *lst)
 	t_champion	*champion;
 
 	champion = lst->content;
-	if (champion->number != 0)
+	if (champion->number > 0)
 		return ;
 	while (find_num(g_game.players, num) && num <= MAX_PLAYERS)
 		num++;

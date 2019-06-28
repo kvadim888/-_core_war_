@@ -24,7 +24,6 @@ static t_header	*get_header(int fd, char *path)
     err_msg(read(fd, &buff, REG_SIZE) < REG_SIZE, ERR_CH_TOO_SMALL, path);
     err_msg(read(fd, &buff, REG_SIZE) < REG_SIZE, ERR_CH_TOO_SMALL, path);
 	header->prog_size = ft_swap32(buff);
-   // err_msg(header->prog_size > CHAMP_MAX_SIZE, "Invalid prog_size");
     err_msg(read(fd, &header->comment, COMMENT_LENGTH) < COMMENT_LENGTH, ERR_CH_TOO_SMALL, path);
     err_msg(read(fd, &buff, REG_SIZE) < REG_SIZE, ERR_CH_TOO_SMALL, path);
 	return (header);

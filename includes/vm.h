@@ -19,15 +19,17 @@
 # define		CODE_EXTENSION		".s"
 # define		BINARY_EXTENSION	".cor"
 
+# define		FLAG_AFF			(uint8_t)0b01000000
 # define		FLAG_DUMP			(uint8_t)0b00100000
-# define		FLAG_AFF			(uint8_t)0b00100000
 # define		FLAG_VERBOSE_8		(uint8_t)0b00001000
 # define		FLAG_VERBOSE_4		(uint8_t)0b00000100
 # define		FLAG_VERBOSE_2		(uint8_t)0b00000010
 # define		FLAG_VERBOSE_1		(uint8_t)0b00000001
 
 # define USAGE "Usage : ./corewar [-dump N -n N -v N] <champion1.cor> <...>\n\
-\t\t-dump N\t: Dumps memory after N cycles then exits\n\
+\t\t-a  \t: Prints output from \"aff\" (Default is to hide it)\n\
+#### TEXT OUTPUT MODE ##########################################################\n\
+\t\t-d N\t: Dumps memory after N cycles then exits\n\
 \t\t-n N\t: Define champion number\n\
 \t\t-v N\t: Verbosity levels, can be added together to enable several\n\
 \t\t\t0\t: Show only essentials\n\
@@ -36,7 +38,7 @@
 \t\t\t4\t: Show operations (Params are NOT litteral ...)\n\
 \t\t\t8\t: Show deaths\n\
 \t\t\t16\t: Show PC movements (Except for jumps)\n\
-#############################################################################\n"
+################################################################################\n"
 
 # define ERR_PLAYERS_AMOUNT	"Invalid players' amount"
 # define ERR_INIT_PLAYER	"Unable to initialise player"
@@ -140,7 +142,8 @@ typedef enum				e_flag
 	UNKNOWN,
 	VERBOSE,
 	DUMP,
-	CHAMPION_NUMBER
+	CHAMPION_NUMBER,
+	AFF
 }							t_flag;
 
 void						usage();
