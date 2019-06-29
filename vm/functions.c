@@ -37,8 +37,8 @@ int32_t get_arg(t_carriage *carriage, uint32_t type,
 
 int 	get_argtype(t_carriage *carriage)
 {
-	t_argtype		argtype;
-	t_operation		*operation;
+	t_argtype	argtype;
+	t_operation	*operation;
 
 	operation = &carriage->operation;
 	if (operation->codage == 0)
@@ -54,12 +54,12 @@ int 	get_argtype(t_carriage *carriage)
 
 size_t	get_arglen(t_operation *operation)
 {
-	size_t		size;
-	int 		i;
+	size_t	size;
+	int 	i;
 
 	if (operation->codage == 0)
 		return (operation->dir_size);
-	size = operation->codage;
+	size = operation->codage + 1;
 	i = -1;
 	while (++i < operation->argc)
 	{
@@ -77,7 +77,7 @@ void	get_argval(t_carriage *carriage)
 	int 		i;
 
 	operation = &carriage->operation;
-	size = 0;
+	size = 1;
 	i = -1;
 	while (++i < operation->argc)
 	{
@@ -96,28 +96,35 @@ void	get_argval(t_carriage *carriage)
 	}
 }
 
+static int	set_function(t_carriage *carriage)
+{
+	if (g_game.field[carriage->pos] > 0 && g_game.field[carriage->pos] <= 16)
+	{
+		memcpy(&carriage->operation, &g_op[g_game.field[carriage->pos] - 1],
+			   sizeof(t_operation));
+		return (0);
+	}
+	ft_bzero(&carriage->operation, sizeof(t_operation));
+	return (1);
+}
+
 void	exec_function(t_list *lst)
 {
-	t_carriage *carriage;
+	t_carriage	*carriage;
 
 	carriage = lst->content;
 	if (carriage->operation.period > 0)
 		carriage->operation.period--;
 	else if (carriage->operation.code == 0)
 	{
-		if (g_game.field[carriage->pos] > 0 &&
-			g_game.field[carriage->pos] <= 16)
+		if (set_function(carriage))
 		{
-			memcpy(&carriage->operation, &g_op[g_game.field[carriage->pos] - 1],
-					sizeof(t_operation));
-			carriage->operation.period--;
+			carriage->pos++;
+			return ;
 		}
-		else
-			ft_bzero(&carriage->operation, sizeof(t_operation));
-		carriage->pos++;
+		carriage->operation.period--;
 	}
-	if (carriage->operation.period > 0 ||
-		(carriage->operation.code < 1 || carriage->operation.code > 16))
+	if (carriage->operation.period > 0)
 		return ;
 	if (get_argtype(carriage))
 		carriage->operation.function(carriage);
