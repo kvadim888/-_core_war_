@@ -84,6 +84,7 @@ void		read_params(int ac, char **av)
 		}
 	}
 	amount = ft_lstlen(g_game.players);
+	g_game.players_amount = amount;
 	g_id = amount;
 	error(amount < 1 || amount > MAX_PLAYERS, ERR_PLAYERS_AMOUNT);
 }

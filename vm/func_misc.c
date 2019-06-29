@@ -32,19 +32,23 @@ void 		func_live(t_carriage *carriage)
     operation = &carriage->operation;
 	carriage->live = g_game.cycle_counter;
 	g_game.live_counter++;
+	survivor = NULL;
+	ft_printf("operation->argv[0] = %d\n", operation->argv[0]);
+	ft_printf("g_game.players_amount = %d\n", g_game.players_amount);
 	if (-operation->argv[0] > 0 && -operation->argv[0] <= g_game.players_amount)
 	{
 		sample.number = -operation->argv[0];
 		survivor = ft_lstfind(g_game.players, &sample, cmp_number);
-		g_game.survivor = survivor->content;
+		g_game.survivor = (survivor->content)
+				? survivor->content : g_game.survivor;
 	}
-	if (g_game.survivor == NULL)
+	if (survivor == NULL)
 		return ;
 	if (g_flag & FLAG_VERBOSE_1)
 		ft_printf("Player %d (stayin' alive) is said to be alive\n",
-				operation->argv[0]);
+				-operation->argv[0]);
     if (g_flag & FLAG_VERBOSE_4)
-        ft_printf("P%5i | live %i\n", carriage->id, operation->argv[0]);
+        ft_printf("P%5i | live %i\n", carriage->id, -operation->argv[0]);
 }
 
 void		func_zjmp(t_carriage *carriage)

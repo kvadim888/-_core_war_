@@ -43,7 +43,10 @@ int 	get_argtype(t_carriage *carriage)
 
 	operation = &carriage->operation;
 	if (operation->codage == 0)
+	{
+		operation->argt[0] = T_DIR;
 		return (1);
+	}
 	argtype.cell = g_game.field[(carriage->pos + 1) % MEM_SIZE];
 	operation->argt[0] = (argtype.arg1 & 3U) ? 1U << (argtype.arg1 - 1U) : 0;
 	operation->argt[1] = (argtype.arg2 & 3U) ? 1U << (argtype.arg2 - 1U) : 0;
@@ -82,7 +85,7 @@ void	get_argval(t_carriage *carriage)
 	int 		i;
 
 	operation = &carriage->operation;
-	size = 1;
+	size = operation->codage + 1;
 	i = -1;
 	while (++i < operation->argc)
 	{
