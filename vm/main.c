@@ -130,6 +130,7 @@ int			main(int ac, char **av)
 	log_field(32); //fixme delete
 	ft_printf("Game start\n");
 	winer = game_loop();
+	ft_printf("Game end\n");
 	log_winner(winer);
 	return (0);
 }

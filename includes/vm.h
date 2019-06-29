@@ -111,10 +111,10 @@ typedef union				u_agrtype
 	uint8_t					cell;
 	struct
 	{
+        uint8_t				dump:2;
+        uint8_t				arg3:2;
+        uint8_t				arg2:2;
 		uint8_t				arg1:2;
-		uint8_t				arg2:2;
-		uint8_t				arg3:2;
-		uint8_t				dump:2;
 	};
 }							t_argtype;
 

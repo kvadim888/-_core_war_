@@ -100,7 +100,7 @@ void	exec_function(t_list *lst)
 	carriage = lst->content;
 	if (carriage->operation.period > 0)
 		carriage->operation.period--;
-	else
+	else if (carriage->operation.code == 0)
 	{
 		if (g_game.field[carriage->pos] > 0 &&
 			g_game.field[carriage->pos] <= 16)
@@ -113,7 +113,8 @@ void	exec_function(t_list *lst)
 			ft_bzero(&carriage->operation, sizeof(t_operation));
 		carriage->pos++;
 	}
-	if (carriage->operation.period > 0 || (carriage->operation.code - 1 > 15))
+	if (carriage->operation.period > 0 ||
+		(carriage->operation.code < 1 || carriage->operation.code > 16))
 		return ;
 	if (get_argtype(carriage))
 		carriage->operation.function(carriage);

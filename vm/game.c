@@ -23,7 +23,7 @@ t_list		*carriage_filter(t_list *lst)
     while (lst)
     {
         carriage = lst->content;
-        if (g_game.cycle_counter - carriage->live <= g_game.check_period)
+        if (g_game.cycle_counter - carriage->live > g_game.check_period)
         {
             if (g_flag & FLAG_VERBOSE_8)
             	ft_printf("Process %d hasn't lived for %d cycles (CTD %d)\n",
