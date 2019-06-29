@@ -25,7 +25,6 @@ void func_st(t_carriage *carriage)
 	if (check_arg(operation->argt[0], operation->argv[0]) != T_REG
 		|| !check_arg(operation->argt[1], operation->argv[1]))
 		return;
-	argv[1] = get_arg(carriage, operation->argt[1], argv[1], IDX_MOD);
 	if (check_arg(operation->argt[1], operation->argv[1]) == T_REG)
 		carriage->reg[argv[1] - 1] = carriage->reg[argv[0] - 1];
 	if (check_arg(operation->argt[1], operation->argv[1]) == T_IND)

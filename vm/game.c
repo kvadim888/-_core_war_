@@ -14,7 +14,7 @@
 
 t_list		*carriage_filter(t_list *lst)
 {
-	t_list		head;
+	t_list      head;
     t_list		*prev;
     t_carriage	*carriage;
 
@@ -34,12 +34,9 @@ t_list		*carriage_filter(t_list *lst)
 				carriage->id, g_game.cycle_counter - carriage->live,
 				g_game.check_period);
 		if (head.next == lst)
-		{
-			ft_lstcut(&head.next, &head, ft_lstrm);
-			lst = head.next;
-		}
-		else
-			ft_lstcut(&lst, prev, ft_lstrm);
+            prev = &head;
+		ft_lstcut(&lst, prev, ft_lstrm);
+
     }
     return (head.next);
 }
@@ -54,15 +51,20 @@ t_champion	*game_loop()
         g_game.check_counter++;
 		g_game.dump_counter++;
         ft_lstiter(g_game.carriages, exec_function);
-        if (g_game.check_counter >= g_game.check_period)
+        if (g_game.check_counter >=  g_game.check_period)
         {
             g_game.check_counter = 0;
             g_game.check_amount++;
+            g_game.live_counter = (g_game.live_counter < NBR_LIVE) ? 0 : g_game.live_counter;
             g_game.carriages = carriage_filter(g_game.carriages);
-            if (g_game.check_amount == MAX_CHECKS ||
+            if (g_game.check_amount >= MAX_CHECKS ||
                 g_game.live_counter >= NBR_LIVE)
-                g_game.check_period -= (g_game.check_period > 0)
-                                        ? CYCLE_DELTA : 0;
+            {
+                g_game.check_period -= CYCLE_DELTA;
+                g_game.check_amount = 0;
+                g_game.live_counter = 0;
+            }
+
         }
         if ((g_flag & FLAG_DUMP) && g_game.dump_counter >= g_game.dump_period)
         {

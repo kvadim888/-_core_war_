@@ -44,7 +44,7 @@ void func_lld(t_carriage *carriage)
 									 operation->argt[0], argv[0], MEM_SIZE);
 		carriage->carry = (carriage->reg[argv[1] - 1]) ? 0 : 1;
 		if (g_flag & FLAG_VERBOSE_4)
-			ft_printf("P%5i | lld %i r%i", carriage->pos, argv[0], argv[1]);
+			ft_printf("P%5i | lld %i r%i\n", carriage->id, argv[0], argv[1]);
 	}
 }
 
@@ -87,6 +87,7 @@ void func_lldi(t_carriage *carriage)
 	argv[1] = get_arg(carriage, operation->argt[1], argv[1], MEM_SIZE);
 	carriage->reg[argv[2] - 1] = get_value((carriage->pos +
 						(argv[0] + argv[1]) + MEM_SIZE) % MEM_SIZE, REG_SIZE);
+	carriage->carry = (carriage->reg[argv[2] - 1]) ? 0 : 1;
 	if (g_flag & FLAG_VERBOSE_4)
 		ft_printf("P%4i | lldi %i %i r%i\n"
 			"       | -> load from %i + %i = %i (with pc %i\n",

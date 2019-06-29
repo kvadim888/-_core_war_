@@ -16,6 +16,43 @@
 #include <op.h>
 #include <functions.h>
 
+void swap(t_list *a, t_list *b)
+{
+    t_champion	*champ;
+    champ = a->content;
+    a->content = b->content;
+    b->content = champ;
+}
+
+void sort_chmps()
+{
+    int	swapped;
+    t_champion *cht;
+    t_champion *ncht;
+    t_list	*tmp;
+    t_list	*ltmp;
+
+    ltmp = NULL;
+    swapped = 1;
+    while (swapped)
+    {
+        swapped = 0;
+        tmp = g_game.players;
+        while (tmp->next != ltmp)
+        {
+            cht = tmp->content;
+            ncht = tmp->next->content;
+            if (cht->number > ncht->number)
+            {
+                swap(tmp, tmp->next);
+                swapped = 1;
+            }
+            tmp = tmp->next;
+        }
+        ltmp = tmp;
+    }
+}
+
 uint8_t		get_flag(char *str)
 {
 	if (ft_strequ(str, "-v") || ft_strequ(str, "-verbose"))
@@ -99,7 +136,7 @@ void		fill_field(t_list *player_lst)
 	ft_bzero(&carriage, sizeof(t_carriage));
 	carriage.id = id++;
 	carriage.reg[0] = -champion->number;
-	carriage.pos = (carriage.id *
+	carriage.pos = ((carriage.id - 1)*
 			(MEM_SIZE / ft_lstlen(g_game.players))) % MEM_SIZE;
 	ft_memcpy(g_game.field + carriage.pos,
 			champion->code, champion->header->prog_size);
@@ -121,6 +158,7 @@ int			main(int ac, char **av)
 
 	read_params(ac, av);
 	ft_lstiter(g_game.players, choose_num);
+    sort_chmps();
 	ft_printf("Introducing players\n");
 	ft_lstiter(g_game.players, log_champion);
 

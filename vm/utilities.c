@@ -25,16 +25,18 @@ int			is_number(char *str)
 
 static int	find_num(t_list *lst, int num)
 {
-	t_champion *champion;
+	t_champion  *champion;
+	int         amount;
 
+	amount = 0;
 	while(lst)
 	{
 		champion = lst->content;
 		if (champion->number == num)
-			return (1);
+		    amount++;
 		lst = lst->next;
 	}
-	return (0);
+	return (amount);
 }
 
 void		choose_num(t_list *lst)
@@ -44,9 +46,12 @@ void		choose_num(t_list *lst)
 
 	champion = lst->content;
 	if (champion->number != 0)
-		return ;
+    {
+        error(find_num(g_game.players, champion->number) > 1, "Number dublication\n");
+        return ;
+    }
 	while (find_num(g_game.players, num) && num <= MAX_PLAYERS)
-		num++;
+	    num++;
 	if (num > MAX_PLAYERS)
 	{
 		ft_printf(USAGE);
@@ -64,7 +69,7 @@ void		set_value(int32_t addr, uint32_t value, size_t size)
 	i = 0;
 	while (i < size)
 	{
-		g_game.field[(addr + i + MEM_SIZE) % MEM_SIZE] = val.byte[i];
+		g_game.field[(addr + size - i - 1 + MEM_SIZE) % MEM_SIZE] = val.byte[i];
 		i++;
 	}
 }

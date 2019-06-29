@@ -135,8 +135,8 @@ void	exec_function(t_list *lst)
 	if (carriage->operation.period > 0)
 		return ;
 	if (get_argtype(carriage))
-		carriage->operation.function(carriage);
-	carriage->pos = (carriage->pos +
-			get_arglen(&carriage->operation) + MEM_SIZE) % MEM_SIZE;
+        carriage->operation.function(carriage);
+        carriage->pos = (carriage->pos +
+                         get_arglen(&carriage->operation) + MEM_SIZE) % MEM_SIZE;
 	carriage->operation.code = 0;
 }
