@@ -66,7 +66,7 @@ size_t	get_arglen(t_operation *operation)
 	int 	i;
 
 	if (operation->codage == 0)
-		return (operation->dir_size);
+		return (operation->dir_size + 1);
 	size = operation->codage + 1;
 	i = -1;
 	while (++i < operation->argc)

@@ -33,8 +33,6 @@ void 		func_live(t_carriage *carriage)
 	carriage->live = g_game.cycle_counter;
 	g_game.live_counter++;
 	survivor = NULL;
-	ft_printf("operation->argv[0] = %d\n", operation->argv[0]);
-	ft_printf("g_game.players_amount = %d\n", g_game.players_amount);
 	if (-operation->argv[0] > 0 && -operation->argv[0] <= g_game.players_amount)
 	{
 		sample.number = -operation->argv[0];

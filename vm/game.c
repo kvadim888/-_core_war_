@@ -23,22 +23,23 @@ t_list		*carriage_filter(t_list *lst)
     while (lst)
     {
         carriage = lst->content;
-        if (g_game.cycle_counter - carriage->live > g_game.check_period)
-        {
-            if (g_flag & FLAG_VERBOSE_8)
-            	ft_printf("Process %d hasn't lived for %d cycles (CTD %d)\n",
-            		carriage->id, g_game.cycle_counter - carriage->live,
-            		g_game.check_period);
-            if (head.next == lst)
-				ft_lstcut(&head.next, prev, ft_lstrm);
-            else
-				ft_lstcut(&lst, prev, ft_lstrm);
-        }
-        else
-        {
-            prev = lst;
-            lst = lst->next;
-        }
+        if ((g_game.cycle_counter - carriage->live) < g_game.check_period)
+		{
+			prev = lst;
+			lst = lst->next;
+			continue ;
+		}
+		if (g_flag & FLAG_VERBOSE_8)
+			ft_printf("Process %d hasn't lived for %d cycles (CTD %d)\n",
+				carriage->id, g_game.cycle_counter - carriage->live,
+				g_game.check_period);
+		if (head.next == lst)
+		{
+			ft_lstcut(&head.next, &head, ft_lstrm);
+			lst = head.next;
+		}
+		else
+			ft_lstcut(&lst, prev, ft_lstrm);
     }
     return (head.next);
 }
