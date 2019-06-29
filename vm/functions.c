@@ -39,17 +39,22 @@ int 	get_argtype(t_carriage *carriage)
 {
 	t_argtype	argtype;
 	t_operation	*operation;
+	uint16_t	i;
 
 	operation = &carriage->operation;
 	if (operation->codage == 0)
 		return (1);
-	argtype.cell = g_game.field[carriage->pos % MEM_SIZE];
+	argtype.cell = g_game.field[(carriage->pos + 1) % MEM_SIZE];
 	operation->argt[0] = (argtype.arg1 & 3U) ? 1U << (argtype.arg1 - 1U) : 0;
 	operation->argt[1] = (argtype.arg2 & 3U) ? 1U << (argtype.arg2 - 1U) : 0;
 	operation->argt[2] = (argtype.arg3 & 3U) ? 1U << (argtype.arg3 - 1U) : 0;
-	return ((operation->argt[0] & g_op[operation->code - 1].argt[0]) &&
-			(operation->argt[1] & g_op[operation->code - 1].argt[1]) &&
-			(operation->argt[2] & g_op[operation->code - 1].argt[2]));
+	i = -1;
+	while (++i < operation->argc)
+	{
+		if (!(operation->argt[i] & g_op[operation->code - 1].argt[i]))
+			return (0);
+	}
+	return (1);
 }
 
 size_t	get_arglen(t_operation *operation)
@@ -130,4 +135,5 @@ void	exec_function(t_list *lst)
 		carriage->operation.function(carriage);
 	carriage->pos = (carriage->pos +
 			get_arglen(&carriage->operation) + MEM_SIZE) % MEM_SIZE;
+	carriage->operation.code = 0;
 }
