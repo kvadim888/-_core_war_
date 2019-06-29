@@ -82,11 +82,14 @@ void	get_argval(t_carriage *carriage)
 	while (++i < operation->argc)
 	{
 		operation->argv[i] = (operation->argt[i] == T_DIR)
-			? get_value(carriage->pos + size, operation->dir_size) : 0;
+			? get_value((carriage->pos + size) % MEM_SIZE, operation->dir_size)
+			: 0;
 		operation->argv[i] = (operation->argt[i] == T_REG)
-			? get_value(carriage->pos + size, 1) : 0;
+			? get_value((carriage->pos + size) % MEM_SIZE, 1)
+			: operation->argv[i];
 		operation->argv[i] = (operation->argt[i] == T_IND)
-			? get_value(carriage->pos + size, IND_SIZE) : 0;
+			? get_value((carriage->pos + size) % MEM_SIZE, IND_SIZE)
+			: operation->argv[i];
 		size += (operation->argt[i] == T_DIR) ? operation->dir_size : 0;
 		size += (operation->argt[i] == T_REG) ? 1 : 0;
 		size += (operation->argt[i] == T_IND) ? IND_SIZE : 0;
