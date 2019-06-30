@@ -109,10 +109,7 @@ int			main(int ac, char **av)
 	t_champion	*winer;
 
 	if (ac < 2)
-	{
-		ft_printf("%s\n", USAGE);
-		return (1);
-	}
+		usage();
 	ft_bzero(&g_game, sizeof(t_game));
 	g_game.check_period = CYCLE_TO_DIE;
 	read_params(ac, av);

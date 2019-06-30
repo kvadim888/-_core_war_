@@ -53,10 +53,7 @@ void		choose_num(t_list *lst)
 	while (find_num(g_game.players, num) && num <= MAX_PLAYERS)
 		num++;
 	if (num > MAX_PLAYERS)
-	{
-		ft_printf(USAGE);
-		exit(0);
-	}
+		usage();
 	champion->number = num;
 }
 

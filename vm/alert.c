@@ -24,7 +24,7 @@ void	error(int trigger, char *msg)
 void	usage(void)
 {
 	ft_printf("Usage : ./corewar [-dump N -n N -v N] <champion1.cor> <...>\n");
-	ft_printf("\t\t-a  \t: Prints output from \"aff\" (Default is to hide it)\n");
+	ft_printf("\t\t-a\t\t: Prints output from \"aff\"\n");
 	ft_printf("\t\t-dump N\t: Dumps memory after N cycles then exits\n");
 	ft_printf("\t\t-n N\t: Define champion number\n");
 	ft_printf("\t\t-v N\t: Verbosity levels\n");
