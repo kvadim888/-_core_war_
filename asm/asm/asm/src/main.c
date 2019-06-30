@@ -19,7 +19,7 @@ int		main(int argc, char **argv)
 
 	if (argc != 2)
 		p_error("\n\tInvalid input arguments.\n\
-			Please use the following structure:\n\t./asm champion_file.s\n");
+	Please use the following structure:\n\t./asm champion_file.s\n");
 	if ((fd = open(argv[1], O_RDONLY)) < 0)
 		p_error("\nERROR! Not valid file.\n");
 	champ = ft_memalloc(sizeof(t_all));
