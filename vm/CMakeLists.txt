@@ -5,7 +5,7 @@ set(CMAKE_C_STANDARD 99)
 
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR} VM_SRC)
 
-#set(CMAKE_C_FLAGS "-Wall -Wextra -Werror")
+set(CMAKE_C_FLAGS "-Wall -Wextra -Werror")
 
 add_executable(vm ${VM_SRC})
 

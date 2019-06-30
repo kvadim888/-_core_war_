@@ -16,30 +16,18 @@
 # include <libft.h>
 # include <op.h>
 
-# define		CODE_EXTENSION		".s"
-# define		BINARY_EXTENSION	".cor"
+# define CODE_EXTENSION		".s"
+# define BINARY_EXTENSION	".cor"
 
-# define		FLAG_DUMP64			(uint8_t)0b01000000
-# define		FLAG_DUMP32			(uint8_t)0b00100000
-# define		FLAG_AFF			(uint8_t)0b00010000
+# define FLAG_DUMP64			(uint8_t)0b01000000
+# define FLAG_DUMP32			(uint8_t)0b00100000
+# define FLAG_AFF			(uint8_t)0b00010000
 
-# define		FLAG_VERBOSE		(uint8_t)0b00001111
-# define		FLAG_VERBOSE_8		(uint8_t)0b00001000
-# define		FLAG_VERBOSE_4		(uint8_t)0b00000100
-# define		FLAG_VERBOSE_2		(uint8_t)0b00000010
-# define		FLAG_VERBOSE_1		(uint8_t)0b00000001
-
-# define USAGE "Usage : ./corewar [-dump N -n N -v N] <champion1.cor> <...>\n\
-\t\t-dump N\t: Dumps memory after N cycles then exits\n\
-\t\t-n N\t: Define champion number\n\
-\t\t-v N\t: Verbosity levels, can be added together to enable several\n\
-\t\t\t0\t: Show only essentials\n\
-\t\t\t1\t: Show lives\n\
-\t\t\t2\t: Show cycles\n\
-\t\t\t4\t: Show operations (Params are NOT litteral ...)\n\
-\t\t\t8\t: Show deaths\n\
-\t\t\t16\t: Show PC movements (Except for jumps)\n\
-#############################################################################\n"
+# define FLAG_VERBOSE		(uint8_t)0b00001111
+# define FLAG_VERBOSE_8		(uint8_t)0b00001000
+# define FLAG_VERBOSE_4		(uint8_t)0b00000100
+# define FLAG_VERBOSE_2		(uint8_t)0b00000010
+# define FLAG_VERBOSE_1		(uint8_t)0b00000001
 
 # define ERR_PLAYERS_AMOUNT	"Invalid players' amount"
 # define ERR_INIT_PLAYER	"Unable to initialise player"
@@ -69,7 +57,7 @@ struct						s_game
 {
 	t_champion				*survivor;
 	t_list					*players;
-	size_t					players_amount;
+	int32_t					players_amount;
 	t_list					*carriages;
 	uint8_t					field[MEM_SIZE];
 	int32_t					check_counter;
@@ -92,7 +80,7 @@ struct						s_champion
 
 struct						s_operation
 {
-	char 					*name;
+	char					*name;
 	uint8_t					code;
 	uint8_t					codage;
 	uint8_t					dir_size;
@@ -110,19 +98,21 @@ struct						s_carriage
 	uint16_t				live;
 	uint8_t					carry;
 	int32_t					reg[REG_NUMBER];
-	t_operation 			operation;
+	t_operation				operation;
 };
+
+typedef struct				s_argument
+{
+	uint8_t					dump:2;
+	uint8_t					a3:2;
+	uint8_t					a2:2;
+	uint8_t					a1:2;
+}							t_arg;
 
 typedef union				u_agrtype
 {
 	uint8_t					cell;
-	struct
-	{
-        uint8_t				dump:2;
-        uint8_t				arg3:2;
-        uint8_t				arg2:2;
-		uint8_t				arg1:2;
-	};
+	t_arg					arg;
 }							t_argtype;
 
 typedef union				u_value
@@ -141,40 +131,31 @@ typedef enum				e_flag
 	CHAMPION_NUMBER
 }							t_flag;
 
-void						usage();
+void						usage(void);
 void						error(int trigger, char *msg);
 int							is_number(char *str);
-
 void						choose_num(t_list *lst);
 void						sort_champions(void);
-
 uint8_t						check_arg(uint32_t type, uint32_t arg);
 int32_t						get_arg(t_carriage *carriage, uint32_t type,
 												uint32_t arg, int32_t divider);
 void						set_value(int32_t addr,
 										uint32_t value, size_t size);
 uint32_t					get_value(uint32_t addr, size_t size);
-
-void	        			exec_function(t_list *lst);
-
+void						exec_function(t_list *lst);
 void						log_field(void);
 void						log_champion(t_list *lst);
 void						log_winner(t_champion *champion);
-
 uint8_t						check_arg(uint32_t type, uint32_t arg);
-
 size_t						get_arglen(t_operation *operation);
 void						get_argval(t_carriage *carriage);
-
 int							new_champion(char *path, t_champion *champion);
-
-t_champion	    			*game_loop();
-
+t_champion					*game_loop(void);
 void						get_argval(t_carriage *carriage);
 size_t						get_arglen(t_operation *operation);
-int 						get_argtype(t_carriage *carriage);
+int							get_argtype(t_carriage *carriage);
 int32_t						get_arg(t_carriage *carriage, uint32_t type,
-											   uint32_t arg, int32_t divider);
+												uint32_t arg, int32_t divider);
 uint8_t						check_arg(uint32_t type, uint32_t arg);
 
 #endif

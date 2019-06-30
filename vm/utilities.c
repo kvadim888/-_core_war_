@@ -62,7 +62,7 @@ void		choose_num(t_list *lst)
 
 void		set_value(int32_t addr, uint32_t value, size_t size)
 {
-	int		i;
+	size_t	i;
 	t_value	val;
 
 	val.word = value;
@@ -76,7 +76,7 @@ void		set_value(int32_t addr, uint32_t value, size_t size)
 
 uint32_t	get_value(uint32_t addr, size_t size)
 {
-	int		i;
+	size_t	i;
 	t_value	value;
 
 	value.word = 0;
@@ -91,6 +91,5 @@ uint32_t	get_value(uint32_t addr, size_t size)
 		return ((int8_t)value.word);
 	if (size == 2)
 		return ((int16_t)value.word);
-	if (size == 4)
-		return ((int32_t)value.word);
+	return ((int32_t)value.word);
 }

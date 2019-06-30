@@ -39,7 +39,7 @@ int32_t		get_arg(t_carriage *carriage, uint32_t type,
 
 int			get_argtype(t_carriage *carriage)
 {
-	t_argtype	argtype;
+	t_argtype	argt;
 	t_operation	*operation;
 	uint16_t	i;
 
@@ -49,10 +49,10 @@ int			get_argtype(t_carriage *carriage)
 		operation->argt[0] = T_DIR;
 		return (1);
 	}
-	argtype.cell = g_game.field[(carriage->pos + 1) % MEM_SIZE];
-	operation->argt[0] = (argtype.arg1 & 3U) ? 1U << (argtype.arg1 - 1U) : 0;
-	operation->argt[1] = (argtype.arg2 & 3U) ? 1U << (argtype.arg2 - 1U) : 0;
-	operation->argt[2] = (argtype.arg3 & 3U) ? 1U << (argtype.arg3 - 1U) : 0;
+	argt.cell = g_game.field[(carriage->pos + 1) % MEM_SIZE];
+	operation->argt[0] = (argt.arg.a1 & 3U) ? 1U << (argt.arg.a1 - 1U) : 0;
+	operation->argt[1] = (argt.arg.a2 & 3U) ? 1U << (argt.arg.a2 - 1U) : 0;
+	operation->argt[2] = (argt.arg.a3 & 3U) ? 1U << (argt.arg.a3 - 1U) : 0;
 	i = -1;
 	while (++i < operation->argc)
 	{
