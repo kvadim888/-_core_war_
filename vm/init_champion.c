@@ -20,14 +20,14 @@ static t_header	*get_header(int fd)
 	header = ft_memalloc(sizeof(t_header));
 	header->magic = COREWAR_EXEC_MAGIC;
 	error(read(fd, &header->prog_name, PROG_NAME_LENGTH) < PROG_NAME_LENGTH,
-		  ERR_INVALID_BINARY);
+		ERR_INVALID_BINARY);
 	error(read(fd, &buff, REG_SIZE) < REG_SIZE, ERR_INVALID_BINARY);
 	error(buff, "No null 4 bytes");
 	error(read(fd, &buff, REG_SIZE) < REG_SIZE, ERR_INVALID_BINARY);
 	header->prog_size = ft_swap32(buff);
 	error(header->prog_size > CHAMP_MAX_SIZE, "Invalid prog_size");
 	error(read(fd, &header->comment, COMMENT_LENGTH) < COMMENT_LENGTH,
-		  ERR_INVALID_BINARY);
+		ERR_INVALID_BINARY);
 	error(read(fd, &buff, REG_SIZE) < REG_SIZE, ERR_INVALID_BINARY);
 	error(buff, "No null 4 bytes");
 	return (header);
@@ -72,3 +72,40 @@ int				new_champion(char *path, t_champion *champion)
 	return (0);
 }
 
+static void		swap(t_list *a, t_list *b)
+{
+	t_champion	*champ;
+
+	champ = a->content;
+	a->content = b->content;
+	b->content = champ;
+}
+
+void			sort_champions(void)
+{
+	int			swapped;
+	t_champion	*cht;
+	t_champion	*ncht;
+	t_list		*tmp;
+	t_list		*ltmp;
+
+	ltmp = NULL;
+	swapped = 1;
+	while (swapped)
+	{
+		swapped = 0;
+		tmp = g_game.players;
+		while (tmp->next != ltmp)
+		{
+			cht = tmp->content;
+			ncht = tmp->next->content;
+			if (cht->number > ncht->number)
+			{
+				swap(tmp, tmp->next);
+				swapped = 1;
+			}
+			tmp = tmp->next;
+		}
+		ltmp = tmp;
+	}
+}

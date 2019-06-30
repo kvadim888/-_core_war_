@@ -25,15 +25,15 @@ int			is_number(char *str)
 
 static int	find_num(t_list *lst, int num)
 {
-	t_champion  *champion;
-	int         amount;
+	t_champion	*champion;
+	int			amount;
 
 	amount = 0;
-	while(lst)
+	while (lst)
 	{
 		champion = lst->content;
 		if (champion->number == num)
-		    amount++;
+			amount++;
 		lst = lst->next;
 	}
 	return (amount);
@@ -46,12 +46,12 @@ void		choose_num(t_list *lst)
 
 	champion = lst->content;
 	if (champion->number != 0)
-    {
-        error(find_num(g_game.players, champion->number) > 1, "Number dublication\n");
-        return ;
-    }
+	{
+		error(find_num(g_game.players, champion->number) > 1, ERR_NBR_DUBL);
+		return ;
+	}
 	while (find_num(g_game.players, num) && num <= MAX_PLAYERS)
-	    num++;
+		num++;
 	if (num > MAX_PLAYERS)
 	{
 		ft_printf(USAGE);

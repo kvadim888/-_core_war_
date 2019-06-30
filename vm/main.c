@@ -11,54 +11,18 @@
 /* ************************************************************************** */
 
 #include <libft.h>
-
 #include <vm.h>
 #include <op.h>
 #include <functions.h>
-
-void swap(t_list *a, t_list *b)
-{
-    t_champion	*champ;
-    champ = a->content;
-    a->content = b->content;
-    b->content = champ;
-}
-
-void sort_chmps()
-{
-    int	swapped;
-    t_champion *cht;
-    t_champion *ncht;
-    t_list	*tmp;
-    t_list	*ltmp;
-
-    ltmp = NULL;
-    swapped = 1;
-    while (swapped)
-    {
-        swapped = 0;
-        tmp = g_game.players;
-        while (tmp->next != ltmp)
-        {
-            cht = tmp->content;
-            ncht = tmp->next->content;
-            if (cht->number > ncht->number)
-            {
-                swap(tmp, tmp->next);
-                swapped = 1;
-            }
-            tmp = tmp->next;
-        }
-        ltmp = tmp;
-    }
-}
 
 uint8_t		get_flag(char *str)
 {
 	if (ft_strequ(str, "-v") || ft_strequ(str, "-verbose"))
 		return (VERBOSE);
-	if (ft_strequ(str, "-d") || ft_strequ(str, "-dump"))
-		return (DUMP);
+	if (ft_strequ(str, "-dump"))
+		return (DUMP32);
+	if (ft_strequ(str, "-d"))
+		return (DUMP64);
 	if (ft_strequ(str, "-a"))
 		return (AFF);
 	if (ft_strequ(str, "-n"))
@@ -66,7 +30,6 @@ uint8_t		get_flag(char *str)
 	return (UNKNOWN);
 }
 
-// todo replace error with usage()
 int			handle_flag(int flag, char *av)
 {
 	int	champion_number;
@@ -78,31 +41,28 @@ int			handle_flag(int flag, char *av)
 		g_flag |= FLAG_AFF;
 	if (flag == VERBOSE)
 	{
-		error(!is_number(av), "The argument after -v (-verbose) must be a positive digit");
+		error(!is_number(av), ERR_VERBOSE_ARG);
 		g_flag |= FLAG_VERBOSE & (uint8_t)ft_atoi(av);
 	}
-	if (flag == DUMP)
+	if (flag == DUMP32 || flag == DUMP64)
 	{
-		error(!is_number(av), "The argument after -d (-dump) must be a positive digit");
-		g_game.dump_period = ft_atoi(av);
-		g_flag |= FLAG_DUMP;
-		error(g_game.dump_period < 0, "Invalid dump value");
+		error(!is_number(av), ERR_DUMP_ARG);
+		error((g_game.dump_period = ft_atoi(av)) < 0, ERR_DUMP_ARG);
+		g_flag |= (flag == DUMP32) ? FLAG_DUMP32 : FLAG_DUMP64;
 	}
 	if (flag == CHAMPION_NUMBER)
 	{
-		error(!is_number(av), "The argument after -n must be a positive digit");
+		error(!is_number(av), ERR_NBR_ARG);
 		champion_number = ft_atoi(av);
-		error(champion_number < 1 || champion_number > 4,
-			  "Invalid champion_number value");
+		error(champion_number < 1 || champion_number > 4, ERR_NBR_PLAYER);
 	}
 	return (champion_number);
 }
 
 void		read_params(int ac, char **av)
 {
-	t_champion champion;
-	int i;
-	int amount;
+	t_champion	champion;
+	int			i;
 
 	i = 0;
 	ft_bzero(&champion, sizeof(t_champion));
@@ -116,27 +76,28 @@ void		read_params(int ac, char **av)
 		else
 		{
 			error(new_champion(av[i], &champion), ERR_INIT_PLAYER);
-			ft_lstappend(&g_game.players, ft_lstnew(&champion, sizeof(t_champion)));
+			ft_lstappend(&g_game.players,
+					ft_lstnew(&champion, sizeof(t_champion)));
 			ft_bzero(&champion, sizeof(t_champion));
 		}
 	}
-	amount = ft_lstlen(g_game.players);
-	g_game.players_amount = amount;
-	g_id = amount;
-	error(amount < 1 || amount > MAX_PLAYERS, ERR_PLAYERS_AMOUNT);
+	g_game.players_amount = ft_lstlen(g_game.players);
+	g_id = g_game.players_amount;
+	error(g_game.players_amount < 1 || g_game.players_amount > MAX_PLAYERS,
+			ERR_PLAYERS_AMOUNT);
 }
 
 void		fill_field(t_list *player_lst)
 {
-	static uint16_t id = 1;
-	t_carriage	carriage;
-	t_champion *champion;
+	static uint16_t	id = 1;
+	t_carriage		carriage;
+	t_champion		*champion;
 
 	champion = player_lst->content;
 	ft_bzero(&carriage, sizeof(t_carriage));
 	carriage.id = id++;
 	carriage.reg[0] = -champion->number;
-	carriage.pos = ((carriage.id - 1)*
+	carriage.pos = ((carriage.id - 1) *
 			(MEM_SIZE / ft_lstlen(g_game.players))) % MEM_SIZE;
 	ft_memcpy(g_game.field + carriage.pos,
 			champion->code, champion->header->prog_size);
@@ -152,24 +113,16 @@ int			main(int ac, char **av)
 		ft_printf("%s\n", USAGE);
 		return (1);
 	}
-
 	ft_bzero(&g_game, sizeof(t_game));
 	g_game.check_period = CYCLE_TO_DIE;
-
 	read_params(ac, av);
 	ft_lstiter(g_game.players, choose_num);
-    sort_chmps();
-	ft_printf("Introducing players\n");
+	sort_champions();
+	ft_printf("Introducing contestants...\n");
 	ft_lstiter(g_game.players, log_champion);
-
-	ft_printf("Map creating\n");
 	ft_bzero(g_game.field, MEM_SIZE);
 	ft_lstiter(g_game.players, fill_field);
-
-	log_field(32); //fixme delete
-	ft_printf("Game start\n");
 	winer = game_loop();
-	ft_printf("Game end\n");
 	log_winner(winer);
 	return (0);
 }

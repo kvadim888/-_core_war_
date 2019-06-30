@@ -26,22 +26,28 @@ void	log_champion(t_list *lst)
 void	log_winner(t_champion *champion)
 {
 	if (!champion)
-		return;
+		return ;
 	ft_printf("Contestant %d, \"%s\", has won !\n",
-			  champion->number, champion->header->prog_name);
+		champion->number, champion->header->prog_name);
 }
 
-void	log_field(int width)
+void	log_field(void)
 {
 	int	pos;
+	int	width;
 
-	pos = 0;
-	while (pos < MEM_SIZE)
+	if (g_flag & (FLAG_DUMP32 | FLAG_DUMP64))
 	{
-		if (pos % width == 0)
-			ft_printf("%.4p : ", pos);
-		ft_printf("%.2x ", g_game.field[pos]);
-		if (++pos % width == 0)
-			ft_printf("\n");
+		width = (g_flag & FLAG_DUMP32) ? 32 : 64;
+		pos = 0;
+		while (pos < MEM_SIZE)
+		{
+			if (pos % width == 0)
+				ft_printf("%.4p : ", pos);
+			ft_printf("%.2x ", g_game.field[pos]);
+			if (++pos % width == 0)
+				ft_printf("\n");
+		}
+		exit(0);
 	}
 }

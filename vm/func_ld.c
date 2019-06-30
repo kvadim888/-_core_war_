@@ -12,13 +12,13 @@
 
 #include <functions.h>
 
-void func_ld(t_carriage *carriage)
+void	func_ld(t_carriage *carriage)
 {
-    t_operation *operation;
+	t_operation	*operation;
 	int32_t		*argv;
 
 	get_argval(carriage);
-    operation = &carriage->operation;
+	operation = &carriage->operation;
 	argv = operation->argv;
 	if (check_arg(operation->argt[0], argv[0]) & (T_DIR | T_IND))
 	{
@@ -30,7 +30,7 @@ void func_ld(t_carriage *carriage)
 	}
 }
 
-void func_lld(t_carriage *carriage)
+void	func_lld(t_carriage *carriage)
 {
 	t_operation *operation;
 	int32_t		*argv;
@@ -41,20 +41,20 @@ void func_lld(t_carriage *carriage)
 	if (check_arg(operation->argt[0], argv[0]) & (T_DIR | T_IND))
 	{
 		carriage->reg[argv[1] - 1] = get_arg(carriage,
-									 operation->argt[0], argv[0], MEM_SIZE);
+									operation->argt[0], argv[0], MEM_SIZE);
 		carriage->carry = (carriage->reg[argv[1] - 1]) ? 0 : 1;
 		if (g_flag & FLAG_VERBOSE_4)
 			ft_printf("P%5i | lld %i r%i\n", carriage->id, argv[0], argv[1]);
 	}
 }
 
-void func_ldi(t_carriage *carriage)
+void	func_ldi(t_carriage *carriage)
 {
-    t_operation *operation;
+	t_operation	*operation;
 	int32_t		*argv;
 
 	get_argval(carriage);
-    operation = &carriage->operation;
+	operation = &carriage->operation;
 	argv = operation->argv;
 	if (!check_arg(operation->argt[0], argv[0]) ||
 		!(check_arg(operation->argt[1], argv[1]) & (T_DIR | T_REG)) ||
@@ -66,18 +66,18 @@ void func_ldi(t_carriage *carriage)
 			(argv[0] + argv[1]) % IDX_MOD + MEM_SIZE) % MEM_SIZE, REG_SIZE);
 	if (g_flag & FLAG_VERBOSE_4)
 		ft_printf("P%5i | ldi %i %i r%i\n"
-			"     | -> load from %i + %i = %i (with pc and mod %i\n",
+			"      | -> load from %i + %i = %i (with pc and mod %i\n",
 			carriage->id, argv[0], argv[1], argv[2], argv[0], argv[1],
 			argv[0] + argv[1], carriage->pos + (argv[0] + argv[1]) % IDX_MOD);
 }
 
-void func_lldi(t_carriage *carriage)
+void	func_lldi(t_carriage *carriage)
 {
-    t_operation *operation;
+	t_operation *operation;
 	int32_t		*argv;
 
 	get_argval(carriage);
-    operation = &carriage->operation;
+	operation = &carriage->operation;
 	argv = operation->argv;
 	if (!check_arg(operation->argt[0], argv[0]) ||
 		!(check_arg(operation->argt[1], argv[1]) & (T_DIR | T_REG)) ||
@@ -89,7 +89,7 @@ void func_lldi(t_carriage *carriage)
 						(argv[0] + argv[1]) + MEM_SIZE) % MEM_SIZE, REG_SIZE);
 	carriage->carry = (carriage->reg[argv[2] - 1]) ? 0 : 1;
 	if (g_flag & FLAG_VERBOSE_4)
-		ft_printf("P%4i | lldi %i %i r%i\n"
+		ft_printf("P%5i | lldi %i %i r%i\n"
 			"       | -> load from %i + %i = %i (with pc %i\n",
 			carriage->id, argv[0], argv[1], argv[2], argv[0], argv[1],
 			argv[0] + argv[1], carriage->pos + (argv[0] + argv[1]));

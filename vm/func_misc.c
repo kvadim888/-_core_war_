@@ -22,14 +22,14 @@ static int	cmp_number(void const *champion_content, void const *sample_content)
 	return (champion->number == sample->number);
 }
 
-void 		func_live(t_carriage *carriage)
+void		func_live(t_carriage *carriage)
 {
-    t_operation *operation;
-    t_champion	sample;
+	t_operation	*operation;
+	t_champion	sample;
 	t_list		*survivor;
 
 	get_argval(carriage);
-    operation = &carriage->operation;
+	operation = &carriage->operation;
 	carriage->live = g_game.cycle_counter;
 	g_game.live_counter++;
 	survivor = NULL;
@@ -42,8 +42,8 @@ void 		func_live(t_carriage *carriage)
 	}
 	if (survivor == NULL)
 		return ;
-    if (g_flag & FLAG_VERBOSE_4)
-        ft_printf("P%5i | live %i\n", carriage->id, operation->argv[0]);
+	if (g_flag & FLAG_VERBOSE_4)
+		ft_printf("P%5i | live %i\n", carriage->id, operation->argv[0]);
 	if (g_flag & FLAG_VERBOSE_1)
 		ft_printf("Player %d (%s) is said to be alive\n",
 				-operation->argv[0], g_game.survivor->header->prog_name);
@@ -51,26 +51,26 @@ void 		func_live(t_carriage *carriage)
 
 void		func_zjmp(t_carriage *carriage)
 {
-    t_operation *operation;
+	t_operation	*operation;
 
 	get_argval(carriage);
-    operation = &carriage->operation;
+	operation = &carriage->operation;
 	if (carriage->carry)
 	{
-        carriage->pos = (carriage->pos - get_arglen(operation)
-        		+ (operation->argv[0] % IDX_MOD) + MEM_SIZE) % MEM_SIZE;
-        if (g_flag & FLAG_VERBOSE_4)
-            ft_printf("P%5i | zjmp %i OK\n", carriage->id, operation->argv[0]);
+		carriage->pos = (carriage->pos - get_arglen(operation)
+			+ (operation->argv[0] % IDX_MOD) + MEM_SIZE) % MEM_SIZE;
+		if (g_flag & FLAG_VERBOSE_4)
+			ft_printf("P%5i | zjmp %i OK\n", carriage->id, operation->argv[0]);
 		return ;
-    }
-    if (g_flag & FLAG_VERBOSE_4)
-        ft_printf("P%5i | zjmp %i FAILED\n", carriage->id, operation->argv[0]);
+	}
+	if (g_flag & FLAG_VERBOSE_4)
+		ft_printf("P%5i | zjmp %i FAILED\n", carriage->id, operation->argv[0]);
 }
 
 void		func_aff(t_carriage *carriage)
 {
-	t_operation *operation;
-	int32_t	*argv;
+	t_operation	*operation;
+	int32_t		*argv;
 
 	get_argval(carriage);
 	operation = &carriage->operation;
@@ -80,5 +80,5 @@ void		func_aff(t_carriage *carriage)
 	if (g_flag & FLAG_AFF)
 		ft_printf("%c\n", (char)(carriage->reg[argv[0] - 1] % 256));
 	if (g_flag & FLAG_VERBOSE_4)
-	    ft_printf("P%5d | aff r%d\n", carriage->id, argv[0] - 1);
+		ft_printf("P%5d | aff r%d\n", carriage->id, argv[0] - 1);
 }

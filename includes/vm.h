@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #ifndef VM_H
-#define VM_H
+# define VM_H
 
 # include <libft.h>
 # include <op.h>
@@ -19,7 +19,8 @@
 # define		CODE_EXTENSION		".s"
 # define		BINARY_EXTENSION	".cor"
 
-# define		FLAG_DUMP			(uint8_t)0b00100000
+# define		FLAG_DUMP64			(uint8_t)0b01000000
+# define		FLAG_DUMP32			(uint8_t)0b00100000
 # define		FLAG_AFF			(uint8_t)0b00010000
 
 # define		FLAG_VERBOSE		(uint8_t)0b00001111
@@ -48,6 +49,12 @@
 # define ERR_READ_BINARY	"Binary file cannot be read"
 # define ERR_INVALID_BINARY	"Invalid binary file"
 # define ERR_INVALID_HEADER	"Invalid magic header"
+# define ERR_NBR_PLAYER		"Invalid champion_number values"
+# define ERR_NBR_DUBL		"Number dublication"
+
+# define ERR_VERBOSE_ARG	"The argument after -v must be a positive digit"
+# define ERR_DUMP_ARG		"The argument after -d must be a positive digit"
+# define ERR_NBR_ARG		"The argument after -n must be a positive digit"
 
 typedef struct s_game		t_game;
 typedef struct s_champion	t_champion;
@@ -61,9 +68,9 @@ uint32_t					g_id;
 struct						s_game
 {
 	t_champion				*survivor;
-	t_list					*players; // t_champion
+	t_list					*players;
 	size_t					players_amount;
-	t_list					*carriages; // t_champion
+	t_list					*carriages;
 	uint8_t					field[MEM_SIZE];
 	int32_t					check_counter;
 	int32_t					check_period;
@@ -128,7 +135,8 @@ typedef enum				e_flag
 {
 	UNKNOWN,
 	VERBOSE,
-	DUMP,
+	DUMP32,
+	DUMP64,
 	AFF,
 	CHAMPION_NUMBER
 }							t_flag;
@@ -138,6 +146,7 @@ void						error(int trigger, char *msg);
 int							is_number(char *str);
 
 void						choose_num(t_list *lst);
+void						sort_champions(void);
 
 uint8_t						check_arg(uint32_t type, uint32_t arg);
 int32_t						get_arg(t_carriage *carriage, uint32_t type,
@@ -148,7 +157,7 @@ uint32_t					get_value(uint32_t addr, size_t size);
 
 void	        			exec_function(t_list *lst);
 
-void						log_field(int width);
+void						log_field(void);
 void						log_champion(t_list *lst);
 void						log_winner(t_champion *champion);
 
@@ -159,7 +168,13 @@ void						get_argval(t_carriage *carriage);
 
 int							new_champion(char *path, t_champion *champion);
 
-t_list		    			*carriage_filter(t_list *lst);
 t_champion	    			*game_loop();
+
+void						get_argval(t_carriage *carriage);
+size_t						get_arglen(t_operation *operation);
+int 						get_argtype(t_carriage *carriage);
+int32_t						get_arg(t_carriage *carriage, uint32_t type,
+											   uint32_t arg, int32_t divider);
+uint8_t						check_arg(uint32_t type, uint32_t arg);
 
 #endif

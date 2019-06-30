@@ -12,13 +12,13 @@
 
 #include <functions.h>
 
-void func_fork(t_carriage	*carriage)
+void	func_fork(t_carriage *carriage)
 {
-    t_operation *operation;
-	t_carriage *new;
+	t_operation	*operation;
+	t_carriage	*new;
 
 	get_argval(carriage);
-    operation = &carriage->operation;
+	operation = &carriage->operation;
 	ft_lstadd(&g_game.carriages, ft_lstnew(carriage, sizeof(t_carriage)));
 	new = g_game.carriages->content;
 	ft_bzero(&new->operation, sizeof(t_operation));
@@ -26,24 +26,23 @@ void func_fork(t_carriage	*carriage)
 																	% MEM_SIZE;
 	new->id = ++g_id;
 	if (g_flag & FLAG_VERBOSE_4)
-	    ft_printf("P%5i | fork %i (%i)\n",
-	    		carriage->id, operation->argv[0], new->pos);
+		ft_printf("P%5i | fork %i (%i)\n",
+					carriage->id, operation->argv[0], new->pos);
 }
 
-void func_lfork(t_carriage *carriage)
+void	func_lfork(t_carriage *carriage)
 {
-    t_operation *operation;
-	t_carriage *new;
+	t_operation	*operation;
+	t_carriage	*new;
 
 	get_argval(carriage);
-    operation = &carriage->operation;
+	operation = &carriage->operation;
 	ft_lstadd(&g_game.carriages, ft_lstnew(carriage, sizeof(t_carriage)));
 	new = g_game.carriages->content;
 	ft_bzero(&new->operation, sizeof(t_operation));
 	new->pos = (carriage->pos + operation->argv[0] + MEM_SIZE) % MEM_SIZE;
 	new->id = ++g_id;
-    if (g_flag & FLAG_VERBOSE_4)
-        ft_printf("P%5i | lfork %i (%i)\n",
-        		carriage->id, operation->argv[0], new->pos);
+	if (g_flag & FLAG_VERBOSE_4)
+		ft_printf("P%5i | lfork %i (%i)\n",
+				carriage->id, operation->argv[0], new->pos);
 }
-

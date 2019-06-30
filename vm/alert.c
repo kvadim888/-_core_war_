@@ -21,7 +21,7 @@ void	error(int trigger, char *msg)
 	}
 }
 
-void	usage()
+void	usage(void)
 {
 	ft_printf("%s\n", USAGE);
 	exit(0);

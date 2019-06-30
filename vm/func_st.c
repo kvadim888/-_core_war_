@@ -12,48 +12,42 @@
 
 #include <functions.h>
 
-//.argt = {T_REG, T_REG | T_IND, 0},
-
-void func_st(t_carriage *carriage)
+void	func_st(t_carriage *carriage)
 {
-    t_operation	*operation;
+	t_operation	*operation;
 	int32_t		*argv;
 
 	get_argval(carriage);
-    operation = &carriage->operation;
-    argv = operation->argv;
+	operation = &carriage->operation;
+	argv = operation->argv;
 	if (check_arg(operation->argt[0], operation->argv[0]) != T_REG
 		|| !check_arg(operation->argt[1], operation->argv[1]))
-		return;
+		return ;
 	if (check_arg(operation->argt[1], operation->argv[1]) == T_REG)
 		carriage->reg[argv[1] - 1] = carriage->reg[argv[0] - 1];
 	if (check_arg(operation->argt[1], operation->argv[1]) == T_IND)
 		set_value(((carriage->pos + (argv[1] % IDX_MOD)) + MEM_SIZE)
 			% MEM_SIZE, carriage->reg[argv[0] - 1], REG_SIZE);
 	if (g_flag & FLAG_VERBOSE_4)
-	    ft_printf("P%5i | st r%i %i\n", carriage->id, argv[0], argv[1]);
+		ft_printf("P%5i | st r%i %i\n", carriage->id, argv[0], argv[1]);
 }
 
-
-// {T_REG, T_REG | T_DIR | T_IND, T_REG | T_DIR}
-
-void func_sti(t_carriage *carriage)
+void	func_sti(t_carriage *carriage)
 {
-    t_operation *operation;
+	t_operation	*operation;
 	int32_t		*argv;
 
 	get_argval(carriage);
-    operation = &carriage->operation;
+	operation = &carriage->operation;
 	argv = operation->argv;
 	argv[1] = get_arg(carriage, operation->argt[1], argv[1], IDX_MOD);
 	argv[2] = get_arg(carriage, operation->argt[2], argv[2], IDX_MOD);
 	set_value((carriage->pos + (argv[1] + argv[2]) % IDX_MOD + MEM_SIZE)
 							% MEM_SIZE, carriage->reg[argv[0] - 1], REG_SIZE);
 	if (g_flag & FLAG_VERBOSE_4)
-	    ft_printf("P%5i | sti r%i %i %i\n"
+		ft_printf("P%5i | sti r%i %i %i\n"
 			"     | -> store to %i + %i = %i (with pc and mod %i)\n",
 			carriage->id, operation->argv[0], argv[1], argv[2],
 			argv[1], argv[2], argv[1] + argv[2],
 			carriage->pos + ((argv[1] + argv[2]) % IDX_MOD));
 }
-

@@ -1,10 +1,27 @@
+
+
 NAME = corewar
 
 FLAGS = -Wall -Werror -Wextra
 
-VM =  main.c utilities.c logger.c functions.c alert.c codage.c param_values.c init_champion.c
+INCLUDES =  ../includes/functions.h\
+            ../includes/op.h\
+            ../includes/vm.h\
+            ../libft/includes/libft.h
 
-INCLUDES = ../includes/functions.h ../includes/op.h ../includes/vm.h
+SRC =   alert.c\
+        func_fork.c\
+        func_ld.c\
+        func_math.c\
+        func_misc.c\
+        func_st.c\
+        functions.c\
+        game.c\
+        init_champion.c\
+        logger.c\
+        main.c\
+        utilities.cc
+
 
 LIBFT = ../libft/libft.a
 
