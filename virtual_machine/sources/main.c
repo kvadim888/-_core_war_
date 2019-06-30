@@ -11,102 +11,114 @@
 /* ************************************************************************** */
 
 #include "vm.h"
-<<<<<<< Updated upstream:vm/main.c
-#include <libft.h>
-#include <op.h>
-=======
 #include "op.h"
 #include "functions.h"
->>>>>>> Stashed changes:virtual_machine/sources/main.c
 
-#define USAGE	"Usage:<need fill>"
-
-#define FLAG_VERBOSE	1
-
-char g_flags = 0; // -v = verbose output
-
-int		new_champion(t_champion *champion)
+uint8_t		get_flag(char *str)
 {
-	//todo fill champion structure
-
-	return (0);
+	if (ft_strequ(str, "-v") || ft_strequ(str, "-verbose"))
+		return (VERBOSE);
+	if (ft_strequ(str, "-dump"))
+		return (DUMP32);
+	if (ft_strequ(str, "-d"))
+		return (DUMP64);
+	if (ft_strequ(str, "-a"))
+		return (AFF);
+	if (ft_strequ(str, "-n"))
+		return (CHAMPION_NUMBER);
+	return (UNKNOWN);
 }
 
-int		get_file(char *path)
+int			handle_flag(int flag, char *av)
 {
-	char		*localname;
-	char		*extension;
-	int			fd;
-	uint32_t	header;
+	int	champion_number;
 
-	localname = ft_strrchr(path, '/');
-	localname == NULL ? path : localname++;
-	extension = ft_strrchr(path, '.');
-	error(!(*extension), "File extension is not specified");
-	error((extension <= localname), "Invalid filename");
-	extension = ft_strdup(extension);
-	error(ft_strcmp(extension, BINARY_EXTENSION), "Invalid file extension");
-	error((fd = open(path, O_RDONLY)) == -1, ERR_OPEN_BINARY);
-	error(read(fd, &header, sizeof(header)) < 0, ERR_READ_BINARY);
-	error(header != COREWAR_EXEC_MAGIC, "Invalid file content");
-	return (fd);
+	champion_number = 0;
+	if (flag == UNKNOWN)
+		usage();
+	if (flag == AFF)
+		g_flag |= FLAG_AFF;
+	if (flag == VERBOSE)
+	{
+		error(!is_number(av), ERR_VERBOSE_ARG);
+		g_flag |= FLAG_VERBOSE & (uint8_t)ft_atoi(av);
+	}
+	if (flag == DUMP32 || flag == DUMP64)
+	{
+		error(!is_number(av), ERR_DUMP_ARG);
+		error((g_game.dump_period = ft_atoi(av)) < 0, ERR_DUMP_ARG);
+		g_flag |= (flag == DUMP32) ? FLAG_DUMP32 : FLAG_DUMP64;
+	}
+	if (flag == CHAMPION_NUMBER)
+	{
+		error(!is_number(av), ERR_NBR_ARG);
+		champion_number = ft_atoi(av);
+		error(champion_number < 1 || champion_number > 4, ERR_NBR_PLAYER);
+	}
+	return (champion_number);
 }
 
-void	read_params(int ac, char **av, t_game *core)
+void		read_params(int ac, char **av)
 {
-	int			i;
-	t_list		*players;
 	t_champion	champion;
-	int		amount;
+	int			i;
 
-	players = NULL;
 	i = 0;
+	ft_bzero(&champion, sizeof(t_champion));
 	while (++i < ac)
 	{
-		if (ft_strequ(av[i], "-v") || ft_strequ(av[i], "--verbose"))
+		if (*av[i] == '-')
 		{
-			g_flags |= FLAG_VERBOSE;
-			ft_printf("verbose enabled\n");
-			//todo: verbose output
-		}
-		else if (ft_strequ(av[i], "-n"))
-		{
-			ft_bzero(&champion, sizeof(t_champion)); // clear fields
-			error(!is_number(av[++i]), "Error: after -n must be digit");
-			champion.number = ft_atoi(av[i]);
-			error(champion.number > 4 || champion.number < 1, "Invalid champion number");
-			champion.fd = get_file(av[++i]);
-			error(new_champion(&champion), ERR_INVALID_BINARY);
-			ft_lstadd(&players, ft_lstnew(&champion, sizeof(t_champion)));
+			champion.number = handle_flag(get_flag(av[i]), av[i + 1]);
+			i++;
 		}
 		else
-			error(1, "Invalid parameters\n");
+		{
+			error(new_champion(av[i], &champion), ERR_INIT_PLAYER);
+			ft_lstappend(&g_game.players,
+					ft_lstnew(&champion, sizeof(t_champion)));
+			ft_bzero(&champion, sizeof(t_champion));
+		}
 	}
-	amount = ft_lstlen(players);
-	error(amount < 1 || amount > MAX_PLAYERS, ERR_PLAYERS_AMOUNT);
-	core->players = players;
+	g_game.players_amount = ft_lstlen(g_game.players);
+	g_id = g_game.players_amount;
+	error(g_game.players_amount < 1 || g_game.players_amount > MAX_PLAYERS,
+			ERR_PLAYERS_AMOUNT);
 }
 
-void	map_create(t_game *game)
+void		fill_field(t_list *player_lst)
 {
+	static uint16_t	id = 1;
+	t_carriage		carriage;
+	t_champion		*champion;
 
+	champion = player_lst->content;
+	ft_bzero(&carriage, sizeof(t_carriage));
+	carriage.id = id++;
+	carriage.reg[0] = -champion->number;
+	carriage.pos = ((carriage.id - 1) *
+			(MEM_SIZE / ft_lstlen(g_game.players))) % MEM_SIZE;
+	ft_memcpy(g_game.field + carriage.pos,
+			champion->code, champion->header->prog_size);
+	ft_lstadd(&g_game.carriages, ft_lstnew(&carriage, sizeof(t_carriage)));
 }
 
-int		main(int ac, char **av)
+int			main(int ac, char **av)
 {
-	t_game game;
+	t_champion	*winer;
 
-	game = (t_game){.players = NULL};
 	if (ac < 2)
-	{
-		ft_printf("%s\n", USAGE);
-		return (1);
-	}
-	read_params(ac, av, &game);
-	ft_printf("map creating\n");
-	create_map(&game);
-
-	ft_printf("game start\n");
-//	cycle(&core);
+		usage();
+	ft_bzero(&g_game, sizeof(t_game));
+	g_game.check_period = CYCLE_TO_DIE;
+	read_params(ac, av);
+	ft_lstiter(g_game.players, choose_num);
+	sort_champions();
+	ft_printf("Introducing contestants...\n");
+	ft_lstiter(g_game.players, log_champion);
+	ft_bzero(g_game.field, MEM_SIZE);
+	ft_lstiter(g_game.players, fill_field);
+	winer = game_loop();
+	log_winner(winer);
 	return (0);
 }

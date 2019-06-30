@@ -6,7 +6,7 @@
 /*   By: vkryvono <vkryvono@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/11 04:19:00 by vkryvono          #+#    #+#             */
-/*   Updated: 2019/06/30 13:46:01 by vkryvono         ###   ########.fr       */
+/*   Updated: 2019/06/30 14:25:41 by vkryvono         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ void	error(int trigger, char *msg)
 		exit(1);
 	}
 }
-<<<<<<< Updated upstream:vm/alert.c
-=======
 
 void	usage(void)
 {
@@ -38,4 +36,3 @@ void	usage(void)
 	ft_printf("\t\t\t16\t: Show PC movements (Except for jumps)\n");
 	exit(0);
 }
->>>>>>> Stashed changes:virtual_machine/sources/alert.c

@@ -6,219 +6,46 @@
 /*   By: vkryvono <vkryvono@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/11 02:46:00 by vkryvono          #+#    #+#             */
-/*   Updated: 2019/06/30 13:42:04 by vkryvono         ###   ########.fr       */
+/*   Updated: 2019/06/30 14:30:56 by vkryvono         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-<<<<<<< Updated upstream:vm/functions.c
-#include <vm.h>
-=======
 #include "vm.h"
 #include "functions.h"
->>>>>>> Stashed changes:virtual_machine/sources/functions.c
 
-typedef struct	s_operation
+static int	set_function(t_carriage *carriage)
 {
-	char 		*name;
-	uint8_t		code;
-	uint16_t	cycle;
-	void		(*function)();
-}				t_operation;
-
-//todo write functions
-
-void	func_live()
-{
-
-}
-
-void	func_ld()
-{
-
-}
-
-void	func_st()
-{
-
-}
-
-void	func_add()
-{
-
-}
-
-void	func_sub()
-{
-
-}
-
-void	func_and()
-{
-
-}
-
-void	func_or()
-{
-
-}
-
-void	func_xor()
-{
-
-}
-
-void	func_zjmp()
-{
-
-}
-
-void	func_ldi()
-{
-
-}
-
-void	func_sti()
-{
-
-}
-
-void	func_fork()
-{
-
-}
-
-void	func_lld()
-{
-
-}
-
-void	func_lldi()
-{
-
-}
-
-void	func_lfork()
-{
-
-}
-
-void	func_aff()
-{
-
-}
-
-t_operation	g_op[16] =
-{
+	if (g_game.field[carriage->pos] > 0 && g_game.field[carriage->pos] <= 16)
 	{
-		.name = "live",
-		.code = 0x01,
-		.argc = 1,
-		.arg_types = {T_DIR, 0, 0},
-		.function = func_live
-	},
-	{
-		.name = "ld",
-		.code = 0x02,
-		.argc = 2,
-		.arg_types = {T_DIR | T_IND, T_REG, 0},
-		.function = func_ld
-	},
-	{
-		.name = "st",
-		.code = 0x03,
-		.argc = 2,
-		.arg_types = {T_REG, T_REG | T_IND, 0},
-		.function = func_st
-	},
-	{
-		.name = "add",
-		.code = 0x04,
-		.argc = 3,
-		.arg_types = {T_REG, T_REG, T_REG},
-		.function = func_add
-	},
-	{
-		.name = "sub",
-		.code = 0x05,
-		.argc = 3,
-		.arg_types = {T_REG, T_REG, T_REG},
-		.function = func_sub
-	},
-	{
-		.name = "and",
-		.code = 0x06,
-		.argc = 3,
-		.arg_types = {T_REG | T_DIR | T_IND, T_REG | T_DIR | T_IND, T_REG},
-		.function = func_and
-	},
-	{
-		.name = "or",
-		.code = 0x07,
-		.argc = 3,
-		.arg_types = {T_REG | T_DIR | T_IND, T_REG | T_DIR | T_IND, T_REG},
-		.function = func_or
-	},
-	{
-		.name = "xor",
-		.code = 0x08,
-		.argc = 3,
-		.arg_types = {T_REG | T_DIR | T_IND, T_REG | T_DIR | T_IND, T_REG},
-		.function = func_xor
-	},
-	{
-		.name = "zjmp",
-		.code = 0x09,
-		.argc = 1,
-		.arg_types = {T_DIR, 0, 0},
-		.function = func_zjmp
-	},
-	{
-		.name = "ldi",
-		.code = 0x0A,
-		.argc = 3,
-		.arg_types = {T_REG | T_DIR | T_IND, T_REG | T_DIR, T_REG},
-		.function = func_ldi
-	},
-	{
-		.name = "sti",
-		.code = 0x0B,
-		.argc = 3,
-		.arg_types = {T_REG, T_REG | T_DIR | T_IND, T_REG | T_DIR},
-		.function = func_sti
-	},
-	{
-		.name = "fork",
-		.code = 0x0C,
-		.argc = 1,
-		.arg_types = {T_DIR, 0, 0},
-		.function = func_fork
-	},
-	{
-		.name = "lld",
-		.code = 0x0D,
-		.argc = 2,
-		.arg_types = {T_DIR | T_IND, T_REG, 0},
-		.function = func_lld
-	},
-	{
-		.name = "lldi",
-		.code = 0x0E,
-		.argc = 3,
-		.arg_types = {T_REG | T_DIR | T_IND, T_REG | T_DIR, T_REG},
-		.function = func_lldi
-	},
-	{
-		.name = "lfork",
-		.code = 0x0F,
-		.argc = 1,
-		.arg_types = {T_DIR, 0, 0},
-		.function = func_lfork
-	},
-	{
-		.name = "aff",
-		.code = 0x10,
-		.argc = 1,
-		.arg_types = {T_REG, 0, 0},
-		.function = func_aff
+		memcpy(&carriage->operation, &g_op[g_game.field[carriage->pos] - 1],
+			sizeof(t_operation));
+		return (0);
 	}
-};
+	ft_bzero(&carriage->operation, sizeof(t_operation));
+	return (1);
+}
+
+void		exec_function(t_list *lst)
+{
+	t_carriage	*carriage;
+
+	carriage = lst->content;
+	if (carriage->operation.period > 0)
+		carriage->operation.period--;
+	else if (carriage->operation.code == 0)
+	{
+		if (set_function(carriage))
+		{
+			carriage->pos = (carriage->pos + 1) % MEM_SIZE;
+			return ;
+		}
+		carriage->operation.period--;
+	}
+	if (carriage->operation.period > 0)
+		return ;
+	if (get_argtype(carriage))
+		carriage->operation.function(carriage);
+	carriage->pos = (carriage->pos +
+					get_arglen(&carriage->operation) + MEM_SIZE) % MEM_SIZE;
+	carriage->operation.code = 0;
+}
