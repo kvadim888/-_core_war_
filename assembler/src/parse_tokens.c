@@ -68,7 +68,7 @@ int		check_separator(char **token, int i, t_all *champ)
 	count = find_cur_operation(token[i]);
 	if (count == 16)
 		error_in_line("ERROR! Invalid operation", champ->line_counter);
-	if (op_tab[count].arg_number == 1)
+	if (g_op_tab[count].arg_number == 1)
 		return (1);
 	cur = i + 1;
 	while (token[cur])

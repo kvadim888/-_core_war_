@@ -34,9 +34,9 @@ void	check_arguments(t_list *all, t_token *cur, t_all *champ)
 	args = NULL;
 	i = find_cur_operation(cur->name);
 	if (!champ->code)
-		champ->code = ft_lstnew_new(&op_tab[i].code_op, 1);
+		champ->code = ft_lstnew_new(&g_op_tab[i].code_op, 1);
 	else
-		ft_lstadd_end(champ->code, ft_lstnew_new(&op_tab[i].code_op, 1));
+		ft_lstadd_end(champ->code, ft_lstnew_new(&g_op_tab[i].code_op, 1));
 	champ->base->prog_size++;
 	all = all->next;
 	while (all)
@@ -48,7 +48,7 @@ void	check_arguments(t_list *all, t_token *cur, t_all *champ)
 		all = all->next;
 	}
 	is_correct_args(args, i, champ);
-	if (op_tab[i].arg_size)
+	if (g_op_tab[i].arg_size)
 		save_args_code(args, champ);
 	save_args(args, i, champ, cur);
 	del_args_list(args);
@@ -61,13 +61,13 @@ void	is_correct_args(t_list *args, int op_nb, t_all *champ)
 	int		i;
 
 	count_args = calculate_args(args);
-	if (calculate_args(args) != op_tab[op_nb].arg_number)
+	if (calculate_args(args) != g_op_tab[op_nb].arg_number)
 		p_error("\nERROR! Wrong number of argument!\n");
 	i = 0;
 	while (args)
 	{
 		token = args->content;
-		if ((token->arg_type & op_tab[op_nb].arg[i]) == 0)
+		if ((token->arg_type & g_op_tab[op_nb].arg[i]) == 0)
 			p_error("\nERROR! Wrong argument in operation!\n");
 		if (token->type == 5 || token->type == 6)
 			is_existing_label(token->name, champ->labels);

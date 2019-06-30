@@ -79,7 +79,7 @@ void	check_save_op(char *instr, t_all *champ)
 	if (instr[0] == SEPARATOR_CHAR && !instr[1])
 		return ;
 	while (++i < 16)
-		if (ft_strequ(instr, op_tab[i].name))
+		if (ft_strequ(instr, g_op_tab[i].name))
 			break ;
 	if (i == 16)
 		error_in_line("ERROR! Invalid operation", champ->line_counter);
@@ -87,8 +87,8 @@ void	check_save_op(char *instr, t_all *champ)
 	ptr->name = ft_strdup(instr);
 	ptr->type = op;
 	ptr->step = champ->byte_counter;
-	champ->tdir_size_cur = (op_tab[i].tdir_size == 1) ? 2 : 4;
-	champ->byte_counter += (op_tab[i].arg_size == 1) ? 2 : 1;
+	champ->tdir_size_cur = (g_op_tab[i].tdir_size == 1) ? 2 : 4;
+	champ->byte_counter += (g_op_tab[i].arg_size == 1) ? 2 : 1;
 	add_list(&champ->head, ptr);
 }
 

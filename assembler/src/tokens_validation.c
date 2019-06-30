@@ -72,7 +72,7 @@ void	save_args(t_list *args, int op_nb, t_all *champ, t_token *cur)
 	int		tdir;
 	int		size;
 
-	tdir = (op_tab[op_nb].tdir_size == 1) ? 2 : 4;
+	tdir = (g_op_tab[op_nb].tdir_size == 1) ? 2 : 4;
 	while (args)
 	{
 		arg = args->content;
@@ -98,7 +98,7 @@ int		find_cur_operation(char *name)
 
 	i = -1;
 	while (++i < 16)
-		if (ft_strequ(name, op_tab[i].name))
+		if (ft_strequ(name, g_op_tab[i].name))
 			break ;
 	return (i);
 }

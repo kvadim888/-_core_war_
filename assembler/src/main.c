@@ -23,7 +23,7 @@ int		main(int argc, char **argv)
 	if ((fd = open(argv[1], O_RDONLY)) < 0)
 		p_error("\nERROR! Not valid file.\n");
 	champ = ft_memalloc(sizeof(t_all));
-	champ->base = ft_memalloc(sizeof(headers_t));
+	champ->base = ft_memalloc(sizeof(t_header));
 	save_name(argv[1], fd, champ);
 	save_inctructions(fd, champ);
 	tokens_validation(champ->head, champ);
